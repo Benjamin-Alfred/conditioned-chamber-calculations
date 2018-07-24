@@ -168,10 +168,6 @@ get_header();
                                     </button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="client_contact_email" class="col-form-label col-sm-4">Contact Email</label>
-                                <input type="email" class="form-control form-control-sm col-sm-8" id="client_contact_email" name="client_contact_email" placeholder="Client Contact Email" readonly />
-                            </div>
                         </div>
                     </div>
                     <div class="card">
