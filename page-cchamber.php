@@ -140,7 +140,7 @@ get_header();
                             <h5 class="card-title">Client Details</h5>
                             <div class="form-group row">
                                 <label for="client" class="col-form-label col-sm-4">Name</label>
-                                <select class="form-control form-control-sm col-sm-7" id="client_contact_id" name="client_contact_id" required >
+                                <select class="form-control form-control-sm col-sm-7" id="client" name="client" required >
                                     <?php
                                         foreach ($clients as $client) {
                                             echo "<option value='".$client->id."'>".$client->name."</option>";
@@ -154,8 +154,8 @@ get_header();
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="client_contact" class="col-form-label col-sm-4">Contact Person</label>
-                                <select class="form-control form-control-sm col-sm-7" id="client_contact" name="client_contact" required >
+                                <label for="client_contact_id" class="col-form-label col-sm-4">Contact Person</label>
+                                <select class="form-control form-control-sm col-sm-7" id="client_contact_id" name="client_contact_id" required >
                                     <?php
                                         foreach ($clientContacts as $contact) {
                                             echo "<option value='".$contact->id."'>".$contact->name."</option>";

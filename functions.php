@@ -98,7 +98,7 @@ function addConditionedChamberRecordings($request){
         client_id => $request['client'],
         client_contact_id => $request['client_contact_id'],
 
-        date_performed => 'now()',
+        date_performed => $request['date_performed'],
         manufacturer_id => $request['manufacturer'],
         equipment_id => $request['equipment'],
         equipment_model => $request['model'],
