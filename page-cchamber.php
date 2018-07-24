@@ -128,16 +128,19 @@ get_header();
                     <input type="hidden" name="form_ready_for_submit" value="false" />
                     <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
 
-                    <div class="form-group row">
-                        <label for="model" class="col-form-label col-sm-4">Date Performed</label>
-                        <input type="text" class="form-control form-control-sm col-sm-8" id="date_performed" name="date_performed" required />
+                    <div class="card">
+                        <div class="card-body">
+                        <div class="form-group row">
+                            <label for="model" class="col-form-label col-sm-4">Date Performed</label>
+                            <input type="text" class="form-control form-control-sm col-sm-8" id="date_performed" name="date_performed" required />
+                        </div>
                     </div>
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Client Details</h5>
                             <div class="form-group row">
                                 <label for="client" class="col-form-label col-sm-4">Name</label>
-                                <select class="form-control form-control-sm col-sm-7" id="client" name="client" required >
+                                <select class="form-control form-control-sm col-sm-7" id="client_contact_id" name="client_contact_id" required >
                                     <?php
                                         foreach ($clients as $client) {
                                             echo "<option value='".$client->id."'>".$client->name."</option>";
