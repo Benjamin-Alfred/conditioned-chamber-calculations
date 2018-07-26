@@ -27,15 +27,14 @@ CREATE TABLE `wp_coe_conditioned_chamber_calculation_readings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `conditioned_chamber_calculation_id` int(10) unsigned NOT NULL,
   `reading_time` smallint(6) NOT NULL,
-  `reading_a` smallint(6) NOT NULL,
-  `reading_b` smallint(6) NOT NULL,
-  `reading_c` smallint(6) NOT NULL,
+  `reading_a` decimal(10,5) NOT NULL,
+  `reading_b` decimal(10,5) NOT NULL,
+  `reading_c` decimal(10,5) NOT NULL,
   `created_by` int(10) unsigned NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
-
 
 CREATE TABLE `wp_coe_conditioned_chamber_calculations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -54,9 +53,9 @@ CREATE TABLE `wp_coe_conditioned_chamber_calculations` (
   `standard_test_equipment_model` varchar(60) DEFAULT NULL,
   `equipment_serial_number` varchar(60) NOT NULL,
   `standard_test_equipment_serial_number` varchar(60) DEFAULT NULL,
-  `expected_temperature` smallint(6) NOT NULL,
-  `environmental_temperature` tinyint(4) NOT NULL DEFAULT '0',
-  `environmental_humidity` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `expected_temperature` decimal(8,5) NOT NULL DEFAULT '0.00000',
+  `environmental_temperature` decimal(8,5) NOT NULL DEFAULT '0.00000',
+  `environmental_humidity` decimal(8,5) unsigned NOT NULL DEFAULT '0.00000',
   `created_by` int(10) unsigned NOT NULL DEFAULT '1',
   `verified_by` int(10) unsigned DEFAULT NULL,
   `approved_by` int(10) unsigned DEFAULT NULL,
@@ -64,8 +63,8 @@ CREATE TABLE `wp_coe_conditioned_chamber_calculations` (
   `verified_at` datetime DEFAULT NULL,
   `approved_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `uncertainity` decimal(5,2) DEFAULT NULL,
-  `result` varchar(8) DEFAULT NULL,
+  `uncertainity` decimal(10,6) NOT NULL DEFAULT '0.000000',
+  `result` varchar(8) DEFAULT "PENDING",
   PRIMARY KEY (`id`)
 );
 
@@ -77,8 +76,7 @@ CREATE TABLE `wp_coe_equipment` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `name_2` (`name`)
+  UNIQUE KEY `name` (`name`)
 );
 
 CREATE TABLE `wp_coe_manufacturers` (
@@ -90,3 +88,14 @@ CREATE TABLE `wp_coe_manufacturers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 );
+
+CREATE TABLE `wp_coe_standard_test_equipment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `created_by` int(10) unsigned NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+);
+

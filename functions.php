@@ -64,6 +64,19 @@ function getCOEEquipment(){
     return $wpdb->get_results("SELECT * FROM wp_coe_equipment ORDER BY name;");
 }
 
+function addCOESTEquipment($name){
+    global $wpdb;
+    if ($name != false) {
+        $result = $wpdb->insert("wp_coe_standard_test_equipment", array('name' => trim($name)));
+    }
+}
+
+function getCOESTEquipment(){
+    global $wpdb;
+    
+    return $wpdb->get_results("SELECT * FROM wp_coe_standard_test_equipment ORDER BY name;");
+}
+
 function addCOEClient($name){
     global $wpdb;
     if ($name != false) {
@@ -116,7 +129,9 @@ function addConditionedChamberRecordings($request){
 
         expected_temperature => $request['expected_temperature'],
         environmental_temperature => $request['environmental_temperature'],
-        environmental_humidity => $request['environmental_humidity']
+        environmental_humidity => $request['environmental_humidity'],
+
+        result => 'PENDING'
 
     );
 
@@ -125,8 +140,11 @@ function addConditionedChamberRecordings($request){
 
     $intervals = array(0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60);
 
-    $averageP = array();
-    $error = array();
+    $p1Values = array();
+    $p2Values = array();
+    $p3Values = array();
+    $errorValues = array();
+
 
     foreach ($intervals as $interval) {
         $intervalArray = array(
@@ -138,13 +156,34 @@ function addConditionedChamberRecordings($request){
             );
         $wpdb->insert("wp_coe_conditioned_chamber_calculation_readings", $intervalArray);
 
-        $averageP[$interval] = ($request['p_1_'.$interval] + $request['p_2_'.$interval] + $request['p_3_'.$interval])/3;
-        $error[$interval] = $averageP[interval] - $request['expected_temperature'];
+        $p1Values[$interval] = $request['p_1_'.$interval];
+        $p2Values[$interval] = $request['p_2_'.$interval];
+        $p3Values[$interval] = $request['p_3_'.$interval];
+
+        $averagePValue = ($p1Values[$interval] + $p2Values[$interval] + $p3Values[$interval])/3;
+
+        $errorValues[$interval] = $averagePValue - $request['expected_temperature'];
     }
 
     //Calculate uncertainity
+    $divisor = 2;
 
-    //redirect to listing page
+    $averageError = pow(array_sum($errorValues)/count($errorValues)/$divisor, 2);
+    $variance = pow((max($errorValues) - min($errorValues))/$divisor, 2);
+
+    $p1Average = array_sum($p1Values)/count($p1Values);
+    $p2Average = array_sum($p2Values)/count($p2Values);
+    $p3Average = array_sum($p3Values)/count($p3Values);
+
+    $homogeneity = pow((($p1Average - $p2Average) + ($p2Average - $p3Average))/2/$divisor, 2);
+    $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
+
+    $UCStandard = pow(0/sqrt(3), 2); //TODO: Needs review
+    $resn = pow(0/$divisor/sqrt(3), 2); //TODO: Needs review
+    
+    $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
+
+    $wpdb->update("wp_coe_conditioned_chamber_calculations", ['uncertainity' => $uncertainity], ['id' => $CCCID]);
 
     return true;
 }
@@ -157,7 +196,7 @@ function getCOEConditionedChamberCertificatesList(){
                 wp_coe_clients.name AS client_name, 
                 wp_coe_equipment.name AS equipment_name, 
                 wp_coe_conditioned_chamber_calculations.equipment_serial_number, 
-                wp_coe_conditioned_chamber_calculations.uncertainity 
+                wp_coe_conditioned_chamber_calculations.result 
             FROM wp_coe_conditioned_chamber_calculations 
             INNER JOIN wp_coe_equipment 
                 ON wp_coe_conditioned_chamber_calculations.equipment_id = wp_coe_equipment.id
@@ -207,7 +246,7 @@ function getCOECCCertificate($certificateID){
     $result->approver = $wpdb->get_row($subQuery, ARRAY_A);
 
     // Standard Test Equipment Info: Name and manufacturer
-    $subQuery = "SELECT name FROM wp_coe_equipment WHERE id = ".$result->standard_test_equipment_id;
+    $subQuery = "SELECT name FROM wp_coe_standard_test_equipment WHERE id = ".$result->standard_test_equipment_id;
 
     $result->ste_equipment = $wpdb->get_row($subQuery, ARRAY_A);
 

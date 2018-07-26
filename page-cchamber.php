@@ -34,28 +34,33 @@ if ($COEPage == 1) {
             $COEPage = 1;
             $certicates = getCOEConditionedChamberCertificatesList();
         }
+    }else{
+
+        $newManufacturer = empty( $_REQUEST['manufacturer_name'] ) ? false : $_REQUEST['manufacturer_name'];
+        addCOEManufacturer($newManufacturer);
+
+        $newEquipment = empty( $_REQUEST['equipment_name'] ) ? false : $_REQUEST['equipment_name'];
+        addCOEEquipment($newEquipment);
+
+        $newSTEquipment = empty( $_REQUEST['s_t_equipment_name'] ) ? false : $_REQUEST['s_t_equipment_name'];
+        addCOESTEquipment($newSTEquipment);
+
+        $newClient = empty( $_REQUEST['client_name'] ) ? false : $_REQUEST['client_name'];
+        addCOEClient($newClient);
+        
+        $clientID = empty( $_REQUEST['client_id'] ) ? false : $_REQUEST['client_id'];
+        $newClientContactName = empty( $_REQUEST['contact_name'] ) ? false : $_REQUEST['contact_name'];
+        $newClientContactEmail = empty( $_REQUEST['contact_email'] ) ? false : $_REQUEST['contact_email'];
+        $newClientContactPhone = empty( $_REQUEST['contact_phone'] ) ? '' : $_REQUEST['contact_phone'];
+
+        addCOEClientContact($clientID, $newClientContactName, $newClientContactEmail, $newClientContactPhone);
+
+        $manufacturers = getCOEManufacturers();
+        $equipments = getCOEEquipment();
+        $STEquipments = getCOESTEquipment();
+        $clients = getCOEClients();
+        $clientContacts = getCOEClientContacts();
     }
-
-    $newManufacturer = empty( $_REQUEST['manufacturer_name'] ) ? false : $_REQUEST['manufacturer_name'];
-    addCOEManufacturer($newManufacturer);
-
-    $newEquipment = empty( $_REQUEST['equipment_name'] ) ? false : $_REQUEST['equipment_name'];
-    addCOEEquipment($newEquipment);
-
-    $newClient = empty( $_REQUEST['client_name'] ) ? false : $_REQUEST['client_name'];
-    addCOEClient($newClient);
-    
-    $clientID = empty( $_REQUEST['client_id'] ) ? false : $_REQUEST['client_id'];
-    $newClientContactName = empty( $_REQUEST['contact_name'] ) ? false : $_REQUEST['contact_name'];
-    $newClientContactEmail = empty( $_REQUEST['contact_email'] ) ? false : $_REQUEST['contact_email'];
-    $newClientContactPhone = empty( $_REQUEST['contact_phone'] ) ? '' : $_REQUEST['contact_phone'];
-
-    addCOEClientContact($clientID, $newClientContactName, $newClientContactEmail, $newClientContactPhone);
-
-    $manufacturers = getCOEManufacturers();
-    $equipments = getCOEEquipment();
-    $clients = getCOEClients();
-    $clientContacts = getCOEClientContacts();
 
 }else if($COEPage == 3){
     $requestedCertificate = $_REQUEST['ccc_id'];
@@ -100,7 +105,8 @@ get_header();
                                     echo "<td>$certicate->client_name</td>";
                                     echo "<td>$certicate->equipment_name</td>";
                                     echo "<td>$certicate->equipment_serial_number</td>";
-                                    echo "<td>".($certicate->uncertainity?"<span class='badge badge-pill badge-success'>PASS</span>":"<span class='badge badge-pill badge-danger'>FAIL</span>")."</td>";
+                                    $badge = ['FAIL'=>'danger', 'PASS'=>'success', 'PENDING'=>'warning'];
+                                    echo "<td><span class='badge badge-".$badge[$certicate->result]."'>".$certicate->result."</span></td>";
                             ?>
                                     <td><form name="ccc_cert" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/">
                                         <input type="hidden" name="show_calibration_certificate" value="false" />
@@ -174,21 +180,6 @@ get_header();
                         <div class="card-body">
                             <h5 class="card-title">Equipment Details</h5>
                             <div class="form-group row">
-                                <label for="manufacturer" class="col-form-label col-sm-4">Manufacturer</label>
-                                <select class="form-control form-control-sm col-sm-7" id="manufacturer" name="manufacturer" required >
-                                    <?php
-                                        foreach ($manufacturers as $manufacturer) {
-                                            echo "<option value='".$manufacturer->id."'>".$manufacturer->name."</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#addManufacturerModal">
-                                        <strong><span aria-hidden="true">&plus;</span></strong>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label for="equipment" class="col-form-label col-sm-4">Equipment Name</label>
                                 <select class="form-control form-control-sm col-sm-7" id="equipment" name="equipment" required >
                                     <?php
@@ -199,6 +190,21 @@ get_header();
                                 </select>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#addEquipmentModal">
+                                        <strong><span aria-hidden="true">&plus;</span></strong>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="manufacturer" class="col-form-label col-sm-4">Manufacturer</label>
+                                <select class="form-control form-control-sm col-sm-7" id="manufacturer" name="manufacturer" required >
+                                    <?php
+                                        foreach ($manufacturers as $manufacturer) {
+                                            echo "<option value='".$manufacturer->id."'>".$manufacturer->name."</option>";
+                                        }
+                                    ?>
+                                </select>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#addManufacturerModal">
                                         <strong><span aria-hidden="true">&plus;</span></strong>
                                     </button>
                                 </div>
@@ -221,6 +227,21 @@ get_header();
                         <div class="card-body">
                             <h5 class="card-title">Standard Test Equipment Used</h5>
                             <div class="form-group row">
+                                <label for="ste_equipment" class="col-form-label col-sm-4">Description</label>
+                                <select class="form-control form-control-sm col-sm-7" id="ste_equipment" name="ste_equipment" required >
+                                    <?php
+                                        foreach ($STEquipments as $equipment) {
+                                            echo "<option value='".$equipment->id."'>".$equipment->name."</option>";
+                                        }
+                                    ?>
+                                </select>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#addSTEquipmentModal">
+                                        <strong><span aria-hidden="true">&plus;</span></strong>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="manufacturer" class="col-form-label col-sm-4">Manufacturer</label>
                                 <select class="form-control form-control-sm col-sm-7" id="ste_manufacturer" name="ste_manufacturer" required >
                                     <?php
@@ -231,21 +252,6 @@ get_header();
                                 </select>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#addManufacturerModal">
-                                        <strong><span aria-hidden="true">&plus;</span></strong>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="equipment" class="col-form-label col-sm-4">Description</label>
-                                <select class="form-control form-control-sm col-sm-7" id="ste_equipment" name="ste_equipment" required >
-                                    <?php
-                                        foreach ($equipments as $equipment) {
-                                            echo "<option value='".$equipment->id."'>".$equipment->name."</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#addEquipmentModal">
                                         <strong><span aria-hidden="true">&plus;</span></strong>
                                     </button>
                                 </div>
@@ -275,11 +281,11 @@ get_header();
                             <h5 class="card-title">Environmental Conditions</h5>
                             <div class="form-group row">
                                 <label for="environmental_temperature" class="col-form-label col-sm-5">Temperature</label>
-                                <input type="number" class="form-control form-control-sm col-sm-7" id="environmental_temperature" name="environmental_temperature" title="" required />
+                                <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="environmental_temperature" name="environmental_temperature" title="" required />
                             </div>
                             <div class="form-group row">
                                 <label for="environmental_humidity" class="col-form-label col-sm-5">Humidity</label>
-                                <input type="number" class="form-control form-control-sm col-sm-7" id="environmental_humidity" name="environmental_humidity" title="" required />
+                                <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="environmental_humidity" name="environmental_humidity" title="" required />
                             </div>
                         </div>
                     </div>
@@ -287,7 +293,7 @@ get_header();
                         <div class="card-body">
                             <div class="form-group row">
                                 <label for="expected_temperature" class="col-form-label col-sm-5">Expected/Set Temperature</label>
-                                <input type="number" class="form-control form-control-sm col-sm-7" id="expected_temperature" name="expected_temperature" title="" required />
+                                <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature" name="expected_temperature" title="" required />
                             </div>
                         </div>
                     </div>
@@ -312,133 +318,133 @@ get_header();
                                         <tr>
                                             <td align="center">0</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_0" name="p_1_0" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_0" name="p_1_0" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_0" name="p_2_0" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_0" name="p_2_0" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_0" name="p_3_0" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_0" name="p_3_0" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">6</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_6" name="p_1_6" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_6" name="p_1_6" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_6" name="p_2_6" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_6" name="p_2_6" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_6" name="p_3_6" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_6" name="p_3_6" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">12</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_12" name="p_1_12" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_12" name="p_1_12" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_12" name="p_2_12" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_12" name="p_2_12" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_12" name="p_3_12" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_12" name="p_3_12" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">18</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_18" name="p_1_18" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_18" name="p_1_18" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_18" name="p_2_18" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_18" name="p_2_18" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_18" name="p_3_18" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_18" name="p_3_18" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">24</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_24" name="p_1_24" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_24" name="p_1_24" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_24" name="p_2_24" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_24" name="p_2_24" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_24" name="p_3_24" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_24" name="p_3_24" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">30</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_30" name="p_1_30" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_30" name="p_1_30" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_30" name="p_2_30" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_30" name="p_2_30" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_30" name="p_3_30" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_30" name="p_3_30" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">36</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_36" name="p_1_36" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_36" name="p_1_36" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_36" name="p_2_36" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_36" name="p_2_36" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_36" name="p_3_36" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_36" name="p_3_36" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">42</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_42" name="p_1_42" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_42" name="p_1_42" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_42" name="p_2_42" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_42" name="p_2_42" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_42" name="p_3_42" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_42" name="p_3_42" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">48</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_48" name="p_1_48" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_48" name="p_1_48" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_48" name="p_2_48" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_48" name="p_2_48" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_48" name="p_3_48" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_48" name="p_3_48" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">54</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_54" name="p_1_54" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_54" name="p_1_54" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_54" name="p_2_54" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_54" name="p_2_54" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_54" name="p_3_54" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_54" name="p_3_54" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">60</td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_1_60" name="p_1_60" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_1_60" name="p_1_60" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_2_60" name="p_2_60" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_2_60" name="p_2_60" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm" id="p_3_60" name="p_3_60" title="" required />
+                                                <input type="number" step="any" class="form-control form-control-sm" id="p_3_60" name="p_3_60" required />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -563,9 +569,9 @@ get_header();
                                 for Temperature Calibration measurements.</p>
                             <p>The environmental conditions were recorded during the period of calibration.
                                 The temperature was
-                                <strong><?php echo $certification->environmental_temperature;?> </strong>⁰C
+                                <strong><?php echo number_format($certification->environmental_temperature, 2);?> </strong>⁰C
                                 with relative humidity of 
-                                <strong><?php echo $certification->environmental_humidity;?></strong> %.
+                                <strong><?php echo number_format($certification->environmental_humidity, 2);?></strong> %.
                             </p>
                         </div>
                     </div>
@@ -646,7 +652,9 @@ get_header();
                                     ?>
                                         <tr>
                                             <td style="text-align: right;"><?php echo $reading['reading_time'];?></td>
-                                            <td style="text-align: center;"><?php echo $certification->expected_temperature;?></td>
+                                            <td style="text-align: center;">
+                                                <?php echo number_format($certification->expected_temperature,2);?>
+                                            </td>
                                             <td style="text-align: right;">
                                                 <?php echo number_format($reading['reading_a'], 3);?>
                                             </td>
@@ -709,14 +717,14 @@ get_header();
                     <div class="remarks" style="font-size: 0.75em">
                         <div><strong>7.0 REMARKS</strong></div>
                         <div style="margin-left: 30px;">
-                            <p><?php echo "remarks";?></p>
-                        <div style="padding: 5px; border: 1px solid #000;">
+                            <p>Calibration Complete. STATUS: <?php echo $certification->result; ?>
+                        </div>
+                        <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
                             <p>Calibration certificate issued without signature and official stamp is not valid.
                                 This certificate has been issued without any alteration and may not be reproduced
                                 other than in full and with the approval of the head of NPHL-COE.</p>
                             <p>If undelivered please return to the above address.</p>
                         </div><br>
-                        <div>Calibration Complete. STATUS: <?php echo "pass_fail"?></div>
                     </div>
                 </div>
             <!-- /Show Calibration Certificate -->
@@ -774,6 +782,32 @@ get_header();
             </div>
             <div class="modal-footer">
                 <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newEquipment.submit()" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addSTEquipmentModal" tabindex="-1" role="dialog" aria-labelledby="addSTEquipmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSTEquipmentModalLabel">Add Standard Test Equipment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" name="newSTEquipment">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4" for="s_t_equipment_name">Name</label>
+                        <input type="text" name="s_t_equipment_name" id="s_t_equipment_name" class="form-control form-control-sm col-sm-8" required />
+                        <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newSTEquipment.submit()" />
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
