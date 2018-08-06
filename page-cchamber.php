@@ -10,6 +10,14 @@
  * @version 1.0
  */
 
+if (!is_user_logged_in()) {
+    get_header();
+    echo "<div class='calibration-login'>";
+    echo "<p>Sign in to access this content!</p>";
+    wp_login_form(array('echo' => true));
+    echo "</div>";
+    get_footer();
+}else{
 /*
  * COE Page Values
  * 1 => List Conditioned Chamber Items
@@ -64,8 +72,16 @@ if ($COEPage == 1) {
 
 }else if($COEPage == 3){
     $requestedCertificate = $_REQUEST['ccc_id'];
-    $certification = getCOECCCertificate($requestedCertificate);
+    
+    if(!empty( $_REQUEST['status'] )){  // Verify COE CC Certificate
+        verifyCOECertificate($_REQUEST);
+        exit();
+    }else{                              //Show COE CC Certificate
+        $certification = getCOECCCertificate($requestedCertificate);
+    }
 }
+
+$currentUser = wp_get_current_user();
 
 get_header();
 
@@ -74,6 +90,14 @@ get_header();
 <div class="wrap">
     <div id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
+            <div class="row d-print-none">
+                <div class="col" style="text-align: right;font-size: 0.75em;">
+                    <span>
+                        Logged in as <?php echo $currentUser->display_name; ?> |    
+                        <a href="<?php echo wp_logout_url( home_url() ); ?>">Logout</a>
+                    </span>
+                </div>
+            </div>
             <?php
                 if ($COEPage == 1) {
             ?>
@@ -461,13 +485,35 @@ get_header();
                 }else if ($COEPage == 3){
             ?>
             <!-- Show Calibration Certificate -->
-                <div>
-                    <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" class="d-print-none">
-                        <button class="btn btn-sm btn-outline-dark float-right" onclick="document.ccc_back.submit">Back</button>
-                    </form><br>
+                <div class="certificate-frame">
+                    <div class="row justify-content-end d-print-none">
+                        <div class="col">
+                            <form name="ccc_back" id="ccc_back" method="POST"
+                                action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/">
+                                <input type="hidden" name="ccc_id" id="ccc_id" value="<?php echo $requestedCertificate; ?>">
+                                <div class="btn-group float-right" role="group" aria-label="Status">
+                                    <?php
+                                    if(strcmp($certification->result, "PENDING") == 0){
+                                    ?>
+                                    <button id="status-pass" type="button" class="btn btn-sm btn-outline-dark">
+                                        Pass
+                                    </button>
+                                    <button id="status-fail" type="button" class="btn btn-sm btn-outline-dark">
+                                        Fail
+                                    </button>
+                                    <?php
+                                    } 
+                                    ?>
+                                    <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_back.submit">
+                                        Close
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="report-header">
                         <div class="row">
-                            <div class="nphl-address col-sm-5" style="font-size: 0.65em;">
+                            <div class="nphl-address col-5" style="font-size: 0.65em;">
                                 <strong>
                                     NATIONAL PUBLIC HEALTH LABORATORY<br>
                                     EQUIPMENT CALIBRATION CENTER<br>
@@ -477,12 +523,17 @@ get_header();
                                 EMAIL: nphls.coe@gmail.com<br>
                                 WEBSITE: nphls.co.ke
                             </div>
-                            <div class="col-sm-2">
-                                <img src="<?php bloginfo('template_url'); ?>-child/coat_of_arms.png">
+                            <div class="col-2">
+                                <img src="<?php bloginfo('template_url'); ?>-child/i/coat_of_arms.png">
+                            </div>
+                            <div class="col-5" style="text-align: right;">
+                                <span style="font-size: 0.65em; display: inline-block;border: 1px solid #000;padding: 0 10px;">
+                                    <?php echo $certification->certificate_number;?>
+                                </span>
                             </div>
                         </div>
                         <div class="row">
-                            <div style="text-align:center" class="col-sm-12">
+                            <div style="text-align:center" class="col-12">
                                 <strong>CALIBRATION CERTIFICATE</strong>
                             </div>
                         </div>
@@ -536,27 +587,27 @@ get_header();
                     <div class="standard-equipment" style="font-size: 0.75em">
                         <div><strong>1.0 STANDARD TEST EQUIPMENT USED:</strong></div>
                         <div style="margin-left: 30px;margin-bottom: 20px;" class="row">
-                            <div class="col-sm-12">
+                            <div class="col-12">
                                 <strong>DESCRIPTION:</strong>
                                 <?php echo $certification->ste_equipment['name'];?>
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-12">
                                 <strong>MANUFACTURER:</strong>
                                 <?php echo $certification->ste_manufacturer['name'];?>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <strong>MODEL:</strong>
                                 <?php echo $certification->standard_test_equipment_model;?>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <strong>SERIAL No:</strong>
                                 <?php echo $certification->standard_test_equipment_serial_number;?>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <strong>CERTIFICATE No:</strong>
                                 <?php echo $certification->standard_test_equipment_certificate_number;?>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <strong>STICKER No:</strong>
                                 <?php echo $certification->standard_test_equipment_sticker_number;?>
                             </div>
@@ -582,149 +633,167 @@ get_header();
                              is traceable to international or national standards.</p>
                         </div>
                     </div>
-                    <div class="validity" style="font-size: 0.75em">
+                    <div class="validity" style="font-size: 0.75em;">
                         <div><strong>4.0 VALIDITY</strong></div>
                         <div style="margin-left: 30px;">
                             <p>This certificate is valid until <strong><?php echo $certification->certificate_validity; ?></strong></p>
                             <table class="table table-sm table-borderless">
                                 <tr>
-                                    <td style="border-bottom: 1px solid #FFF;">PERFORMED BY</td>
-                                    <td style="border-bottom: 1px solid #000;">
+                                    <td class="signatories-label-left">PERFORMED BY</td>
+                                    <td class="signatories-space">
                                         <?php echo $certification->creator['display_name']; ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="border-bottom: 1px solid #FFF;">REVIEWED BY</td>
-                                    <td style="border-bottom: 1px solid #000;">
+                                    <td class="signatories-label-left">REVIEWED BY</td>
+                                    <td class="signatories-space">
                                         <?php echo $certification->verifier['display_name']; ?>
                                     </td>
-                                    <td style="border-bottom: 1px solid #FFF;text-align: right;">DATE</td>
-                                    <td style="border-bottom: 1px solid #000;">
+                                    <td class="signatories-label">DATE</td>
+                                    <td class="signatories-space">
                                         <?php echo substr($certification->verified_at, 0, 10); ?>
                                     </td>
-                                    <td style="border-bottom: 1px solid #FFF;text-align: right;">SIGN</td>
-                                    <td style="border-bottom: 1px solid #000;"><?php echo "signature"; ?></td>
+                                    <td class="signatories-label">SIGN</td>
+                                    <td class="signatories-space">
+                                        <img src="<?php bloginfo('template_url'); ?>-child/i/signature-2.png" alt="signature" class="signatories-image" />
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td style="border-bottom: 1px solid #FFF;">APPROVED BY</td>
-                                    <td style="border-bottom: 1px solid #000;">
+                                    <td class="signatories-label-left">APPROVED BY</td>
+                                    <td class="signatories-space">
                                         <?php echo $certification->approver['display_name']; ?>
                                     </td>
-                                    <td style="border-bottom: 1px solid #FFF;text-align: right;">DATE</td>
-                                    <td style="border-bottom: 1px solid #000;">
+                                    <td class="signatories-label">DATE</td>
+                                    <td class="signatories-space">
                                         <?php echo substr($certification->approved_at, 0, 10); ?>
                                     </td>
-                                    <td style="border-bottom: 1px solid #FFF;text-align: right;">SIGN</td>
-                                    <td style="border-bottom: 1px solid #000;"><?php echo "signature"; ?></td>
+                                    <td class="signatories-label">SIGN</td>
+                                    <td class="signatories-space">
+                                        <img src="<?php bloginfo('template_url'); ?>-child/i/signature-3.png" alt="signature" class="signatories-image" />
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
-                    <div class="results" style="font-size: 0.75em">
-                        <div><strong>5.0 TRACEABILITY</strong></div>
-                        <div style="margin-left: 30px;">
-                            <table class="table table-sm table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>time/in</th>
-                                        <th>set temp(X)</th>
-                                        <th>p1</th>
-                                        <th>p2</th>
-                                        <th>p3</th>
-                                        <th>average(P)</th>
-                                        <th>error(average-X)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $totals['p1'] = 0;
-                                    $totals['p2'] = 0;
-                                    $totals['p3'] = 0;
-
-                                    $errorValues = array();
-
-                                    $counter = 0;
-                                    $divisor = 2;
-
-                                    foreach ($certification->readings as $reading) {
-                                        $average = ($reading['reading_a'] + $reading['reading_b'] + $reading['reading_c'])/3;
-                                        $error = $average - $certification->expected_temperature;
-                                    ?>
-                                        <tr>
-                                            <td style="text-align: right;"><?php echo $reading['reading_time'];?></td>
-                                            <td style="text-align: center;">
-                                                <?php echo number_format($certification->expected_temperature,2);?>
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <?php echo number_format($reading['reading_a'], 3);?>
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <?php echo number_format($reading['reading_b'], 3);?>
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <?php echo number_format($reading['reading_c'], 3);?>
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <?php echo number_format($average, 3);?>
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <?php echo number_format($error, 3); ?>
-                                            </td>
-                                        </tr>
-                                    <?php
-                                        $totals['p1'] += $reading['reading_a'];
-                                        $totals['p2'] += $reading['reading_b'];
-                                        $totals['p3'] += $reading['reading_c'];
-
-                                        $errorValues[$counter] = $error;
-                                        
-                                        $counter++;
-                                    }
-
-                                    $averageError = pow(array_sum($errorValues)/count($errorValues)/$divisor, 2);
-
-                                    $variance = pow((max($errorValues) - min($errorValues))/$divisor, 2);
-
-                                    $totals['average_p1'] = $totals['p1']/$counter;
-                                    $totals['average_p2'] = $totals['p2']/$counter;
-                                    $totals['average_p3'] = $totals['p3']/$counter;
-                                    $homogeneity = (($totals['average_p1'] - $totals['average_p2'])+($totals['average_p2'] - $totals['average_p3']))/2/$divisor;
-                                    $homogeneity = pow($homogeneity, 2);
-
-                                    $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
-
-                                    // These 2 lines below don't make sense
-                                    $UCStandard = pow(0/sqrt(3), 2);
-
-                                    $resn = pow(0/$divisor/sqrt(3), 2);
-                                    ?>
-                                    <tr></tr>
-                                </tbody>
-                            </table>
+                    <div class="row" style="font-size: 0.75em;page-break-after: always;">
+                        <div class="col">
+                            <center>Page 1 of 2</center>
                         </div>
                     </div>
-                    <div class="uncertainity" style="font-size: 0.75em">
-                        <div>
-                            <strong>
-                                6.0 UNCERTAINITY: 
-                                <?php
-                                    $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
-                                    echo number_format($uncertainity,7);
-                                ?>
-                            </strong>
+                </div>
+                <div class="certificate-frame" style="margin-top: 60px;font-size: 0.75em;">
+                    <div class="certificate-inner-frame">
+                        <div class="results">
+                            <div><strong>5.0 TRACEABILITY</strong></div>
+                            <div style="margin-left: 30px;">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>time/in</th>
+                                            <th>set temp(X)</th>
+                                            <th>p1</th>
+                                            <th>p2</th>
+                                            <th>p3</th>
+                                            <th>average(P)</th>
+                                            <th>error(average-X)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $totals['p1'] = 0;
+                                        $totals['p2'] = 0;
+                                        $totals['p3'] = 0;
+
+                                        $errorValues = array();
+
+                                        $counter = 0;
+                                        $divisor = 2;
+
+                                        foreach ($certification->readings as $reading) {
+                                            $average = ($reading['reading_a'] + $reading['reading_b'] + $reading['reading_c'])/3;
+                                            $error = $average - $certification->expected_temperature;
+                                        ?>
+                                            <tr>
+                                                <td style="text-align: right;"><?php echo $reading['reading_time'];?></td>
+                                                <td style="text-align: center;">
+                                                    <?php echo number_format($certification->expected_temperature,2);?>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <?php echo number_format($reading['reading_a'], 3);?>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <?php echo number_format($reading['reading_b'], 3);?>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <?php echo number_format($reading['reading_c'], 3);?>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <?php echo number_format($average, 3);?>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <?php echo number_format($error, 3); ?>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                            $totals['p1'] += $reading['reading_a'];
+                                            $totals['p2'] += $reading['reading_b'];
+                                            $totals['p3'] += $reading['reading_c'];
+
+                                            $errorValues[$counter] = $error;
+                                            
+                                            $counter++;
+                                        }
+
+                                        $averageError = pow(array_sum($errorValues)/count($errorValues)/$divisor, 2);
+
+                                        $variance = pow((max($errorValues) - min($errorValues))/$divisor, 2);
+
+                                        $totals['average_p1'] = $totals['p1']/$counter;
+                                        $totals['average_p2'] = $totals['p2']/$counter;
+                                        $totals['average_p3'] = $totals['p3']/$counter;
+                                        $homogeneity = (($totals['average_p1'] - $totals['average_p2'])+($totals['average_p2'] - $totals['average_p3']))/2/$divisor;
+                                        $homogeneity = pow($homogeneity, 2);
+
+                                        $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
+
+                                        // These 2 lines below don't make sense
+                                        $UCStandard = pow(0/sqrt(3), 2);
+
+                                        $resn = pow(0/$divisor/sqrt(3), 2);
+                                        ?>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div><br>
-                    <div class="remarks" style="font-size: 0.75em">
-                        <div><strong>7.0 REMARKS</strong></div>
-                        <div style="margin-left: 30px;">
-                            <p>Calibration Complete. STATUS: <?php echo $certification->result; ?>
-                        </div>
-                        <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
-                            <p>Calibration certificate issued without signature and official stamp is not valid.
-                                This certificate has been issued without any alteration and may not be reproduced
-                                other than in full and with the approval of the head of NPHL-COE.</p>
-                            <p>If undelivered please return to the above address.</p>
+                        <div class="uncertainity">
+                            <div>
+                                <strong>
+                                    6.0 UNCERTAINITY: 
+                                    <?php
+                                        $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
+                                        echo number_format($uncertainity,7);
+                                    ?>
+                                </strong>
+                            </div>
                         </div><br>
+                        <div class="remarks">
+                            <div><strong>7.0 REMARKS</strong></div>
+                            <div style="margin-left: 30px;">
+                                <p>Calibration Complete. STATUS: <span id="ccc_status"><?php echo $certification->result; ?></span></p>
+                            </div>
+                            <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
+                                <p>Calibration certificate issued without signature and official stamp is not valid.
+                                    This certificate has been issued without any alteration and may not be reproduced
+                                    other than in full and with the approval of the head of NPHL-COE.</p>
+                                <p>If undelivered please return to the above address.</p>
+                            </div><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <center>Page 2 of 2</center>
+                        </div>
                     </div>
                 </div>
             <!-- /Show Calibration Certificate -->
@@ -891,5 +960,25 @@ jQuery( document ).ready(function( $ ) {
     $( function() {
         $( "#date_performed" ).datepicker({ dateFormat: 'yy-mm-dd' });
     } );
+
+    $( "#status-pass" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( url, {ccc_id: $( "#ccc_id").val(), status: "PASSED", show_calibration_certificate: "true"} )
+            .done(function(data) {
+                $( "#ccc_back" ).submit();
+            });
+    });
+
+    $( "#status-fail" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( url, {ccc_id: $( "#ccc_id").val(), status: "FAILED", show_calibration_certificate: "true"} )
+            .done(function(data) {
+                $( "#ccc_back" ).submit();
+            });
+    });
+
 });
 </script>
+<?php
+}
+?>

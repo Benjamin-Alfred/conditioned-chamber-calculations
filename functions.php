@@ -31,7 +31,7 @@ function my_theme_enqueue_styles() {
 
     wp_enqueue_script(
         'bootstrap',
-        get_stylesheet_directory_uri() . '/bootstrap/js/bootstrap.min.js',
+        get_stylesheet_directory_uri() . '/bootstrap/js/bootstrap.bundle.min.js',
         array('jquery','jquery-ui')
     );
 
@@ -255,6 +255,32 @@ function getCOECCCertificate($certificateID){
     $result->ste_manufacturer = $wpdb->get_row($subQuery, ARRAY_A);
 
     return $result;
+}
+
+function verifyCOECertificate($data){
+    global $wpdb;
+
+    $_APPROVER = 2;
+    $_VERIFIER = 2;
+
+    $datetime = date("Y-m-d H:i:s", time() + (3*60*60)); //UTC+3
+    $year = substr($datetime, 0, 4);
+
+    $subQuery = "SELECT COUNT(id) hits FROM wp_coe_conditioned_chamber_calculations WHERE verified_at LIKE '$year%'";
+
+    $result = $wpdb->get_row($subQuery, ARRAY_A);
+    $certificateNumber = str_pad((intval($result['hits'])+1), 4, "0", STR_PAD_LEFT);
+
+    $verifierData = [
+        'result' => $data['status'], 
+        'certificate_number' => "COE/CC/".$year."/$certificateNumber", 
+        'verified_by' => $_VERIFIER, 
+        'verified_at' => $datetime, 
+        'approved_by' => $_APPROVER, 
+        'approved_at' => $datetime
+    ];
+
+    $wpdb->update("wp_coe_conditioned_chamber_calculations", $verifierData, ['id' => $data['ccc_id']]);
 }
 
 /*
