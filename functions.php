@@ -107,11 +107,14 @@ function getCOEClientContacts(){
 function addConditionedChamberRecordings($request){
     global $wpdb;
 
+    $currentUser = wp_get_current_user();
+
     $testDetails = array(
         client_id => $request['client'],
         client_contact_id => $request['client_contact_id'],
 
         date_performed => $request['date_performed'],
+        created_by => $currentUser->ID,
         manufacturer_id => $request['manufacturer'],
         equipment_id => $request['equipment'],
         equipment_model => $request['model'],
@@ -153,6 +156,7 @@ function addConditionedChamberRecordings($request){
                 'reading_a' => $request['p_1_'.$interval],
                 'reading_b' => $request['p_2_'.$interval],
                 'reading_c' => $request['p_3_'.$interval],
+                'created_by' => $currentUser->ID
             );
         $wpdb->insert("wp_coe_conditioned_chamber_calculation_readings", $intervalArray);
 
@@ -260,8 +264,9 @@ function getCOECCCertificate($certificateID){
 function verifyCOECertificate($data){
     global $wpdb;
 
-    $_APPROVER = 2;
-    $_VERIFIER = 2;
+    $currentUser = wp_get_current_user();
+    $_APPROVER = $currentUser->ID;
+    $_VERIFIER = $currentUser->ID;
 
     $datetime = date("Y-m-d H:i:s", time() + (3*60*60)); //UTC+3
     $year = substr($datetime, 0, 4);

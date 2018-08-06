@@ -298,8 +298,6 @@ get_header();
                             </div>
                         </div>
                     </div>
-                    <!-- TODO: Generate Sequential xxx plus YY year -->
-                    <!-- <input type="hidden" id="certificate_number" name="certificate_number" value="COE/CC/YY/xxxxx" /> -->
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Environmental Conditions</h5>
@@ -655,7 +653,10 @@ get_header();
                                     </td>
                                     <td class="signatories-label">SIGN</td>
                                     <td class="signatories-space">
-                                        <img src="<?php bloginfo('template_url'); ?>-child/i/signature-2.png" alt="signature" class="signatories-image" />
+                                        <?php
+                                            $verifierSignature = get_template_directory_uri()."-child/i/signature-".$certification->verified_by.".png";
+                                        ?>
+                                        <img src="<?php echo $verifierSignature ?>" alt="Sign here" class="signatories-image" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -665,11 +666,14 @@ get_header();
                                     </td>
                                     <td class="signatories-label">DATE</td>
                                     <td class="signatories-space">
+                                        <?php
+                                            $approverSignature = get_template_directory_uri()."-child/i/signature-".$certification->approved_by.".png";
+                                        ?>
                                         <?php echo substr($certification->approved_at, 0, 10); ?>
                                     </td>
                                     <td class="signatories-label">SIGN</td>
                                     <td class="signatories-space">
-                                        <img src="<?php bloginfo('template_url'); ?>-child/i/signature-3.png" alt="signature" class="signatories-image" />
+                                        <img src="<?php echo $approverSignature; ?>" alt="signature" class="signatories-image" />
                                     </td>
                                 </tr>
                             </table>
