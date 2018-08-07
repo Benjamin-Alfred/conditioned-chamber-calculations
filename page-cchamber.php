@@ -18,6 +18,7 @@ if (!is_user_logged_in()) {
     echo "</div>";
     get_footer();
 }else{
+
 /*
  * COE Page Values
  * 1 => List Conditioned Chamber Items
@@ -68,6 +69,34 @@ if ($COEPage == 1) {
         $STEquipments = getCOESTEquipment();
         $clients = getCOEClients();
         $clientContacts = getCOEClientContacts();
+
+        // If this was an AJAX call, return json output then terminate execution
+        $APICode = empty( $_REQUEST['api_code'] ) ? 0 : $_REQUEST['api_code'];
+
+        switch ($APICode) {
+            case '0':
+                break;
+            case '1':
+                echo json_encode($manufacturers);
+                exit();
+                break;
+            case '2':
+                echo json_encode($equipments);
+                exit();
+                break;
+            case '3':
+                echo json_encode($STEquipments);
+                exit();
+                break;
+            case '4':
+                echo json_encode($clients);
+                exit();
+                break;
+            case '5':
+                echo json_encode($clientContacts);
+                exit();
+                break;
+        }
     }
 
 }else if($COEPage == 3){
@@ -104,12 +133,14 @@ get_header();
             <!-- List Conditioned Chamber Items -->
                 <h3>Conditioned Chamber Certifications</h3>
 
-                <form name="ccc_post" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/">
-                    <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
-                    <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_post.submit()">
-                        <strong><span aria-hidden="true">&plus;</span> Add New </strong>
-                    </button>
-                </form>
+                <div class="row justify-content-end">
+                    <form name="ccc_post" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/">
+                        <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
+                        <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_post.submit()">
+                            <strong><span aria-hidden="true">&plus;</span> New Calculation </strong>
+                        </button>
+                    </form>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
@@ -266,7 +297,7 @@ get_header();
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="manufacturer" class="col-form-label col-sm-4">Manufacturer</label>
+                                <label for="ste_manufacturer" class="col-form-label col-sm-4">Manufacturer</label>
                                 <select class="form-control form-control-sm col-sm-7" id="ste_manufacturer" name="ste_manufacturer" required >
                                     <?php
                                         foreach ($manufacturers as $manufacturer) {
@@ -828,7 +859,9 @@ get_header();
                 </form>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newManufacturer.submit()" />
+                <button id="add_manufacturer_button" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Save
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -854,7 +887,9 @@ get_header();
                 </form>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newEquipment.submit()" />
+                <button id="add_equipment_button" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Save
+                </button> 
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -880,7 +915,7 @@ get_header();
                 </form>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newSTEquipment.submit()" />
+                <button id="add_ste_equipment_button" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -906,7 +941,9 @@ get_header();
                 </form>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newClient.submit()" />
+                <button id="add_client_button" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Save
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -950,7 +987,9 @@ get_header();
                 </form>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Save" onclick="document.newClientContact.submit()" />
+                <button id="add_client_contact_button" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Save
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -980,6 +1019,95 @@ jQuery( document ).ready(function( $ ) {
                 $( "#ccc_back" ).submit();
             });
     });
+
+    $( "#add_client_button" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( 
+            url, 
+            {client_name: $( "#client_name").val(), calculate_conditioned_chamber_item: "false", api_code: 4} 
+        ).done(function(data) {
+                var newOptions = "", i, clients;
+                clients = JSON.parse(data);
+                for(i = 0; i < clients.length; i++){
+                    newOptions += "<option value='" + clients[i].id + "'>" + clients[i].name + "</option>";
+                }
+                $("#client").html(newOptions);
+            });
+
+    });
+
+    $( "#add_manufacturer_button" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( 
+            url, 
+            {manufacturer_name: $( "#manufacturer_name").val(), calculate_conditioned_chamber_item: "false", api_code: 1} 
+        ).done(function(data) {
+                var newOptions = "", i, manufacturers;
+                manufacturers = JSON.parse(data);
+                for(i = 0; i < manufacturers.length; i++){
+                    newOptions += "<option value='" + manufacturers[i].id + "'>" + manufacturers[i].name + "</option>";
+                }
+                $("#manufacturer").html(newOptions);
+                $("#ste_manufacturer").html(newOptions);
+            });
+
+    });
+
+    $( "#add_equipment_button" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( 
+            url, 
+            {equipment_name: $( "#equipment_name").val(), calculate_conditioned_chamber_item: "false", api_code: 2} 
+        ).done(function(data) {
+                var newOptions = "", i, equipments;
+                equipments = JSON.parse(data);
+                for(i = 0; i < equipments.length; i++){
+                    newOptions += "<option value='" + equipments[i].id + "'>" + equipments[i].name + "</option>";
+                }
+                $("#equipment").html(newOptions);
+            });
+
+    });
+
+    $( "#add_ste_equipment_button" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( 
+            url, 
+            {s_t_equipment_name: $( "#s_t_equipment_name").val(), calculate_conditioned_chamber_item: "false", api_code: 3} 
+        ).done(function(data) {
+                var newOptions = "", i, equipments;
+                equipments = JSON.parse(data);
+                for(i = 0; i < equipments.length; i++){
+                    newOptions += "<option value='" + equipments[i].id + "'>" + equipments[i].name + "</option>";
+                }
+                $("#ste_equipment").html(newOptions);
+            });
+
+    });
+
+    $( "#add_client_contact_button" ).click(function() {
+        url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
+        $.post( 
+            url, 
+            {
+                client_id: $("#client_id").val(),
+                contact_name: $( "#contact_name").val(), 
+                contact_email: $( "#contact_email").val(), 
+                contact_phone: $( "#contact_phone").val(), 
+                calculate_conditioned_chamber_item: "false", 
+                api_code: 5
+            } 
+        ).done(function(data) {
+                var newOptions = "", i, clients;
+                clients = JSON.parse(data);
+                for(i = 0; i < clients.length; i++){
+                    newOptions += "<option value='" + clients[i].id + "'>" + clients[i].name + "</option>";
+                }
+                $("#client_contact_id").html(newOptions);
+            });
+
+    });
+
 
 });
 </script>
