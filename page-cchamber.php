@@ -672,6 +672,17 @@ get_header();
                                     <td class="signatories-space">
                                         <?php echo $certification->creator['display_name']; ?>
                                     </td>
+                                    <td class="signatories-label">DATE</td>
+                                    <td class="signatories-space">
+                                        <?php echo substr($certification->date_performed, 0, 10); ?>
+                                    </td>
+                                    <td class="signatories-label">SIGN</td>
+                                    <td class="signatories-space">
+                                        <?php
+                                            $creatorSignature = get_template_directory_uri()."-child/i/signature-".$certification->created_by.".png";
+                                        ?>
+                                        <img src="<?php echo $creatorSignature ?>" alt="Sign here" class="signatories-image" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="signatories-label-left">REVIEWED BY</td>
