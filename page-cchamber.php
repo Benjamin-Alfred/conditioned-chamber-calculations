@@ -859,7 +859,7 @@ get_header();
                                     6.0 UNCERTAINITY: 
                                     <?php
                                         $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
-                                        echo number_format($uncertainity,7);
+                                        echo number_format($uncertainity*2,7);
                                     ?>
                                 </strong>
                             </div>
