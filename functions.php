@@ -130,6 +130,8 @@ function addConditionedChamberRecordings($request){
         standard_test_equipment_certificate_number => $request['ste_certificate_number'],
         standard_test_equipment_sticker_number => $request['ste_sticker_number'],
 
+        uncertainity_of_standard => $request['uncertainity_of_standard'],
+        resolution_of_standard => $request['resolution_of_standard'],
         expected_temperature => $request['expected_temperature'],
         environmental_temperature => $request['environmental_temperature'],
         environmental_humidity => $request['environmental_humidity'],
@@ -182,8 +184,8 @@ function addConditionedChamberRecordings($request){
     $homogeneity = pow((($p1Average - $p2Average) + ($p2Average - $p3Average))/2/$divisor, 2);
     $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
 
-    $UCStandard = pow(0/sqrt(3), 2); //TODO: Needs review
-    $resn = pow(0/$divisor/sqrt(3), 2); //TODO: Needs review
+    $UCStandard = pow($testDetails['uncertainity_of_standard']/sqrt(3), 2);
+    $resn = pow($testDetails['resolution_of_standard']/$divisor/sqrt(3), 2);
     
     $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
 
@@ -286,6 +288,18 @@ function verifyCOECertificate($data){
     ];
 
     $wpdb->update("wp_coe_conditioned_chamber_calculations", $verifierData, ['id' => $data['ccc_id']]);
+}
+
+function hasRole($role){
+    global $wpdb;
+
+    $roles = ['CALIBRATOR' => 1, 'REVIEWER' => 2, 'APPROVER' => 3];
+    $currentUser = wp_get_current_user();
+
+    $query = "SELECT COUNT(*) hits FROM wp_coe_user_roles WHERE user_id = ".$currentUser->ID." AND role_id = ".$roles[$role];
+    $result = $wpdb->get_row($query, ARRAY_A);
+
+    return intval($result['hits']) == 1;
 }
 
 /*

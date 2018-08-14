@@ -53,6 +53,8 @@ CREATE TABLE `wp_coe_conditioned_chamber_calculations` (
   `standard_test_equipment_model` varchar(60) DEFAULT NULL,
   `equipment_serial_number` varchar(60) NOT NULL,
   `standard_test_equipment_serial_number` varchar(60) DEFAULT NULL,
+  `uncertainity_of_standard` decimal(8,5) NOT NULL DEFAULT '0.00000',
+  `resolution_of_standard` decimal(8,5) NOT NULL DEFAULT '0.00000',
   `expected_temperature` decimal(8,5) NOT NULL DEFAULT '0.00000',
   `environmental_temperature` decimal(8,5) NOT NULL DEFAULT '0.00000',
   `environmental_humidity` decimal(8,5) unsigned NOT NULL DEFAULT '0.00000',
@@ -99,3 +101,8 @@ CREATE TABLE `wp_coe_standard_test_equipment` (
   UNIQUE KEY `name` (`name`)
 );
 
+CREATE TABLE `wp_coe_user_roles` (
+  `user_id` int(10) unsigned NOT NULL,
+  `role_id` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`)
+);

@@ -136,9 +136,15 @@ get_header();
                 <div class="row justify-content-end">
                     <form name="ccc_post" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/">
                         <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
+                    <?php
+                        if(hasRole('CALIBRATOR')){
+                    ?>
                         <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_post.submit()">
                             <strong><span aria-hidden="true">&plus;</span> New Calculation </strong>
                         </button>
+                    <?php
+                        }
+                    ?>
                     </form>
                 </div>
                 <div class="table-responsive">
@@ -327,6 +333,18 @@ get_header();
                                 <label for="ste_sticker_number" class="col-form-label col-sm-4">Sticker Number</label>
                                 <input type="text" class="form-control form-control-sm col-sm-8" id="ste_sticker_number" name="ste_sticker_number" />
                             </div>
+                            <div class="form-group row">
+                                <label for="uncertainity_of_standard" class="col-form-label col-sm-4">
+                                    Uncertainity of the Standard
+                                </label>
+                                <input type="text" class="form-control form-control-sm col-sm-8" id="uncertainity_of_standard" name="uncertainity_of_standard" />
+                            </div>
+                            <div class="form-group row">
+                                <label for="resolution_of_standard" class="col-form-label col-sm-4">
+                                    Resolution of the Standard
+                                </label>
+                                <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_standard" name="resolution_of_standard" />
+                            </div>
                         </div>
                     </div>
                     <div class="card">
@@ -350,7 +368,6 @@ get_header();
                             </div>
                         </div>
                     </div>
-
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Readings</h5>
@@ -505,9 +522,15 @@ get_header();
                             </div>
                         </div>
                     </div>
+                <?php
+                    if(hasRole('CALIBRATOR')){
+                ?>
                     <div class="form-group">
                         <input type="submit" class="button btn form-control" value="Save" />
                     </div>
+                <?php
+                    }
+                ?>
                 </form>
             <!-- /Conditioned Chamber Calculations -->
             <?php
@@ -522,7 +545,15 @@ get_header();
                                 <input type="hidden" name="ccc_id" id="ccc_id" value="<?php echo $requestedCertificate; ?>">
                                 <div class="btn-group float-right" role="group" aria-label="Status">
                                     <?php
-                                    if(strcmp($certification->result, "PENDING") == 0){
+                                    if(strcmp($certification->result, "PENDING") != 0 && hasRole('APPROVER')){
+                                    ?>
+                                    <button id="btn_approve" type="button" class="btn btn-sm btn-outline-dark">
+                                        Approve
+                                    </button>
+                                    <?php
+                                    }
+
+                                    if(strcmp($certification->result, "PENDING") == 0 && hasRole('REVIEWER')){
                                     ?>
                                     <button id="status-pass" type="button" class="btn btn-sm btn-outline-dark">
                                         Pass
@@ -696,9 +727,14 @@ get_header();
                                     <td class="signatories-label">SIGN</td>
                                     <td class="signatories-space">
                                         <?php
+                                        if(isset($certification->verified_by)){
                                             $verifierSignature = get_template_directory_uri()."-child/i/signature-".$certification->verified_by.".png";
                                         ?>
-                                        <img src="<?php echo $verifierSignature ?>" alt="Sign here" class="signatories-image" />
+                                            <img src="<?php echo $verifierSignature ?>" alt="Sign here" 
+                                                class="signatories-image" />
+                                        <?php
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -708,14 +744,19 @@ get_header();
                                     </td>
                                     <td class="signatories-label">DATE</td>
                                     <td class="signatories-space">
-                                        <?php
-                                            $approverSignature = get_template_directory_uri()."-child/i/signature-".$certification->approved_by.".png";
-                                        ?>
                                         <?php echo substr($certification->approved_at, 0, 10); ?>
                                     </td>
                                     <td class="signatories-label">SIGN</td>
                                     <td class="signatories-space">
-                                        <img src="<?php echo $approverSignature; ?>" alt="signature" class="signatories-image" />
+                                        <?php
+                                        if(isset($certification->approved_by)){
+                                            $approverSignature = get_template_directory_uri()."-child/i/signature-".$certification->approved_by.".png";
+                                        ?>
+                                            <img src="<?php echo $approverSignature; ?>" alt="signature" 
+                                                class="signatories-image" />
+                                        <?php
+                                        }
+                                        ?>
                                     </td>
                                 </tr>
                             </table>
@@ -803,9 +844,9 @@ get_header();
                                         $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
 
                                         // These 2 lines below don't make sense
-                                        $UCStandard = pow(0/sqrt(3), 2);
+                                        $UCStandard = pow($certification->standard_of_uncertainity/sqrt(3), 2);
 
-                                        $resn = pow(0/$divisor/sqrt(3), 2);
+                                        $resn = pow($certification->standard_of_resolution/$divisor/sqrt(3), 2);
                                         ?>
                                         <tr></tr>
                                     </tbody>
@@ -829,7 +870,7 @@ get_header();
                                 <p>Calibration Complete. STATUS: <span id="ccc_status"><?php echo $certification->result; ?></span></p>
                             </div>
                             <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
-                                <p>Calibration certificate issued without signature and official stamp is not valid.
+                                <p>Calibration certificate issued without signature is not valid.
                                     This certificate has been issued without any alteration and may not be reproduced
                                     other than in full and with the approval of the head of NPHL-COE.</p>
                                 <p>If undelivered please return to the above address.</p>
@@ -851,7 +892,8 @@ get_header();
 </div><!-- .wrap -->
 
 
-<div class="modal fade" id="addManufacturerModal" tabindex="-1" role="dialog" aria-labelledby="addManufacturerModalLabel" aria-hidden="true">
+<div class="modal fade" id="addManufacturerModal" tabindex="-1" role="dialog" 
+    aria-labelledby="addManufacturerModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -861,10 +903,12 @@ get_header();
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" name="newManufacturer">
+                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" 
+                    name="newManufacturer">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="manufacturer_name">Name</label>
-                        <input type="text" name="manufacturer_name" id="manufacturer_name" class="form-control form-control-sm col-sm-8" required />
+                        <input type="text" name="manufacturer_name" id="manufacturer_name" 
+                            class="form-control form-control-sm col-sm-8" required />
                         <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
                     </div>
                 </form>
@@ -879,7 +923,8 @@ get_header();
     </div>
 </div>
 
-<div class="modal fade" id="addEquipmentModal" tabindex="-1" role="dialog" aria-labelledby="addEquipmentModalLabel" aria-hidden="true">
+<div class="modal fade" id="addEquipmentModal" tabindex="-1" role="dialog" 
+    aria-labelledby="addEquipmentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -889,7 +934,8 @@ get_header();
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" name="newEquipment">
+                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" 
+                    name="newEquipment">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="equipment_name">Name</label>
                         <input type="text" name="equipment_name" id="equipment_name" class="form-control form-control-sm col-sm-8" required />
@@ -907,7 +953,8 @@ get_header();
     </div>
 </div>
 
-<div class="modal fade" id="addSTEquipmentModal" tabindex="-1" role="dialog" aria-labelledby="addSTEquipmentModalLabel" aria-hidden="true">
+<div class="modal fade" id="addSTEquipmentModal" tabindex="-1" role="dialog" 
+    aria-labelledby="addSTEquipmentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -917,23 +964,28 @@ get_header();
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" name="newSTEquipment">
+                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" 
+                    name="newSTEquipment">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="s_t_equipment_name">Name</label>
-                        <input type="text" name="s_t_equipment_name" id="s_t_equipment_name" class="form-control form-control-sm col-sm-8" required />
+                        <input type="text" name="s_t_equipment_name" id="s_t_equipment_name" 
+                            class="form-control form-control-sm col-sm-8" required />
                         <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="add_ste_equipment_button" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button id="add_ste_equipment_button" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Save
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+<div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" 
+    aria-labelledby="addClientModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -943,10 +995,12 @@ get_header();
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" name="newClient">
+                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" 
+                    name="newClient">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="client_name">Name</label>
-                        <input type="text" name="client_name" id="client_name" class="form-control form-control-sm col-sm-8" required />
+                        <input type="text" name="client_name" id="client_name" 
+                            class="form-control form-control-sm col-sm-8" required />
                         <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
                     </div>
                 </form>
@@ -961,7 +1015,8 @@ get_header();
     </div>
 </div>
 
-<div class="modal fade" id="addClientContactModal" tabindex="-1" role="dialog" aria-labelledby="addClientContactModalLabel" aria-hidden="true">
+<div class="modal fade" id="addClientContactModal" tabindex="-1" role="dialog" 
+    aria-labelledby="addClientContactModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -971,10 +1026,12 @@ get_header();
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" name="newClientContact">
+                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chamber-calculations/" 
+                    name="newClientContact">
                     <div class="form-group row">
                         <label for="client" class="col-form-label col-sm-4">Name</label>
-                        <select class="form-control form-control-sm col-sm-8" id="client_id" name="client_id" required >
+                        <select class="form-control form-control-sm col-sm-8" id="client_id" 
+                            name="client_id" required >
                             <?php
                                 foreach ($clients as $client) {
                                     echo "<option value='".$client->id."'>".$client->name."</option>";
@@ -984,16 +1041,19 @@ get_header();
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="contact_name">Contact Name</label>
-                        <input type="text" name="contact_name" id="contact_name" class="form-control form-control-sm col-sm-8" required />
+                        <input type="text" name="contact_name" id="contact_name" 
+                            class="form-control form-control-sm col-sm-8" required />
                         <input type="hidden" name="calculate_conditioned_chamber_item" value="false" />
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="contact_email">Contact Email</label>
-                        <input type="email" name="contact_email" id="contact_email" class="form-control form-control-sm col-sm-8" required />
+                        <input type="email" name="contact_email" id="contact_email" 
+                            class="form-control form-control-sm col-sm-8" required />
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="contact_phone">Contact Phone</label>
-                        <input type="text" name="contact_phone" id="contact_phone" class="form-control form-control-sm col-sm-8" />
+                        <input type="text" name="contact_phone" id="contact_phone" 
+                            class="form-control form-control-sm col-sm-8" />
                     </div>
                 </form>
             </div>
@@ -1044,14 +1104,14 @@ jQuery( document ).ready(function( $ ) {
                 }
                 $("#client").html(newOptions);
             });
-
     });
 
     $( "#add_manufacturer_button" ).click(function() {
         url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
         $.post( 
             url, 
-            {manufacturer_name: $( "#manufacturer_name").val(), calculate_conditioned_chamber_item: "false", api_code: 1} 
+            {manufacturer_name: $( "#manufacturer_name").val(), calculate_conditioned_chamber_item: "false", 
+                api_code: 1} 
         ).done(function(data) {
                 var newOptions = "", i, manufacturers;
                 manufacturers = JSON.parse(data);
@@ -1061,7 +1121,6 @@ jQuery( document ).ready(function( $ ) {
                 $("#manufacturer").html(newOptions);
                 $("#ste_manufacturer").html(newOptions);
             });
-
     });
 
     $( "#add_equipment_button" ).click(function() {
@@ -1077,14 +1136,14 @@ jQuery( document ).ready(function( $ ) {
                 }
                 $("#equipment").html(newOptions);
             });
-
     });
 
     $( "#add_ste_equipment_button" ).click(function() {
         url = "<?php echo get_site_url().'/conditioned-chamber-calculations/'; ?>";
         $.post( 
             url, 
-            {s_t_equipment_name: $( "#s_t_equipment_name").val(), calculate_conditioned_chamber_item: "false", api_code: 3} 
+            {s_t_equipment_name: $( "#s_t_equipment_name").val(), calculate_conditioned_chamber_item: "false", 
+                api_code: 3} 
         ).done(function(data) {
                 var newOptions = "", i, equipments;
                 equipments = JSON.parse(data);
@@ -1093,7 +1152,6 @@ jQuery( document ).ready(function( $ ) {
                 }
                 $("#ste_equipment").html(newOptions);
             });
-
     });
 
     $( "#add_client_contact_button" ).click(function() {
@@ -1116,7 +1174,6 @@ jQuery( document ).ready(function( $ ) {
                 }
                 $("#client_contact_id").html(newOptions);
             });
-
     });
 
 
