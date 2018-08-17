@@ -690,7 +690,9 @@ get_header();
                         <div><strong>3.0 TRACEABILITY</strong></div>
                         <div style="margin-left: 30px;">
                             <p>The equipment has been calibrated against reference standards whose calibration
-                             is traceable to international or national standards.</p>
+                             is traceable to international or national standards through 
+                             <?php echo $certification->standard_test_equipment_certificate_number;?>.
+                             </p>
                         </div>
                     </div>
                     <div class="validity" style="font-size: 0.75em;">
@@ -862,6 +864,9 @@ get_header();
                                         echo number_format($uncertainity*2,7);
                                     ?>
                                 </strong>
+                            </div>
+                            <div style="margin-left: 30px;">
+                                <p>The reported uncertainty is expanded and has a confidence level of 95%.</p>
                             </div>
                         </div><br>
                         <div class="remarks">
