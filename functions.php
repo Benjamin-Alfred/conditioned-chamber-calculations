@@ -13,25 +13,25 @@ function my_theme_enqueue_styles() {
 
     wp_enqueue_style(
         'jquery-ui',
-        get_stylesheet_directory_uri() . '/jquery-ui-1.12.1.custom/jquery-ui.min.css',
+        get_stylesheet_directory_uri() . '/js/jquery-ui-1.12.1.custom/jquery-ui.min.css',
         array($parent_style, 'child-style')
     );
 
     wp_enqueue_style(
         'bootstrap',
-        get_stylesheet_directory_uri() . '/bootstrap/css/bootstrap.min.css',
+        get_stylesheet_directory_uri() . '/js/bootstrap/css/bootstrap.min.css',
         array($parent_style, 'child-style', 'jquery-ui')
     );
 
     wp_enqueue_script(
         'jquery-ui',
-        get_stylesheet_directory_uri() . '/jquery-ui-1.12.1.custom/jquery-ui.min.js',
+        get_stylesheet_directory_uri() . '/js/jquery-ui-1.12.1.custom/jquery-ui.min.js',
         array('jquery')
     );
 
     wp_enqueue_script(
         'bootstrap',
-        get_stylesheet_directory_uri() . '/bootstrap/js/bootstrap.bundle.min.js',
+        get_stylesheet_directory_uri() . '/js/bootstrap/js/bootstrap.bundle.min.js',
         array('jquery','jquery-ui')
     );
 

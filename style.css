@@ -46,6 +46,10 @@ table td.signatories-space {
 	height: 40%;
 }
 
+form.search-form label{
+	display: initial;
+}
+
 @media print {
     header.site-header {display: none;}
 	.certificate-frame {
