@@ -17,17 +17,17 @@ else if(!empty( $_REQUEST['show_calibration_certificate'] )) $COEPage = 3;
 
 
 if ($COEPage == 1) {
-    $certicates = getCOEConditionedChamberCertificatesList();
+    $certicates = getCOEThermometerCertificatesList();
 }else if($COEPage == 2){
 
     $validated = empty( $_REQUEST['form_ready_for_submit'] ) ? false : true;
 
     if ($validated) {
-        $response = addConditionedChamberRecordings($_REQUEST);
+        $response = addThermometerRecordings($_REQUEST);
 
         if($response){
             $COEPage = 1;
-            $certicates = getCOEConditionedChamberCertificatesList();
+            $certicates = getCOEThermometerCertificatesList();
         }
     }else{
 
@@ -89,10 +89,10 @@ if ($COEPage == 1) {
     $requestedCertificate = $_REQUEST['ccc_id'];
     
     if(!empty( $_REQUEST['status'] )){  // Verify COE CC Certificate
-        verifyCOECertificate($_REQUEST);
+        verifyThermometerCertificate($_REQUEST);
         exit();
     }else{                              //Show COE CC Certificate
-        $certification = getCOECCCertificate($requestedCertificate);
+        $certification = getCOEThermometerCertificate($requestedCertificate);
     }
 }
 

@@ -138,8 +138,8 @@
     <div class="calibration-procedure" style="font-size: 0.75em">
         <div><strong>2.0 CALIBRATION PROCEDURE</strong></div>
         <div style="margin-left: 30px;">
-            <p>The equipment was calibrated as per <strong>NPHL-COE-LTP-SOP-026</strong> procedure
-                for Temperature Calibration measurements.</p>
+            <p>The equipment was calibrated as per <strong>NPHL/COE/TCP/001</strong> thermometer calibration 
+                procedure document. Procedure for digital and analogue thermometers calibration.</p>
             <p>The environmental conditions were recorded during the period of calibration.
                 The temperature was
                 <strong><?php echo number_format($certification->environmental_temperature, 2);?> </strong>⁰C
@@ -151,9 +151,9 @@
     <div class="traceability" style="font-size: 0.75em">
         <div><strong>3.0 TRACEABILITY</strong></div>
         <div style="margin-left: 30px;">
-            <p>The equipment has been calibrated against reference standards whose calibration
-             is traceable to international or national standards through 
-             <?php echo $certification->standard_test_equipment_certificate_number;?>.
+            <p>The thermometer has been calibrated against a thermocouple thermometer traceable to 
+                international standards through  
+                <?php echo $certification->standard_test_equipment_certificate_number;?>.
              </p>
         </div>
     </div>
@@ -238,22 +238,22 @@
             <div><strong>5.0 TRACEABILITY</strong></div>
             <div style="margin-left: 30px;">
                 <table class="table table-sm table-bordered">
-                    <thead>
-                        <tr>
-                            <th>time/in</th>
-                            <th>set temp(X)</th>
-                            <th>p1</th>
-                            <th>p2</th>
-                            <th>p3</th>
-                            <th>average(P)</th>
-                            <th>error(average-X)</th>
-                        </tr>
-                    </thead>
                     <tbody>
+                        <tr>
+                            <td><strong>Thermometer</strong></td>
+                            <td style="text-align: right;">
+                                <?php echo $certification->manufacturer_name . " " . $certification->equipment_name . " " . $certification->equipment_model; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Temperature Setting</strong></td>
+                            <td style="text-align: right;"><?php echo $certification->expected_temperature; ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Standard Setting</strong></td>
+                            <td style="text-align: right;"><?php echo $certification->expected_temperature; ?></td>
+                        </tr>
                         <?php
-                        $totals['p1'] = 0;
-                        $totals['p2'] = 0;
-                        $totals['p3'] = 0;
 
                         $errorValues = array();
 
@@ -261,34 +261,13 @@
                         $divisor = 2;
 
                         foreach ($certification->readings as $reading) {
-                            $average = ($reading['reading_a'] + $reading['reading_b'] + $reading['reading_c'])/3;
-                            $error = $average - $certification->expected_temperature;
+                            $error = $reading['reading_value'] - $certification->expected_temperature;
                         ?>
                             <tr>
-                                <td style="text-align: right;"><?php echo $reading['reading_time'];?></td>
-                                <td style="text-align: center;">
-                                    <?php echo number_format($certification->expected_temperature,2);?>
-                                </td>
-                                <td style="text-align: right;">
-                                    <?php echo number_format($reading['reading_a'], 3);?>
-                                </td>
-                                <td style="text-align: right;">
-                                    <?php echo number_format($reading['reading_b'], 3);?>
-                                </td>
-                                <td style="text-align: right;">
-                                    <?php echo number_format($reading['reading_c'], 3);?>
-                                </td>
-                                <td style="text-align: right;">
-                                    <?php echo number_format($average, 3);?>
-                                </td>
-                                <td style="text-align: right;">
-                                    <?php echo number_format($error, 3); ?>
-                                </td>
+                                <td><strong>READ <?php echo $reading['reading_id'];?></strong></td>
+                                <td style="text-align: right;"><?php echo $reading['reading_value'];?></td>
                             </tr>
                         <?php
-                            $totals['p1'] += $reading['reading_a'];
-                            $totals['p2'] += $reading['reading_b'];
-                            $totals['p3'] += $reading['reading_c'];
 
                             $errorValues[$counter] = $error;
                             
@@ -296,23 +275,33 @@
                         }
 
                         $averageError = pow(array_sum($errorValues)/count($errorValues)/$divisor, 2);
+                        ?>
+                        <tr>
+                            <td><strong>Average Correction</strong></td>
+                            <td style="text-align: right;"><?php echo $averageError; ?></td>
+                        </tr>
+                        <?php
 
                         $variance = pow((max($errorValues) - min($errorValues))/$divisor, 2);
 
-                        $totals['average_p1'] = $totals['p1']/$counter;
-                        $totals['average_p2'] = $totals['p2']/$counter;
-                        $totals['average_p3'] = $totals['p3']/$counter;
-                        $homogeneity = (($totals['average_p1'] - $totals['average_p2'])+($totals['average_p2'] - $totals['average_p3']))/2/$divisor;
-                        $homogeneity = pow($homogeneity, 2);
+                        $homogeneity = pow(1, 2);
 
                         $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
 
-                        // These 2 lines below don't make sense
                         $UCStandard = pow($certification->standard_of_uncertainity/sqrt(3), 2);
 
                         $resn = pow($certification->standard_of_resolution/$divisor/sqrt(3), 2);
+
+                        $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
                         ?>
-                        <tr></tr>
+                        <tr>
+                            <td><strong>Uncertainty Expanded</strong></td>
+                            <td style="text-align: right;"><?php echo number_format($uncertainity*2,7); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remarks</strong></td>
+                            <td style="text-align: right;"><?php echo $certification->result; ?></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -322,19 +311,23 @@
                 <strong>
                     6.0 UNCERTAINITY: 
                     <?php
-                        $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
                         echo number_format($uncertainity*2,7);
                     ?>
                 </strong>
             </div>
             <div style="margin-left: 30px;">
-                <p>The reported uncertainty is expanded and has a confidence level of 95%.</p>
+                <p>The reported expanded uncertainty is stated as expanded uncertainty of measurements multiplied 
+                    by coverage factor K= 2, providing a confidence level of approximately 95%.</p>
             </div>
         </div><br>
         <div class="remarks">
             <div><strong>7.0 REMARKS</strong></div>
             <div style="margin-left: 30px;">
                 <p>Calibration Complete. STATUS: <span id="ccc_status"><?php echo $certification->result; ?></span></p>
+                <p>The maximum error is within the specified limits of accuracy of <strong style="color:red">+/- 2⁰C</strong>
+                    as specified by the manufacturer for liquid in glass, dial thermometers.</p>
+                <p>The maximum error is within the specified limits of accuracy of <strong style="color:red">+/- 1.5⁰C</strong>
+                    as specified by the manufacturer for digital thermometers.</p>
             </div>
             <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
                 <p>Calibration certificate issued without signature is not valid.

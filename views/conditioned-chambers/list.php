@@ -35,7 +35,7 @@
                     $badge = ['FAIL'=>'danger', 'PASS'=>'success', 'PENDING'=>'warning'];
                     echo "<td><span class='badge badge-".$badge[$certicate->result]."'>".$certicate->result."</span></td>";
             ?>
-                    <td><form name="ccc_cert" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
+                    <td><form name="ccc_cert" id="ccc_cert" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
                         <input type="hidden" name="show_calibration_certificate" value="false" />
                         <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
                         <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_cert.submit()">View</button>

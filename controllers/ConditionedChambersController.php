@@ -7,8 +7,8 @@
  * 2 => Add
  * 3 => View Certificate
  */
-$Conditioned ChambersPageURI['conditioned-chambers'][1] = "views/conditioned-chambers/list.php";
-$Conditioned ChambersPageURI['conditioned-chambers'][2] = "views/conditioned-chambers/entry-form.php";
+$COEPageURI['conditioned-chambers'][1] = "views/conditioned-chambers/list.php";
+$COEPageURI['conditioned-chambers'][2] = "views/conditioned-chambers/entry-form.php";
 $COEPageURI['conditioned-chambers'][3] = "views/conditioned-chambers/certificate.php";
 
 $COEPage = 1; 

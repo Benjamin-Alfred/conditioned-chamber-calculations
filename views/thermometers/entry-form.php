@@ -1,11 +1,11 @@
-<!-- Conditioned Chamber Calculations -->
+<!-- Thermometer Calculations -->
 <div>
     <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/thermometers/">
         <button class="btn btn-sm btn-outline-dark float-right" onclick="document.ccc_back.submit">Back</button>
     </form>
     <br>
     <br>
-    <form name="conditioned_chamber_calculations" method="POST" action="<?php echo get_site_url(); ?>/thermometers/">
+    <form name="calibration_calculations_form" method="POST" action="<?php echo get_site_url(); ?>/thermometers/">
         <input type="hidden" name="form_ready_for_submit" value="false" />
         <input type="hidden" name="calibration_calculation" value="false" />
 
@@ -234,4 +234,4 @@
         ?>
     </form>
 </div>
-<!-- /Conditioned Chamber Calculations -->
+<!-- /Thermometer Calculations -->
