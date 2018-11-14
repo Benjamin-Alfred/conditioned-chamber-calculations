@@ -177,8 +177,16 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-group row">
-                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading (°c)</label>
-                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature" name="expected_temperature" title="" required />
+                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading 1 (°c)</label>
+                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature_a" name="expected_temperature_a" title="" required />
+                </div>
+                <div class="form-group row">
+                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading 2 (°c)</label>
+                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature_b" name="expected_temperature_b" title="" required />
+                </div>
+                <div class="form-group row">
+                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading 3 (°c)</label>
+                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature_c" name="expected_temperature_c" title="" required />
                 </div>
             </div>
         </div>
@@ -189,33 +197,62 @@
                     <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col"><center>Temperature (°c)</center></th>
+                                <th scope="col" rowspan="2">#</th>
+                                <th scope="col" colspan="3"><center>Temperature (°c)</center></th>
+                            </tr>
+                            <tr>
+                                <th scope="col">Point 1</th>
+                                <th scope="col">Point 2</th>
+                                <th scope="col">Point 3</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Reading 1</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1" name="reading_1" required />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_1" name="reading_1_1" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_1" name="reading_2_1" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_1" name="reading_3_1" required />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Reading 2</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2" name="reading_2" required />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_2" name="reading_1_2" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_2" name="reading_2_2" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_2" name="reading_3_2" required />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Reading 3</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3" name="reading_3" required />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_3" name="reading_1_3" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_3" name="reading_2_3" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_3" name="reading_3_3" required />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Reading 4</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_4" name="reading_4" required />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_4" name="reading_1_4" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_4" name="reading_2_4" required />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_4" name="reading_3_4" required />
                                 </td>
                             </tr>
                         </tbody>

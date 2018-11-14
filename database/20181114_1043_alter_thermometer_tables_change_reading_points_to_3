@@ -1,0 +1,7 @@
+--- 2018-11-14 - Change Thermometer tables to accomodate 3 reading points
+ALTER TABLE wp_coe_thermometer_calculation_readings CHANGE COLUMN reading_value reading_a DECIMAL(10,5) DEFAULT 0;
+ALTER TABLE wp_coe_thermometer_calculation_readings ADD COLUMN reading_c DECIMAL(10,5) DEFAULT 0 AFTER reading_a;
+ALTER TABLE wp_coe_thermometer_calculation_readings ADD COLUMN reading_b DECIMAL(10,5) DEFAULT 0 AFTER reading_a;
+ALTER TABLE wp_coe_thermometer_calculations CHANGE COLUMN expected_temperature expected_temperature_a DECIMAL(8,5) DEFAULT 0;
+ALTER TABLE wp_coe_thermometer_calculations ADD COLUMN expected_temperature_c DECIMAL(8,5) DEFAULT 0 AFTER expected_temperature_a;
+ALTER TABLE wp_coe_thermometer_calculations ADD COLUMN expected_temperature_b DECIMAL(8,5) DEFAULT 0 AFTER expected_temperature_a;

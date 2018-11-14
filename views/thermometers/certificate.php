@@ -241,17 +241,19 @@
                     <tbody>
                         <tr>
                             <td><strong>Thermometer</strong></td>
-                            <td style="text-align: right;">
+                            <td style="text-align: right;" colspan="3">
                                 <?php echo $certification->manufacturer_name . " " . $certification->equipment_name . " " . $certification->equipment_model; ?>
                             </td>
                         </tr>
                         <tr>
                             <td><strong>Temperature Setting</strong></td>
-                            <td style="text-align: right;"><?php echo $certification->expected_temperature; ?></td>
+                            <td style="text-align: right;" colspan="3"><?php echo $certification->expected_temperature; ?></td>
                         </tr>
                         <tr>
                             <td><strong>Standard Setting</strong></td>
-                            <td style="text-align: right;"><?php echo $certification->expected_temperature; ?></td>
+                            <td style="text-align: right;"><?php echo $certification->expected_temperature_a; ?></td>
+                            <td style="text-align: right;"><?php echo $certification->expected_temperature_b; ?></td>
+                            <td style="text-align: right;"><?php echo $certification->expected_temperature_c; ?></td>
                         </tr>
                         <?php
 
@@ -261,46 +263,64 @@
                         $divisor = 2;
 
                         foreach ($certification->readings as $reading) {
-                            $error = $reading['reading_value'] - $certification->expected_temperature;
+                            $error[1] = $reading['reading_a'] - $certification->expected_temperature_a;
+                            $error[2] = $reading['reading_b'] - $certification->expected_temperature_b;
+                            $error[3] = $reading['reading_c'] - $certification->expected_temperature_c;
                         ?>
                             <tr>
                                 <td><strong>READ <?php echo $reading['reading_id'];?></strong></td>
-                                <td style="text-align: right;"><?php echo $reading['reading_value'];?></td>
+                                <td style="text-align: right;"><?php echo $reading['reading_a'];?></td>
+                                <td style="text-align: right;"><?php echo $reading['reading_b'];?></td>
+                                <td style="text-align: right;"><?php echo $reading['reading_c'];?></td>
                             </tr>
                         <?php
 
-                            $errorValues[$counter] = $error;
+                            $errorValues[1][$counter] = $error[1];
+                            $errorValues[2][$counter] = $error[2];
+                            $errorValues[3][$counter] = $error[3];
                             
                             $counter++;
                         }
 
-                        $averageError = pow(array_sum($errorValues)/count($errorValues)/$divisor, 2);
+                        $averageError[1] = pow(array_sum($errorValues[1])/count($errorValues[1])/$divisor, 2);
+                        $averageError[2] = pow(array_sum($errorValues[2])/count($errorValues[2])/$divisor, 2);
+                        $averageError[3] = pow(array_sum($errorValues[3])/count($errorValues[3])/$divisor, 2);
                         ?>
                         <tr>
                             <td><strong>Average Correction</strong></td>
-                            <td style="text-align: right;"><?php echo $averageError; ?></td>
+                            <td style="text-align: right;"><?php echo $averageError[1]; ?></td>
+                            <td style="text-align: right;"><?php echo $averageError[2]; ?></td>
+                            <td style="text-align: right;"><?php echo $averageError[3]; ?></td>
                         </tr>
                         <?php
 
-                        $variance = pow((max($errorValues) - min($errorValues))/$divisor, 2);
+                        $variance[1] = pow((max($errorValues[1]) - min($errorValues[1]))/$divisor, 2);
+                        $variance[2] = pow((max($errorValues[2]) - min($errorValues[2]))/$divisor, 2);
+                        $variance[3] = pow((max($errorValues[3]) - min($errorValues[3]))/$divisor, 2);
 
                         $homogeneity = pow(1, 2);
 
-                        $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
+                        $repeatability[1] = pow(sd($errorValues[1])/sqrt(count($errorValues[1]))/$divisor, 2);
+                        $repeatability[2] = pow(sd($errorValues[2])/sqrt(count($errorValues[2]))/$divisor, 2);
+                        $repeatability[3] = pow(sd($errorValues[3])/sqrt(count($errorValues[3]))/$divisor, 2);
 
                         $UCStandard = pow($certification->standard_of_uncertainity/sqrt(3), 2);
 
                         $resn = pow($certification->standard_of_resolution/$divisor/sqrt(3), 2);
 
-                        $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
+                        $uncertainity[1] = sqrt($averageError[1] + $variance[1] + $homogeneity  + $repeatability[1] + $UCStandard + $resn);
+                        $uncertainity[2] = sqrt($averageError[2] + $variance[2] + $homogeneity  + $repeatability[2] + $UCStandard + $resn);
+                        $uncertainity[3] = sqrt($averageError[3] + $variance[3] + $homogeneity  + $repeatability[3] + $UCStandard + $resn);
                         ?>
                         <tr>
                             <td><strong>Uncertainty Expanded</strong></td>
-                            <td style="text-align: right;"><?php echo number_format($uncertainity*2,7); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($uncertainity[1]*2,7); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($uncertainity[2]*2,7); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($uncertainity[3]*2,7); ?></td>
                         </tr>
                         <tr>
                             <td><strong>Remarks</strong></td>
-                            <td style="text-align: right;"><?php echo $certification->result; ?></td>
+                            <td style="text-align: right;" colspan="3"><?php echo $certification->result; ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -308,14 +328,16 @@
         </div>
         <div class="uncertainity">
             <div>
-                <strong>
-                    6.0 UNCERTAINITY: 
-                    <?php
-                        echo number_format($uncertainity*2,7);
-                    ?>
-                </strong>
+                <strong>6.0 UNCERTAINITY</strong>
             </div>
             <div style="margin-left: 30px;">
+                <p>
+                    <?php
+                        echo "<span style='margin-right:20px'>".number_format($uncertainity[1]*2,7)."</span>";
+                        echo "<span style='margin-right:20px'>".number_format($uncertainity[2]*2,7)."</span>";
+                        echo "<span>".number_format($uncertainity[3]*2,7)."</span>";
+                    ?>
+                </p>
                 <p>The reported expanded uncertainty is stated as expanded uncertainty of measurements multiplied 
                     by coverage factor K= 2, providing a confidence level of approximately 95%.</p>
             </div>

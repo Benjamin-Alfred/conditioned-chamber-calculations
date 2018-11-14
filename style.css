@@ -50,6 +50,10 @@ form.search-form label{
 	display: initial;
 }
 
+.modal .modal-dialog {
+	max-width: 600px;
+}
+
 @media print {
     header.site-header {display: none;}
 	.certificate-frame {

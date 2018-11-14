@@ -318,7 +318,9 @@ function addThermometerRecordings($request){
 
         uncertainity_of_standard => $request['uncertainity_of_standard'],
         resolution_of_standard => $request['resolution_of_standard'],
-        expected_temperature => $request['expected_temperature'],
+        expected_temperature_a => $request['expected_temperature_a'],
+        expected_temperature_b => $request['expected_temperature_b'],
+        expected_temperature_c => $request['expected_temperature_c'],
         environmental_temperature => $request['environmental_temperature'],
         environmental_humidity => $request['environmental_humidity'],
 
@@ -331,7 +333,7 @@ function addThermometerRecordings($request){
 
     $intervals = array(1, 2, 3, 4);
 
-    $readingValues = array();
+    $averagePValue = array();
     $errorValues = array();
 
 
@@ -340,31 +342,43 @@ function addThermometerRecordings($request){
                 'thermometer_calculation_id' => $CCCID,
                 'reading_id' => $interval,
                 'reading_value' => $request['reading_'.$interval],
+                'reading_a' => $request['reading_1_'.$interval],
+                'reading_b' => $request['reading_2_'.$interval],
+                'reading_c' => $request['reading_3_'.$interval],
                 'created_by' => $currentUser->ID
             );
         $wpdb->insert("wp_coe_thermometer_calculation_readings", $intervalArray);
 
-        $readingValues[$interval] = $request['reading_'.$interval];
-
-        $errorValues[$interval] = $request['reading_'.$interval] - $request['expected_temperature'];
+        $errorValues[1][$interval] = $request['reading_1_'.$interval] - $request['expected_temperature_a'];
+        $errorValues[2][$interval] = $request['reading_2_'.$interval] - $request['expected_temperature_b'];
+        $errorValues[3][$interval] = $request['reading_3_'.$interval] - $request['expected_temperature_c'];
     }
 
     //Calculate uncertainity
     $divisor = 2;
 
-    $averageError = pow(array_sum($errorValues)/count($errorValues)/$divisor, 2);
-    $variance = pow((max($errorValues) - min($errorValues))/$divisor, 2);
+    $averageError[1] = pow(array_sum($errorValues[1])/count($errorValues[1])/$divisor, 2);
+    $averageError[2] = pow(array_sum($errorValues[2])/count($errorValues[2])/$divisor, 2);
+    $averageError[3] = pow(array_sum($errorValues[3])/count($errorValues[3])/$divisor, 2);
+
+    $variance[1] = pow((max($errorValues[1]) - min($errorValues[1]))/$divisor, 2);
+    $variance[2] = pow((max($errorValues[2]) - min($errorValues[2]))/$divisor, 2);
+    $variance[3] = pow((max($errorValues[3]) - min($errorValues[3]))/$divisor, 2);
 
     $homogeneity = 0;
 
-    $repeatability = pow(sd($errorValues)/sqrt(count($errorValues))/$divisor, 2);
+    $repeatability[1] = pow(sd($errorValues[1])/sqrt(count($errorValues[1]))/$divisor, 2);
+    $repeatability[2] = pow(sd($errorValues[2])/sqrt(count($errorValues[2]))/$divisor, 2);
+    $repeatability[3] = pow(sd($errorValues[3])/sqrt(count($errorValues[3]))/$divisor, 2);
 
     $UCStandard = pow($testDetails['uncertainity_of_standard']/sqrt(3), 2);
     $resn = pow($testDetails['resolution_of_standard']/$divisor/sqrt(3), 2);
     
-    $uncertainity = sqrt($averageError + $variance + $homogeneity  + $repeatability + $UCStandard + $resn);
+    $uncertainity[1] = sqrt($averageError[1] + $variance[1] + $homogeneity  + $repeatability[1] + $UCStandard + $resn);
+    $uncertainity[2] = sqrt($averageError[2] + $variance[2] + $homogeneity  + $repeatability[2] + $UCStandard + $resn);
+    $uncertainity[3] = sqrt($averageError[3] + $variance[3] + $homogeneity  + $repeatability[3] + $UCStandard + $resn);
 
-    $wpdb->update("wp_coe_thermometer_calculations", ['uncertainity' => $uncertainity], ['id' => $CCCID]);
+    // $wpdb->update("wp_coe_thermometer_calculations", ['uncertainity' => $uncertainity], ['id' => $CCCID]);
 
     return true;
 }
