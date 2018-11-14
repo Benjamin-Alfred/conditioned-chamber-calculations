@@ -6,14 +6,17 @@
  * 1 => List
  * 2 => Add
  * 3 => View Certificate
+ * 4 => Edit
  */
 $COEPageURI['thermometers'][1] = "views/thermometers/list.php";
 $COEPageURI['thermometers'][2] = "views/thermometers/entry-form.php";
 $COEPageURI['thermometers'][3] = "views/thermometers/certificate.php";
+$COEPageURI['thermometers'][4] = "views/thermometers/edit-form.php";
 
 $COEPage = 1; 
 if(!empty( $_REQUEST['calibration_calculation'] )) $COEPage = 2;
 else if(!empty( $_REQUEST['show_calibration_certificate'] )) $COEPage = 3;
+else if(!empty( $_REQUEST['edit_calibration_calculation'] )) $COEPage = 4;
 
 
 if ($COEPage == 1) {
@@ -21,9 +24,11 @@ if ($COEPage == 1) {
 }else if($COEPage == 2){
 
     $validated = empty( $_REQUEST['form_ready_for_submit'] ) ? false : true;
+    $updatedForm = empty( $_REQUEST['form_ready_for_update'] ) ? false : true;
 
-    if ($validated) {
-        $response = addThermometerRecordings($_REQUEST);
+    if ($validated || $updatedForm) {
+        if($validated)$response = addThermometerRecordings($_REQUEST);
+        else if($updatedForm)$response = updateThermometerRecordings($_REQUEST);
 
         if($response){
             $COEPage = 1;
@@ -88,11 +93,26 @@ if ($COEPage == 1) {
 }else if($COEPage == 3){
     $requestedCertificate = $_REQUEST['ccc_id'];
     
-    if(!empty( $_REQUEST['status'] )){  // Verify COE CC Certificate
+    if(!empty( $_REQUEST['status'] )){  // Verify COE Thermometer Certificate
         verifyThermometerCertificate($_REQUEST);
         exit();
-    }else{                              //Show COE CC Certificate
+    }else{                              //Show COE Thermometer Certificate
         $certification = getCOEThermometerCertificate($requestedCertificate);
+    }
+}else if($COEPage == 4){
+    $requestedCertificate = $_REQUEST['ccc_id'];
+    
+    if(!empty( $_REQUEST['status'] )){  // Verify COE Thermometer Certificate
+        verifyThermometerCertificate($_REQUEST);
+        exit();
+    }else{                              //Show COE Thermometer Certificate
+        $certification = getCOEThermometerCertificate($requestedCertificate);
+
+        $manufacturers = getCOEManufacturers();
+        $equipments = getCOEEquipment();
+        $STEquipments = getCOESTEquipment();
+        $clients = getCOEClients();
+        $clientContacts = getCOEClientContacts();
     }
 }
 

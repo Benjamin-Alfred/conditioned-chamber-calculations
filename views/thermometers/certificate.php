@@ -288,9 +288,9 @@
                         ?>
                         <tr>
                             <td><strong>Average Correction</strong></td>
-                            <td style="text-align: right;"><?php echo $averageError[1]; ?></td>
-                            <td style="text-align: right;"><?php echo $averageError[2]; ?></td>
-                            <td style="text-align: right;"><?php echo $averageError[3]; ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[1],7); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[2],7); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[3],7); ?></td>
                         </tr>
                         <?php
 
