@@ -444,7 +444,7 @@ function updateThermometerRecordings($request){
                 'reading_a' => $request['reading_1_'.$interval],
                 'reading_b' => $request['reading_2_'.$interval],
                 'reading_c' => $request['reading_3_'.$interval],
-                'thermometer_calculation_id' =. $calculationID,
+                'thermometer_calculation_id' => $calculationID,
                 'reading_id' => $interval
             );
 
