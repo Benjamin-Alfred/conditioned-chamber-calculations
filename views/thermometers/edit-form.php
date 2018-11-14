@@ -4,7 +4,6 @@
         <button class="btn btn-sm btn-outline-dark float-right" onclick="document.ccc_back.submit">Back</button>
     </form>
     <br>
-    <?php var_dump($certification); ?>
     <br>
     <form name="calibration_calculations_form" method="POST" action="<?php echo get_site_url(); ?>/thermometers/">
         <input type="hidden" name="form_ready_for_update" value="false" />
