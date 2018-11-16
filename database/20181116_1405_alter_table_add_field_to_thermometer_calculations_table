@@ -1,0 +1,2 @@
+--- 2018-11-16 - Add field to thermometer calculations table
+ALTER TABLE wp_coe_thermometer_calculations ADD COLUMN resolution_of_device_under_test decimal(8,5) DEFAULT 0 AFTER resolution_of_standard;

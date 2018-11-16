@@ -25,7 +25,8 @@
                     <select class="form-control form-control-sm col-sm-7" id="client" name="client" required >
                         <?php
                             foreach ($clients as $client) {
-                                echo "<option value='".$client->id."'>".$client->name."</option>";
+                                echo "<option value='{$client->id}' ".($certification->client_id==$client->id?'selected':'');
+                                echo ">{$client->name}</option>";
                             }
                         ?>
                     </select>
@@ -40,7 +41,9 @@
                     <select class="form-control form-control-sm col-sm-7" id="client_contact_id" name="client_contact_id" required >
                         <?php
                             foreach ($clientContacts as $contact) {
-                                echo "<option value='".$contact->id."'>".$contact->name."</option>";
+                                echo "<option value='{$contact->id}' ";
+                                echo ($certification->client_contact_id==$contact->id?'selected':'');
+                                echo ">{$contact->name}</option>";
                             }
                         ?>
                     </select>
@@ -60,7 +63,9 @@
                     <select class="form-control form-control-sm col-sm-7" id="equipment" name="equipment" required >
                         <?php
                             foreach ($equipments as $equipment) {
-                                echo "<option value='".$equipment->id."'>".$equipment->name."</option>";
+                                echo "<option value='{$equipment->id}' ";
+                                echo ($certification->equipment_id==$equipment->id?'selected':'');
+                                echo ">{$equipment->name}</option>";
                             }
                         ?>
                     </select>
@@ -75,7 +80,9 @@
                     <select class="form-control form-control-sm col-sm-7" id="manufacturer" name="manufacturer" required >
                         <?php
                             foreach ($manufacturers as $manufacturer) {
-                                echo "<option value='".$manufacturer->id."'>".$manufacturer->name."</option>";
+                                echo "<option value='{$manufacturer->id}' ";
+                                echo ($certification->manufacturer_id==$manufacturer->id?'selected':'');
+                                echo ">{$manufacturer->name}</option>";
                             }
                         ?>
                     </select>
@@ -110,7 +117,9 @@
                     <select class="form-control form-control-sm col-sm-7" id="ste_equipment" name="ste_equipment" required >
                         <?php
                             foreach ($STEquipments as $equipment) {
-                                echo "<option value='".$equipment->id."'>".$equipment->name."</option>";
+                                echo "<option value='{$equipment->id}' ";
+                                echo ($certification->standard_test_equipment_id==$equipment->id?'selected':'');
+                                echo ">{$equipment->name}</option>";
                             }
                         ?>
                     </select>
@@ -125,7 +134,9 @@
                     <select class="form-control form-control-sm col-sm-7" id="ste_manufacturer" name="ste_manufacturer" required >
                         <?php
                             foreach ($manufacturers as $manufacturer) {
-                                echo "<option value='".$manufacturer->id."'>".$manufacturer->name."</option>";
+                                echo "<option value='{$manufacturer->id}' ";
+                                echo ($certification->standard_test_equipment_manufacturer_id==$manufacturer->id?'selected':'');
+                                echo ">{$manufacturer->name}</option>";
                             }
                         ?>
                     </select>
@@ -168,6 +179,12 @@
                     </label>
                     <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_standard"
                         name="resolution_of_standard" value="<?php echo $certification->resolution_of_standard; ?>" />
+                </div>
+                <div class="form-group row">
+                    <label for="resolution_of_device_under_test" class="col-form-label col-sm-4">
+                        Resolution of Device under Test
+                    </label>
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_device_under_test" name="resolution_of_device_under_test" value="<?php echo $certification->resolution_of_device_under_test; ?>" />
                 </div>
             </div>
         </div>

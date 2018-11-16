@@ -245,11 +245,7 @@
                                 <?php echo $certification->manufacturer_name . " " . $certification->equipment_name . " " . $certification->equipment_model; ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td><strong>Temperature Setting</strong></td>
-                            <td style="text-align: right;" colspan="3"><?php echo $certification->expected_temperature; ?></td>
-                        </tr>
-                        <tr>
+                        <tr style="font-weight: bold;">
                             <td><strong>Standard Setting</strong></td>
                             <td style="text-align: right;"><?php echo $certification->expected_temperature_a; ?></td>
                             <td style="text-align: right;"><?php echo $certification->expected_temperature_b; ?></td>
@@ -282,11 +278,11 @@
                             $counter++;
                         }
 
-                        $averageError[1] = pow(array_sum($errorValues[1])/count($errorValues[1])/$divisor, 2);
-                        $averageError[2] = pow(array_sum($errorValues[2])/count($errorValues[2])/$divisor, 2);
-                        $averageError[3] = pow(array_sum($errorValues[3])/count($errorValues[3])/$divisor, 2);
+                        $averageError[1] = array_sum($errorValues[1])/count($errorValues[1]);
+                        $averageError[2] = array_sum($errorValues[2])/count($errorValues[2]);
+                        $averageError[3] = array_sum($errorValues[3])/count($errorValues[3]);
                         ?>
-                        <tr>
+                        <tr style="font-weight: bold;">
                             <td><strong>Average Correction</strong></td>
                             <td style="text-align: right;"><?php echo number_format($averageError[1],7); ?></td>
                             <td style="text-align: right;"><?php echo number_format($averageError[2],7); ?></td>
@@ -298,19 +294,21 @@
                         $variance[2] = pow((max($errorValues[2]) - min($errorValues[2]))/$divisor, 2);
                         $variance[3] = pow((max($errorValues[3]) - min($errorValues[3]))/$divisor, 2);
 
-                        $homogeneity = pow(1, 2);
+                        $homogeneity = 0;
 
                         $repeatability[1] = pow(sd($errorValues[1])/sqrt(count($errorValues[1]))/$divisor, 2);
                         $repeatability[2] = pow(sd($errorValues[2])/sqrt(count($errorValues[2]))/$divisor, 2);
                         $repeatability[3] = pow(sd($errorValues[3])/sqrt(count($errorValues[3]))/$divisor, 2);
 
-                        $UCStandard = pow($certification->standard_of_uncertainity/sqrt(3), 2);
+                        $standardOfUncertainity = pow($certification->standard_of_uncertainity/sqrt(3), 2);
 
-                        $resn = pow($certification->standard_of_resolution/$divisor/sqrt(3), 2);
+                        $standardOfResolution = pow($certification->standard_of_resolution/$divisor/sqrt(3), 2);
 
-                        $uncertainity[1] = sqrt($averageError[1] + $variance[1] + $homogeneity  + $repeatability[1] + $UCStandard + $resn);
-                        $uncertainity[2] = sqrt($averageError[2] + $variance[2] + $homogeneity  + $repeatability[2] + $UCStandard + $resn);
-                        $uncertainity[3] = sqrt($averageError[3] + $variance[3] + $homogeneity  + $repeatability[3] + $UCStandard + $resn);
+                        $resolutionOfDeviceUnderTest = pow(($certification->resolution_of_device_under_test/2/sqrt(3)), 2);
+
+                        $uncertainity[1] = sqrt(pow(($averageError[1]/$divisor), 2) + $variance[1] + $homogeneity  + $repeatability[1] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[2] = sqrt(pow(($averageError[2]/$divisor), 2) + $variance[2] + $homogeneity  + $repeatability[2] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[3] = sqrt(pow(($averageError[3]/$divisor), 2) + $variance[3] + $homogeneity  + $repeatability[3] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
                         ?>
                         <tr>
                             <td><strong>Uncertainty Expanded</strong></td>

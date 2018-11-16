@@ -159,6 +159,12 @@
                     </label>
                     <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_standard" name="resolution_of_standard" />
                 </div>
+                <div class="form-group row">
+                    <label for="resolution_of_device_under_test" class="col-form-label col-sm-4">
+                        Resolution of Device under Test
+                    </label>
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_device_under_test" name="resolution_of_device_under_test" />
+                </div>
             </div>
         </div>
         <div class="card">
