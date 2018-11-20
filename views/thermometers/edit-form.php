@@ -252,10 +252,10 @@
                                     <input type="number" step="any" class="form-control form-control-sm" id="reading_1_2" name="reading_1_2" required value="<?php echo $certification->readings[1]['reading_a']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_2" name="reading_2_2" required value="<?php echo $certification->readings[2]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_2" name="reading_2_2" required value="<?php echo $certification->readings[1]['reading_b']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_2" name="reading_3_2" required value="<?php echo $certification->readings[3]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_2" name="reading_3_2" required value="<?php echo $certification->readings[1]['reading_c']; ?>" />
                                 </td>
                             </tr>
                             <tr>
@@ -276,10 +276,10 @@
                                     <input type="number" step="any" class="form-control form-control-sm" id="reading_1_4" name="reading_1_4" required value="<?php echo $certification->readings[3]['reading_a']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_4" name="reading_2_4" required value="<?php echo $certification->readings[3]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_4" name="reading_2_4" required value="<?php echo $certification->readings[3]['reading_b']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_4" name="reading_3_4" required value="<?php echo $certification->readings[3]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_4" name="reading_3_4" required value="<?php echo $certification->readings[3]['reading_c']; ?>" />
                                 </td>
                             </tr>
                         </tbody>
