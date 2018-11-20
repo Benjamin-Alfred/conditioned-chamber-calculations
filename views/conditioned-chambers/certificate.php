@@ -49,6 +49,7 @@
                 <img src="<?php bloginfo('template_url'); ?>-child/i/coat_of_arms.png">
             </div>
             <div class="col-5" style="text-align: right;">
+                <span style="font-size: 0.55em; "><strong>CERTIFICATE NUMBER</strong></span>
                 <span style="font-size: 0.65em; display: inline-block;border: 1px solid #000;padding: 0 10px;">
                     <?php echo $certification->certificate_number;?>
                 </span>
@@ -222,6 +223,10 @@
                         }
                         ?>
                     </td>
+                </tr>
+                <tr>
+                    <td> &nbsp; </td>
+                    <td colspan="5">For Head NPHL </td>
                 </tr>
             </table>
         </div>
