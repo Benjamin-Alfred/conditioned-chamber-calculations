@@ -509,7 +509,7 @@ function verifyThermometerCertificate($data){
 
     $verifierData = [
         'result' => $data['status'], 
-        'certificate_number' => "COE/CC/".$year."/$certificateNumber", 
+        'certificate_number' => "COE/THERM/".$year."/$certificateNumber", 
         'verified_by' => $_VERIFIER, 
         'verified_at' => $datetime, 
         'approved_by' => $_APPROVER, 
