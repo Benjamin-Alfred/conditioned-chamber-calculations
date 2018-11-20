@@ -339,7 +339,10 @@
         <div class="remarks">
             <div><strong>7.0 REMARKS</strong></div>
             <div style="margin-left: 30px;">
-                <p>Calibration Complete. STATUS: <span id="ccc_status"><?php echo $certification->result; ?></span></p>
+                <p>
+                    Calibration Complete. STATUS: 
+                    <span id="ccc_status" style="color:#F00;"><?php echo $certification->result; ?></span>
+                </p>
             </div>
             <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
                 <p>Calibration certificate issued without signature is not valid.

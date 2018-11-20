@@ -323,7 +323,7 @@
                         </tr>
                         <tr>
                             <td><strong>Remarks</strong></td>
-                            <td style="text-align: right;" colspan="3"><?php echo $certification->result; ?></td>
+                            <td style="text-align: right; color:#F00;" colspan="3"><?php echo $certification->result; ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -348,7 +348,10 @@
         <div class="remarks">
             <div><strong>7.0 REMARKS</strong></div>
             <div style="margin-left: 30px;">
-                <p>Calibration Complete. STATUS: <span id="ccc_status"><?php echo $certification->result; ?></span></p>
+                <p>
+                    Calibration Complete. STATUS: 
+                    <span id="ccc_status" style="color:#F00;"><?php echo $certification->result; ?></span>
+                </p>
                 <p>The maximum error is within the specified limits of accuracy of <strong style="color:red">+/- 2⁰C</strong>
                     as specified by the manufacturer for liquid in glass, dial thermometers.</p>
                 <p>The maximum error is within the specified limits of accuracy of <strong style="color:red">+/- 1.5⁰C</strong>
