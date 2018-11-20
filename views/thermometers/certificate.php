@@ -300,9 +300,9 @@
                         $repeatability[2] = pow(sd($errorValues[2])/sqrt(count($errorValues[2]))/$divisor, 2);
                         $repeatability[3] = pow(sd($errorValues[3])/sqrt(count($errorValues[3]))/$divisor, 2);
 
-                        $standardOfUncertainity = pow($certification->standard_of_uncertainity/sqrt(3), 2);
+                        $standardOfUncertainity = pow($certification->uncertainity_of_standard/sqrt(3), 2);
 
-                        $standardOfResolution = pow($certification->standard_of_resolution/$divisor/sqrt(3), 2);
+                        $standardOfResolution = pow($certification->resolution_of_standard/$divisor/sqrt(3), 2);
 
                         $resolutionOfDeviceUnderTest = pow(($certification->resolution_of_device_under_test/2/sqrt(3)), 2);
 
