@@ -6,14 +6,17 @@
  * 1 => List
  * 2 => Add
  * 3 => View Certificate
+ * 4 => Edit
  */
 $COEPageURI['conditioned-chambers'][1] = "views/conditioned-chambers/list.php";
 $COEPageURI['conditioned-chambers'][2] = "views/conditioned-chambers/entry-form.php";
 $COEPageURI['conditioned-chambers'][3] = "views/conditioned-chambers/certificate.php";
+$COEPageURI['conditioned-chambers'][4] = "views/conditioned-chambers/edit-form.php";
 
 $COEPage = 1; 
 if(!empty( $_REQUEST['calibration_calculation'] )) $COEPage = 2;
 else if(!empty( $_REQUEST['show_calibration_certificate'] )) $COEPage = 3;
+else if(!empty( $_REQUEST['edit_calibration_calculation'] )) $COEPage = 4;
 
 
 if ($COEPage == 1) {
@@ -21,9 +24,11 @@ if ($COEPage == 1) {
 }else if($COEPage == 2){
 
     $validated = empty( $_REQUEST['form_ready_for_submit'] ) ? false : true;
+    $updatedForm = empty( $_REQUEST['form_ready_for_update'] ) ? false : true;
 
-    if ($validated) {
-        $response = addConditionedChamberRecordings($_REQUEST);
+    if ($validated || $updatedForm) {
+        if($validated)$response = addConditionedChamberRecordings($_REQUEST);
+        else if($updatedForm)$response = updateConditionedChamberRecordings($_REQUEST);
 
         if($response){
             $COEPage = 1;
@@ -93,6 +98,21 @@ if ($COEPage == 1) {
         exit();
     }else{                              //Show COE CC Certificate
         $certification = getCOECCCertificate($requestedCertificate);
+    }
+}else if($COEPage == 4){
+    $requestedCertificate = $_REQUEST['ccc_id'];
+    
+    if(!empty( $_REQUEST['status'] )){  // Verify COE Thermometer Certificate
+        verifyCOECertificate($_REQUEST);
+        exit();
+    }else{                              //Show COE Thermometer Certificate
+        $certification = getCOECCCertificate($requestedCertificate);
+
+        $manufacturers = getCOEManufacturers();
+        $equipments = getCOEEquipment();
+        $STEquipments = getCOESTEquipment();
+        $clients = getCOEClients();
+        $clientContacts = getCOEClientContacts();
     }
 }
 

@@ -194,6 +194,78 @@ function addConditionedChamberRecordings($request){
     return true;
 }
 
+function updateConditionedChamberRecordings($request){
+    global $wpdb;
+
+    $currentUser = wp_get_current_user();
+
+    $calculationID = $request['calibration_calculation_id'];
+
+    $testDetails = array(
+        client_id => $request['client'],
+        client_contact_id => $request['client_contact_id'],
+
+        date_performed => $request['date_performed'],
+        created_by => $currentUser->ID,
+        manufacturer_id => $request['manufacturer'],
+        equipment_id => $request['equipment'],
+        equipment_model => $request['model'],
+        equipment_serial_number => $request['serial_number'],
+        submission_number => $request['submission_number'],
+
+        certificate_number => 'NOT ISSUED',
+        
+        standard_test_equipment_id => $request['ste_equipment'],
+        standard_test_equipment_manufacturer_id => $request['ste_manufacturer'],
+        standard_test_equipment_model => $request['ste_model'],
+        standard_test_equipment_serial_number => $request['ste_serial_number'],
+        standard_test_equipment_certificate_number => $request['ste_certificate_number'],
+        standard_test_equipment_sticker_number => $request['ste_sticker_number'],
+
+        uncertainity_of_standard => $request['uncertainity_of_standard'],
+        resolution_of_standard => $request['resolution_of_standard'],
+        expected_temperature => $request['expected_temperature'],
+        environmental_temperature => $request['environmental_temperature'],
+        environmental_humidity => $request['environmental_humidity'],
+
+        result => 'PENDING'
+
+    );
+
+    $wpdb->update("wp_coe_conditioned_chamber_calculations", $testDetails, ['id' => $calculationID]);
+
+    $intervals = array(0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60);
+    $now = date("Y-m-d H:i:s");
+
+    foreach ($intervals as $interval) {
+        $results = $wpdb->get_results("SELECT id FROM wp_coe_conditioned_chamber_calculation_readings WHERE conditioned_chamber_calculation_id = $calculationID AND reading_time = $interval", ARRAY_A);
+
+        if (count($results > 0)) {
+            $intervalArray = array(
+                'reading_a' => $request['p_1_'.$interval],
+                'reading_b' => $request['p_2_'.$interval],
+                'reading_c' => $request['p_3_'.$interval],
+                'updated_at' => $now
+            );
+
+            $wpdb->update("wp_coe_conditioned_chamber_calculation_readings", $intervalArray, ['id' => $results[0]['id']]);
+        }else{
+            $intervalArray = array(
+                'reading_a' => $request['p_1_'.$interval],
+                'reading_b' => $request['p_2_'.$interval],
+                'reading_c' => $request['p_3_'.$interval],
+                'conditioned_chamber_calculation_id' => $calculationID,
+                'reading_time' => $interval
+            );
+
+            $wpdb->insert("wp_coe_conditioned_chamber_calculation_readings", $intervalArray);
+        }
+
+    }
+
+    return true;
+}
+
 function getCOEConditionedChamberCertificatesList(){
     global $wpdb;
 

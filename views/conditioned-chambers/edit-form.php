@@ -1,11 +1,11 @@
-<!-- Thermometer Calculations -->
+<!-- Conditioned Chamber Calculations -->
 <div>
-    <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/thermometers/">
+    <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
         <button class="btn btn-sm btn-outline-dark float-right" onclick="document.ccc_back.submit">Back</button>
     </form>
     <br>
     <br>
-    <form name="calibration_calculations_form" method="POST" action="<?php echo get_site_url(); ?>/thermometers/">
+    <form name="calibration_calculations_form" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
         <input type="hidden" name="form_ready_for_update" value="false" />
         <input type="hidden" name="calibration_calculation" value="false" />
         <input type="hidden" name="calibration_calculation_id" value="<?php echo $certification->id; ?>" />
@@ -94,7 +94,7 @@
                 </div>
                 <div class="form-group row">
                     <label for="model" class="col-form-label col-sm-4">Model</label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="model" name="model" required 
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="model" name="model" required
                         value="<?php echo $certification->equipment_model; ?>" />
                 </div>
                 <div class="form-group row">
@@ -149,42 +149,35 @@
                 <div class="form-group row">
                     <label for="model" class="col-form-label col-sm-4">Model</label>
                     <input type="text" class="form-control form-control-sm col-sm-8" id="ste_model" name="ste_model" required
-                         value="<?php echo $certification->standard_test_equipment_model; ?>" />
+                        value="<?php echo $certification->standard_test_equipment_model; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="serial_number" class="col-form-label col-sm-4">Serial Number</label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="ste_serial_number" required
-                        name="ste_serial_number" value="<?php echo $certification->standard_test_equipment_serial_number; ?>" />
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="ste_serial_number" 
+                    name="ste_serial_number" required  value="<?php echo $certification->standard_test_equipment_serial_number; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="ste_certificate_number" class="col-form-label col-sm-4">Certificate Number</label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="ste_certificate_number" required
-                        name="ste_certificate_number" value="<?php echo $certification->standard_test_equipment_certificate_number; ?>" />
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="ste_certificate_number" 
+                        name="ste_certificate_number" required value="<?php echo $certification->standard_test_equipment_certificate_number; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="ste_sticker_number" class="col-form-label col-sm-4">Sticker Number</label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="ste_sticker_number"
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="ste_sticker_number" 
                         name="ste_sticker_number" value="<?php echo $certification->standard_test_equipment_sticker_number; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="uncertainity_of_standard" class="col-form-label col-sm-4">
                         Uncertainity of the Standard
                     </label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="uncertainity_of_standard" 
-                        name="uncertainity_of_standard" value="<?php echo $certification->uncertainity_of_standard; ?>" />
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="uncertainity_of_standard" name="uncertainity_of_standard" value="<?php echo $certification->uncertainity_of_standard; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="resolution_of_standard" class="col-form-label col-sm-4">
                         Resolution of the Standard
                     </label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_standard"
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_standard" 
                         name="resolution_of_standard" value="<?php echo $certification->resolution_of_standard; ?>" />
-                </div>
-                <div class="form-group row">
-                    <label for="resolution_of_device_under_test" class="col-form-label col-sm-4">
-                        Resolution of Device under Test
-                    </label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_device_under_test" name="resolution_of_device_under_test" value="<?php echo $certification->resolution_of_device_under_test; ?>" />
                 </div>
             </div>
         </div>
@@ -193,28 +186,25 @@
                 <h5 class="card-title">Environmental Conditions</h5>
                 <div class="form-group row">
                     <label for="environmental_temperature" class="col-form-label col-sm-5">Temperature</label>
-                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="environmental_temperature"
-                    name="environmental_temperature" value="<?php echo $certification->environmental_temperature; ?>" required />
+                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" 
+                        id="environmental_temperature" name="environmental_temperature" title="" required
+                        value="<?php echo $certification->environmental_temperature; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="environmental_humidity" class="col-form-label col-sm-5">Humidity</label>
-                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="environmental_humidity" name="environmental_humidity" value="<?php echo $certification->environmental_humidity; ?>" required />
+                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="environmental_humidity"
+                        name="environmental_humidity" title="" required
+                        value="<?php echo $certification->environmental_humidity; ?>" />
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <div class="form-group row">
-                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading 1 (°c)</label>
-                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature_a" name="expected_temperature_a" value="<?php echo $certification->expected_temperature_a; ?>" required />
-                </div>
-                <div class="form-group row">
-                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading 2 (°c)</label>
-                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature_b" name="expected_temperature_b" value="<?php echo $certification->expected_temperature_b; ?>" required />
-                </div>
-                <div class="form-group row">
-                    <label for="expected_temperature" class="col-form-label col-sm-5">Standard Reading 3 (°c)</label>
-                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature_c" name="expected_temperature_c" value="<?php echo $certification->expected_temperature_c; ?>" required />
+                    <label for="expected_temperature" class="col-form-label col-sm-5">Expected/Set Temperature</label>
+                    <input type="number" step="any" class="form-control form-control-sm col-sm-7" id="expected_temperature"
+                        name="expected_temperature" title="" required
+                        value="<?php echo $certification->expected_temperature; ?>" />
                 </div>
             </div>
         </div>
@@ -225,62 +215,149 @@
                     <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
-                                <th scope="col" rowspan="2">#</th>
-                                <th scope="col" colspan="3"><center>Temperature (°c)</center></th>
+                                <th scope="col" rowspan="2">time (min)</th>
+                                <th colspan="3"><center>Chamber Temperature in °c</center></th>
                             </tr>
                             <tr>
-                                <th scope="col">Point 1</th>
-                                <th scope="col">Point 2</th>
-                                <th scope="col">Point 3</th>
+                                <th scope="col">p1</th>
+                                <th scope="col">p2</th>
+                                <th scope="col">p3</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Reading 1</td>
+                                <td align="center">0</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_1" name="reading_1_1" required value="<?php echo $certification->readings[0]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_0" required
+                                    name="p_1_0" value="<?php echo $certification->readings[0]['reading_a']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_1" name="reading_2_1" required value="<?php echo $certification->readings[0]['reading_b']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_0" required
+                                        name="p_2_0" value="<?php echo $certification->readings[0]['reading_b']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_1" name="reading_3_1" required value="<?php echo $certification->readings[0]['reading_c']; ?>" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Reading 2</td>
-                                <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_2" name="reading_1_2" required value="<?php echo $certification->readings[1]['reading_a']; ?>" />
-                                </td>
-                                <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_2" name="reading_2_2" required value="<?php echo $certification->readings[1]['reading_b']; ?>" />
-                                </td>
-                                <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_2" name="reading_3_2" required value="<?php echo $certification->readings[1]['reading_c']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_0" required
+                                        name="p_3_0" value="<?php echo $certification->readings[0]['reading_c']; ?>" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Reading 3</td>
+                                <td align="center">6</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_3" name="reading_1_3" required value="<?php echo $certification->readings[2]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_6" name="p_1_6" required value="<?php echo $certification->readings[1]['reading_a']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_3" name="reading_2_3" required value="<?php echo $certification->readings[2]['reading_b']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_6" name="p_2_6" required value="<?php echo $certification->readings[1]['reading_b']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_3" name="reading_3_3" required value="<?php echo $certification->readings[2]['reading_c']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_6" name="p_3_6" required value="<?php echo $certification->readings[1]['reading_c']; ?>" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Reading 4</td>
+                                <td align="center">12</td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_1_4" name="reading_1_4" required value="<?php echo $certification->readings[3]['reading_a']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_12" name="p_1_12" required value="<?php echo $certification->readings[2]['reading_a']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_2_4" name="reading_2_4" required value="<?php echo $certification->readings[3]['reading_b']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_12" name="p_2_12" required value="<?php echo $certification->readings[2]['reading_b']; ?>" />
                                 </td>
                                 <td>
-                                    <input type="number" step="any" class="form-control form-control-sm" id="reading_3_4" name="reading_3_4" required value="<?php echo $certification->readings[3]['reading_c']; ?>" />
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_12" name="p_3_12" required value="<?php echo $certification->readings[2]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">18</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_18" name="p_1_18" required value="<?php echo $certification->readings[3]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_18" name="p_2_18" required value="<?php echo $certification->readings[3]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_18" name="p_3_18" required value="<?php echo $certification->readings[3]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">24</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_24" name="p_1_24" required value="<?php echo $certification->readings[4]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_24" name="p_2_24" required value="<?php echo $certification->readings[4]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_24" name="p_3_24" required value="<?php echo $certification->readings[4]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">30</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_30" name="p_1_30" required value="<?php echo $certification->readings[5]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_30" name="p_2_30" required value="<?php echo $certification->readings[5]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_30" name="p_3_30" required value="<?php echo $certification->readings[5]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">36</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_36" name="p_1_36" required value="<?php echo $certification->readings[6]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_36" name="p_2_36" required value="<?php echo $certification->readings[6]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_36" name="p_3_36" required value="<?php echo $certification->readings[6]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">42</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_42" name="p_1_42" required value="<?php echo $certification->readings[7]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_42" name="p_2_42" required value="<?php echo $certification->readings[7]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_42" name="p_3_42" required value="<?php echo $certification->readings[7]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">48</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_48" name="p_1_48" required value="<?php echo $certification->readings[8]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_48" name="p_2_48" required value="<?php echo $certification->readings[8]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_48" name="p_3_48" required value="<?php echo $certification->readings[8]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">54</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_54" name="p_1_54" required value="<?php echo $certification->readings[9]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_54" name="p_2_54" required value="<?php echo $certification->readings[9]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_54" name="p_3_54" required value="<?php echo $certification->readings[9]['reading_c']; ?>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">60</td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_1_60" name="p_1_60" required value="<?php echo $certification->readings[10]['reading_a']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_2_60" name="p_2_60" required value="<?php echo $certification->readings[10]['reading_b']; ?>" />
+                                </td>
+                                <td>
+                                    <input type="number" step="any" class="form-control form-control-sm" id="p_3_60" name="p_3_60" required value="<?php echo $certification->readings[10]['reading_c']; ?>" />
                                 </td>
                             </tr>
                         </tbody>
@@ -299,4 +376,4 @@
         ?>
     </form>
 </div>
-<!-- /Thermometer Calculations -->
+<!-- /Conditioned Chamber Calculations -->
