@@ -39,13 +39,13 @@
                         <form name="ccc_cert" id="ccc_cert" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
                             <input type="hidden" name="show_calibration_certificate" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
-                            <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_cert.submit()">View</button>
+                            <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert').submit()">View</button>
                         </form>
                         <form name="ccc_cert_1" id="ccc_cert_1" method="POST"
                             action="<?php echo get_site_url(); ?>/conditioned-chambers/">
                             <input type="hidden" name="edit_calibration_calculation" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
-                            <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_cert_1.submit()">Edit</button>
+                            <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
                         </form>
                     </td></tr>
             <?php
