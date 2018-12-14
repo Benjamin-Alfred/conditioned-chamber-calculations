@@ -1,0 +1,23 @@
+--- 2018-12-14 - Create service_requests and service_requests_status tables
+
+CREATE TABLE `wp_coe_service_requests` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `facility_id` int(10) unsigned NOT NULL,
+  `equipment_id` int(10) unsigned NOT NULL,
+  `manufacturer_id` int(10) unsigned NOT NULL,
+  `equipment_model` varchar(100) DEFAULT NULL,
+  `equipment_serial_number` varchar(100) NOT NULL,
+  `equipment_inventory_number` varchar(100) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `wp_coe_service_request_status` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_request_id` int(10) unsigned NOT NULL,
+  `status` varchar(30) NOT NULL,
+  `status_text` varchar(60) NOT NULL,
+  `done_by` int(10) unsigned NOT NULL,
+  `done_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
