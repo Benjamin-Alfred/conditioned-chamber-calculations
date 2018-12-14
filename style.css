@@ -13,6 +13,10 @@ Template: twentyseventeen
 
 */
 
+.wrap{
+	max-width: 100%;
+}
+
 .calibration-login{
 	border: 1px solid #000;
 	border-radius: 8px;
@@ -52,6 +56,37 @@ form.search-form label{
 
 .modal .modal-dialog {
 	max-width: 600px;
+}
+
+.btn-nav-coe{
+	height: 64px;
+	margin-left: 1px;
+	padding: 12px;
+	width: 64px;
+}
+
+.btn-nav-coe-sm{
+	height: 48px;
+	margin-left: 1px;
+	padding: 6px;
+	width: 48px;
+}
+
+/* Data tables*/
+.dataTables_length select{
+	height: calc(1.8125rem + 2px);
+}
+
+.dataTables_filter label input{
+	display: inline-block;
+	font-size: .875rem;
+    line-height: 1.5;
+	padding: 0.3rem;
+    width: 10rem;
+}
+
+.dataTables_paginate, .dataTables_length, .dataTables_filter, .dataTables_info {
+	font-size: 0.875rem;
 }
 
 @media print {

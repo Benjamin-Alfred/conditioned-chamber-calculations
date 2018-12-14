@@ -1,0 +1,43 @@
+--- 2018-11-30 - Create facilities, sub_counties and counties table
+
+CREATE TABLE `wp_coe_counties` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `wp_coe_sub_counties` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `county_id` int(10) unsigned NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sub_counties_county_id_foreign` (`county_id`),
+  CONSTRAINT `sub_counties_county_id_foreign` FOREIGN KEY (`county_id`) REFERENCES `wp_coe_counties` (`id`)
+);
+
+CREATE TABLE `wp_coe_facilities` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `registration_number` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sub_county_id` int(10) unsigned NOT NULL,
+  `mailing_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `in_charge` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `in_charge_phone` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `in_charge_email` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `longitude` decimal(5,2) DEFAULT NULL,
+  `latitude` decimal(5,2) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`),
+  KEY `facilities_sub_county_id_foreign` (`sub_county_id`),
+  CONSTRAINT `facilities_sub_county_id_foreign` FOREIGN KEY (`sub_county_id`) REFERENCES `wp_coe_sub_counties` (`id`)
+);

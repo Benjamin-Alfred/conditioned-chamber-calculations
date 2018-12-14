@@ -23,6 +23,12 @@ function my_theme_enqueue_styles() {
         array($parent_style, 'child-style', 'jquery-ui')
     );
 
+    wp_enqueue_style(
+        'datatables',
+        get_stylesheet_directory_uri() . '/js/datatables.net/css/jquery.dataTables.min.css',
+        array($parent_style, 'child-style', 'bootstrap')
+    );
+
     wp_enqueue_script(
         'jquery-ui',
         get_stylesheet_directory_uri() . '/js/jquery-ui-1.12.1.custom/jquery-ui.min.js',
@@ -33,6 +39,12 @@ function my_theme_enqueue_styles() {
         'bootstrap',
         get_stylesheet_directory_uri() . '/js/bootstrap/js/bootstrap.bundle.min.js',
         array('jquery','jquery-ui')
+    );
+
+    wp_enqueue_script(
+        'datatables',
+        get_stylesheet_directory_uri() . '/js/datatables.net/js/jquery.dataTables.min.js',
+        array('jquery')
     );
 
 }
@@ -90,18 +102,33 @@ function getCOEClients(){
     return $wpdb->get_results("SELECT * FROM wp_coe_clients ORDER BY name;");
 }
 
-function addCOEClientContact($clientID, $name, $email, $phone){
+function addCOEClientContact($clientID, $name, $email, $phone, $password = ""){
     global $wpdb;
-    if ($clientID != false && $name != false && $email != false) {
-        $result = $wpdb->insert("wp_coe_client_contacts",
-                    array('client_id' => $clientID, 'name' => trim($name), 'email' => trim($email), 'phone' => trim($phone)));
+    $inputArray = [];
+    $result = false;
+    if ($clientID !== false && $name !== false && $email !== false) {
+        $inputArray["client_id"] = $clientID;
+        $inputArray["name"] = trim($name);
+        $inputArray["email"] = trim($email);
+        $inputArray["phone"] = trim($phone);
+        if($password !== false) $inputArray["password"] = md5(trim($password));
+        $result = $wpdb->insert("wp_coe_client_contacts", $inputArray);
     }
+    return $result;
 }
 
 function getCOEClientContacts(){
     global $wpdb;
     
     return $wpdb->get_results("SELECT * FROM wp_coe_client_contacts ORDER BY name;");
+}
+
+function getCOEFacility($facilityCode){
+    global $wpdb;
+    $query = "SELECT f.id, f.code, f.name, s.name AS sub_county, c.name AS county FROM wp_coe_facilities f ";
+    $query .= "INNER JOIN wp_coe_sub_counties s ON f.sub_county_id = s.id ";
+    $query .= "INNER JOIN wp_coe_counties c ON s.county_id = c.id WHERE code = $facilityCode;";
+    return $wpdb->get_results($query);
 }
 
 function addConditionedChamberRecordings($request){
