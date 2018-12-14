@@ -54,6 +54,10 @@ form.search-form label{
 	display: initial;
 }
 
+form.inline-form{
+	display: inline-block;
+}
+
 .modal .modal-dialog {
 	max-width: 600px;
 }

@@ -106,5 +106,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
 
+    $( "#thermometers-list" ).DataTable();
+
 });
 </script>

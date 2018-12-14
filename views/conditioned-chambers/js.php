@@ -106,5 +106,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
 
+    $( "#conditioned-chambers-list" ).DataTable();
+
 });
 </script>

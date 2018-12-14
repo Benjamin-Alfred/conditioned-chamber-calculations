@@ -13,8 +13,8 @@
     ?>
     </form>
 </div>
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
+<div class="">
+    <table class="table table-striped table-sm" id="thermometers-list" data-page-length="25">
         <thead>
             <tr>
                 <th scope="col">Date</th>
@@ -37,13 +37,13 @@
             ?>
                     <td>
                         <form name="ccc_cert" id="ccc_cert" method="POST"
-                            action="<?php echo get_site_url(); ?>/thermometers/">
+                            action="<?php echo get_site_url(); ?>/thermometers/" class="inline-form">
                             <input type="hidden" name="show_calibration_certificate" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
                             <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert').submit()">View</button>
                         </form>
                         <form name="ccc_cert_1" id="ccc_cert_1" method="POST"
-                            action="<?php echo get_site_url(); ?>/thermometers/">
+                            action="<?php echo get_site_url(); ?>/thermometers/" class="inline-form">
                             <input type="hidden" name="edit_calibration_calculation" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
                             <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
