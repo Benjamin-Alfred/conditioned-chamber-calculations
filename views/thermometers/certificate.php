@@ -42,8 +42,8 @@
                     P.O BOX   20750-00202<br>
                     NAIROBI, KENYA.<br>
                 </strong>
-                EMAIL: nphls.coe@gmail.com<br>
-                WEBSITE: nphls.co.ke
+                EMAIL: coe.nphl@gmail.com<br>
+                WEBSITE: nphl.go.ke
             </div>
             <div class="col-2">
                 <img src="<?php bloginfo('template_url'); ?>-child/i/coat_of_arms.png">
@@ -253,7 +253,7 @@
                             </td>
                         </tr>
                         <tr style="font-weight: bold;">
-                            <td><strong>Standard Setting</strong></td>
+                            <td><strong>Standard Setting (⁰C)</strong></td>
                             <td style="text-align: right;"><?php echo $certification->expected_temperature_a; ?></td>
                             <td style="text-align: right;"><?php echo $certification->expected_temperature_b; ?></td>
                             <td style="text-align: right;"><?php echo $certification->expected_temperature_c; ?></td>
@@ -271,7 +271,7 @@
                             $error[3] = $reading['reading_c'] - $certification->expected_temperature_c;
                         ?>
                             <tr>
-                                <td><strong>READ <?php echo $reading['reading_id'];?></strong></td>
+                                <td><strong>READ <?php echo $reading['reading_id'];?> (⁰C)</strong></td>
                                 <td style="text-align: right;"><?php echo $reading['reading_a'];?></td>
                                 <td style="text-align: right;"><?php echo $reading['reading_b'];?></td>
                                 <td style="text-align: right;"><?php echo $reading['reading_c'];?></td>

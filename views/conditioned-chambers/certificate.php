@@ -42,8 +42,8 @@
                     P.O BOX   20750-00202<br>
                     NAIROBI, KENYA.<br>
                 </strong>
-                EMAIL: nphls.coe@gmail.com<br>
-                WEBSITE: nphls.co.ke
+                EMAIL: coe.nphl@gmail.com<br>
+                WEBSITE: nphl.go.ke
             </div>
             <div class="col-2">
                 <img src="<?php bloginfo('template_url'); ?>-child/i/coat_of_arms.png">
@@ -247,11 +247,11 @@
                 <table class="table table-sm table-bordered">
                     <thead class="table-border-dark">
                         <tr>
-                            <th>Time/in</th>
-                            <th>Set temp(X)</th>
-                            <th>p1</th>
-                            <th>p2</th>
-                            <th>p3</th>
+                            <th>Time (min)</th>
+                            <th>Set temp(X ⁰C)</th>
+                            <th>p1 (⁰C)</th>
+                            <th>p2 (⁰C)</th>
+                            <th>p3 (⁰C)</th>
                             <th>Average(P)</th>
                             <th>Error(average-X)</th>
                         </tr>
