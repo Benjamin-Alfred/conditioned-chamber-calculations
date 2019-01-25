@@ -62,49 +62,51 @@
         </div>
     </div>
     <div class="customer-and-equipment-details" style="font-size: 0.7em">
-        <table class="table table-bordered table-sm">
-            <tr>
-                <td colspan="2" style="text-align:center">
-                    <strong>CUSTOMER DETAILS</strong>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>REQUESTED BY (FACILITY)</strong></td>
-                <td><?php echo $certification->client_name;?></td>
-            </tr>
-            <tr>
-                <td><strong>LABORATORY PERSONNEL</strong></td>
-                <td><?php echo $certification->client_contact_name;?></td>
-            </tr>
-            <tr>
-                <td><strong>EMAIL OF LAB PERSONNEL</strong></td>
-                <td><?php echo $certification->client_contact_email;?></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align:center">
-                    <strong>EQUIPMENT DETAILS</strong>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>EQUIPMENT</strong></td>
-                <td><?php echo $certification->equipment_name; ?></td>
-            </tr>
-            <tr>
-                <td><strong>MANUFACTURER</strong></td>
-                <td><?php echo $certification->manufacturer_name;?></td>
-            </tr>
-            <tr>
-                <td><strong>MODEL</strong></td>
-                <td><?php echo $certification->equipment_model;?></td>
-            </tr>
-            <tr>
-                <td><strong>SERIAL No.</strong></td>
-                <td><?php echo $certification->equipment_serial_number;?></td>
-            </tr>
-            <tr>
-                <td><strong>INVENTORY No.</strong></td>
-                <td><?php echo $certification->submission_number;?></td>
-            </tr>
+        <table class="table table-bordered table-sm table-border-dark">
+            <tbody>
+                <tr>
+                    <td colspan="2" style="text-align:center">
+                        <strong>CUSTOMER DETAILS</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>REQUESTED BY (FACILITY)</strong></td>
+                    <td><?php echo $certification->client_name;?></td>
+                </tr>
+                <tr>
+                    <td><strong>LABORATORY PERSONNEL</strong></td>
+                    <td><?php echo $certification->client_contact_name;?></td>
+                </tr>
+                <tr>
+                    <td><strong>EMAIL OF LAB PERSONNEL</strong></td>
+                    <td><?php echo $certification->client_contact_email;?></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center">
+                        <strong>EQUIPMENT DETAILS</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>EQUIPMENT</strong></td>
+                    <td><?php echo $certification->equipment_name; ?></td>
+                </tr>
+                <tr>
+                    <td><strong>MANUFACTURER</strong></td>
+                    <td><?php echo $certification->manufacturer_name;?></td>
+                </tr>
+                <tr>
+                    <td><strong>MODEL</strong></td>
+                    <td><?php echo $certification->equipment_model;?></td>
+                </tr>
+                <tr>
+                    <td><strong>SERIAL No.</strong></td>
+                    <td><?php echo $certification->equipment_serial_number;?></td>
+                </tr>
+                <tr>
+                    <td><strong>INVENTORY No.</strong></td>
+                    <td><?php echo $certification->submission_number;?></td>
+                </tr>
+            </tbody>
         </table>
     </div>
     <div class="standard-equipment" style="font-size: 0.75em">
@@ -240,21 +242,21 @@
 <div class="certificate-frame" style="margin-top: 60px;font-size: 0.75em;">
     <div class="certificate-inner-frame">
         <div class="results">
-            <div><strong>5.0 TRACEABILITY</strong></div>
+            <div><strong>5.0 CALIBRATION RESULTS</strong></div>
             <div style="margin-left: 30px;">
                 <table class="table table-sm table-bordered">
-                    <thead>
+                    <thead class="table-border-dark">
                         <tr>
-                            <th>time/in</th>
-                            <th>set temp(X)</th>
+                            <th>Time/in</th>
+                            <th>Set temp(X)</th>
                             <th>p1</th>
                             <th>p2</th>
                             <th>p3</th>
-                            <th>average(P)</th>
-                            <th>error(average-X)</th>
+                            <th>Average(P)</th>
+                            <th>Error(average-X)</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-border-dark">
                         <?php
                         $totals['p1'] = 0;
                         $totals['p2'] = 0;
@@ -341,7 +343,7 @@
             <div style="margin-left: 30px;">
                 <p>
                     Calibration Complete. STATUS: 
-                    <span id="ccc_status" style="color:#F00;"><?php echo $certification->result; ?></span>
+                    <span id="ccc_status" style="color:#F00;"><strong><?php echo $certification->result; ?></strong></span>
                 </p>
             </div>
             <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">

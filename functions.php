@@ -29,6 +29,18 @@ function my_theme_enqueue_styles() {
         array($parent_style, 'child-style', 'bootstrap')
     );
 
+    wp_enqueue_style(
+        'open-iconic',
+        get_stylesheet_directory_uri() . '/i/open-iconic/font/css/open-iconic.css',
+        array($parent_style, 'child-style', 'bootstrap')
+    );
+
+    wp_enqueue_style(
+        'open-iconic-bootstrap',
+        get_stylesheet_directory_uri() . '/i/open-iconic/font/css/open-iconic-bootstrap.css',
+        array($parent_style, 'child-style', 'bootstrap')
+    );
+
     wp_enqueue_script(
         'jquery-ui',
         get_stylesheet_directory_uri() . '/js/jquery-ui-1.12.1.custom/jquery-ui.min.js',
@@ -46,7 +58,6 @@ function my_theme_enqueue_styles() {
         get_stylesheet_directory_uri() . '/js/datatables.net/js/jquery.dataTables.min.js',
         array('jquery')
     );
-
 }
 add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 

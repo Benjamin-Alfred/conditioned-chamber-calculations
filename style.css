@@ -93,12 +93,23 @@ form.inline-form{
 	font-size: 0.875rem;
 }
 
+@page {
+  size: A4;
+}
+
 @media print {
     header.site-header {display: none;}
-	.certificate-frame {
-		min-height: 1307px;
+	html, body {
+		height: 297mm;
+		width: 210mm;
 	}
+
 	div.certificate-inner-frame{
-		min-height: 1228px;
+		min-height: 277mm;
+		height: 100%;
+	}
+
+	.table-border-dark tr td, .table-border-dark tr th{
+		border-color: #000 !important;
 	}
 }
