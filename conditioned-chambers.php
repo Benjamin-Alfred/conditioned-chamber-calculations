@@ -35,6 +35,9 @@ get_header();
                         <span class="oi" data-glyph="menu" title="menu" aria-hidden="true" style="color: #000;"></span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <?php if(hasRole('USER_ADMIN')){ ?>
+                        <a class="dropdown-item" href="/clients/">Service Requests</a>
+                        <?php } ?>
                         <a class="dropdown-item" href="/thermometers/">Thermometers</a>
                     </div>
                 </div>

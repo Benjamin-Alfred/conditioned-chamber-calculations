@@ -34,6 +34,11 @@ get_header();
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="oi" data-glyph="menu" title="menu" aria-hidden="true" style="color: #000;"></span>
                     </button>
+                    <?php if(hasRole('USER_ADMIN')){ ?>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/thermometers/">Service Requests</a>
+                    </div>
+                    <?php } ?>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/conditioned-chambers/">Conditioned Chambers</a>
                     </div>
