@@ -6,7 +6,7 @@ jQuery( document ).ready(function( $ ) {
 
     $( "#status-pass" ).click(function() {
         url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
-        $.post( url, {ccc_id: $( "#ccc_id").val(), status: "PASSED", show_calibration_certificate: "true"} )
+        $.post( url, {ccc_id: $( "#ccc_id").val(), status: "PASSED", api_code: 6} )
             .done(function(data) {
                 $( "#ccc_back" ).submit();
             });
@@ -14,7 +14,7 @@ jQuery( document ).ready(function( $ ) {
 
     $( "#status-fail" ).click(function() {
         url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
-        $.post( url, {ccc_id: $( "#ccc_id").val(), status: "FAILED", show_calibration_certificate: "true"} )
+        $.post( url, {ccc_id: $( "#ccc_id").val(), status: "FAILED", api_code: 6} )
             .done(function(data) {
                 $( "#ccc_back" ).submit();
             });
@@ -24,7 +24,7 @@ jQuery( document ).ready(function( $ ) {
         url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
         $.post( 
             url, 
-            {client_name: $( "#client_name").val(), calibration_calculation: "false", api_code: 4} 
+            {client_name: $( "#client_name").val(), api_code: 15} 
         ).done(function(data) {
                 var newOptions = "", i, clients;
                 clients = JSON.parse(data);
@@ -39,8 +39,7 @@ jQuery( document ).ready(function( $ ) {
         url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
         $.post( 
             url, 
-            {manufacturer_name: $( "#manufacturer_name").val(), calibration_calculation: "false", 
-                api_code: 1} 
+            {manufacturer_name: $( "#manufacturer_name").val(), api_code: 12} 
         ).done(function(data) {
                 var newOptions = "", i, manufacturers;
                 manufacturers = JSON.parse(data);
@@ -56,7 +55,7 @@ jQuery( document ).ready(function( $ ) {
         url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
         $.post( 
             url, 
-            {equipment_name: $( "#equipment_name").val(), calibration_calculation: "false", api_code: 2} 
+            {equipment_name: $( "#equipment_name").val(), api_code: 13} 
         ).done(function(data) {
                 var newOptions = "", i, equipments;
                 equipments = JSON.parse(data);
@@ -71,8 +70,7 @@ jQuery( document ).ready(function( $ ) {
         url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
         $.post( 
             url, 
-            {s_t_equipment_name: $( "#s_t_equipment_name").val(), calibration_calculation: "false", 
-                api_code: 3} 
+            {s_t_equipment_name: $( "#s_t_equipment_name").val(), api_code: 14} 
         ).done(function(data) {
                 var newOptions = "", i, equipments;
                 equipments = JSON.parse(data);
@@ -92,8 +90,7 @@ jQuery( document ).ready(function( $ ) {
                 contact_name: $( "#contact_name").val(), 
                 contact_email: $( "#contact_email").val(), 
                 contact_phone: $( "#contact_phone").val(), 
-                calibration_calculation: "false", 
-                api_code: 5
+                api_code: 16
             } 
         ).done(function(data) {
                 var newOptions = "", i, clients;

@@ -15,7 +15,6 @@
                         <label class="col-form-label col-sm-4" for="manufacturer_name">Name</label>
                         <input type="text" name="manufacturer_name" id="manufacturer_name" 
                             class="form-control form-control-sm col-sm-8" required />
-                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -45,7 +44,6 @@
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="equipment_name">Name</label>
                         <input type="text" name="equipment_name" id="equipment_name" class="form-control form-control-sm col-sm-8" required />
-                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -76,7 +74,6 @@
                         <label class="col-form-label col-sm-4" for="s_t_equipment_name">Name</label>
                         <input type="text" name="s_t_equipment_name" id="s_t_equipment_name" 
                             class="form-control form-control-sm col-sm-8" required />
-                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -107,7 +104,6 @@
                         <label class="col-form-label col-sm-4" for="client_name">Name</label>
                         <input type="text" name="client_name" id="client_name" 
                             class="form-control form-control-sm col-sm-8" required />
-                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -149,7 +145,6 @@
                         <label class="col-form-label col-sm-4" for="contact_name">Contact Name</label>
                         <input type="text" name="contact_name" id="contact_name" 
                             class="form-control form-control-sm col-sm-8" required />
-                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="contact_email">Contact Email</label>

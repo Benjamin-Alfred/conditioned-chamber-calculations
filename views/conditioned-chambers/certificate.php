@@ -5,6 +5,7 @@
             <form name="ccc_back" id="ccc_back" method="POST"
                 action="<?php echo get_site_url(); ?>/conditioned-chambers/">
                 <input type="hidden" name="ccc_id" id="ccc_id" value="<?php echo $requestedCertificate; ?>">
+                <input type="hidden" name="api_code" value="4">
                 <div class="btn-group float-right" role="group" aria-label="Status">
                     <?php
                     if(strcmp($certification->result, "PENDING") != 0 && hasRole('APPROVER')){
@@ -26,9 +27,9 @@
                     <?php
                     } 
                     ?>
-                    <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_back.submit">
+                    <a class="btn btn-sm btn-outline-dark" href="<?php echo get_site_url(); ?>/conditioned-chambers/">
                         Close
-                    </button>
+                    </a>
                 </div>
             </form>
         </div>

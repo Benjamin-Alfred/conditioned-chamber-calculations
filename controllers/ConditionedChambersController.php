@@ -8,115 +8,148 @@
  * 3 => View Certificate
  * 4 => Edit
  */
-$COEPageURI['conditioned-chambers'][1] = "views/conditioned-chambers/list.php";
-$COEPageURI['conditioned-chambers'][2] = "views/conditioned-chambers/entry-form.php";
-$COEPageURI['conditioned-chambers'][3] = "views/conditioned-chambers/certificate.php";
-$COEPageURI['conditioned-chambers'][4] = "views/conditioned-chambers/edit-form.php";
+$COEPageURI['conditioned-chambers'][0] = "views/conditioned-chambers/list.php";
+$COEPageURI['conditioned-chambers'][1] = "views/conditioned-chambers/new.php";
+$COEPageURI['conditioned-chambers'][2] = "views/conditioned-chambers/certificate.php";
+$COEPageURI['conditioned-chambers'][3] = "views/conditioned-chambers/edit.php";
 
-$COEPage = 1; 
-if(!empty( $_REQUEST['calibration_calculation'] )) $COEPage = 2;
-else if(!empty( $_REQUEST['show_calibration_certificate'] )) $COEPage = 3;
-else if(!empty( $_REQUEST['edit_calibration_calculation'] )) $COEPage = 4;
+$COEPageURI['conditioned-chambers'][4] = "views/clients/list.php";
 
+$COEPage = 0;
 
-if ($COEPage == 1) {
-    $certicates = getCOEConditionedChamberCertificatesList();
-}else if($COEPage == 2){
+$APICode = empty( $_REQUEST['api_code'] ) ? 0 : $_REQUEST['api_code'];
 
-    $validated = empty( $_REQUEST['form_ready_for_submit'] ) ? false : true;
-    $updatedForm = empty( $_REQUEST['form_ready_for_update'] ) ? false : true;
+$currentUser = wp_get_current_user();
 
-    if ($validated || $updatedForm) {
-        if($validated)$response = addConditionedChamberRecordings($_REQUEST);
-        else if($updatedForm)$response = updateConditionedChamberRecordings($_REQUEST);
+switch ($APICode) {
+    case '0': // list CC
+        $COEPage = 0;
+        break;
+    case '1': // new CC
+        $COEPage = 1;
+        break;
+    case '2': // save CC
+        $response = addConditionedChamberRecordings($_REQUEST);
 
         if($response){
+            $COEPage = 0;
+        }else{
             $COEPage = 1;
-            $certicates = getCOEConditionedChamberCertificatesList();
         }
-    }else{
+        break;
+    case '3': // update CC
+        $response = updateConditionedChamberRecordings($_REQUEST);
 
+        if($response){
+            $COEPage = 0;
+        }else{
+            $COEPage = 3;
+        }
+        break;
+    case '4': // view CC certificate
+        $COEPage = 2;
+        break;
+    case '5': // edit CC
+        $COEPage = 3;
+        break;
+    case '6': // verify CC certificte
+        $requestedCertificate = $_REQUEST['ccc_id'];
+        if(!empty( $_REQUEST['status'] )){  // Verify COE CC Certificate
+            verifyConditionedChamberCertificate($_REQUEST);
+        }
+        exit();
+        break;
+    case '12': // add new manufacturer
         $newManufacturer = empty( $_REQUEST['manufacturer_name'] ) ? false : $_REQUEST['manufacturer_name'];
         addCOEManufacturer($newManufacturer);
-
+        $APICode = 7;
+        break;
+    case '13': // add new equipment
         $newEquipment = empty( $_REQUEST['equipment_name'] ) ? false : $_REQUEST['equipment_name'];
         addCOEEquipment($newEquipment);
-
+        $APICode = 8;
+        break;
+    case '14': // add new standard test equipment 
         $newSTEquipment = empty( $_REQUEST['s_t_equipment_name'] ) ? false : $_REQUEST['s_t_equipment_name'];
         addCOESTEquipment($newSTEquipment);
-
+        $APICode = 9;
+        break;
+    case '15': // add new client
         $newClient = empty( $_REQUEST['client_name'] ) ? false : $_REQUEST['client_name'];
         addCOEClient($newClient);
-        
+        $APICode = 10;
+        break;
+    case '16': // add new client contact
         $clientID = empty( $_REQUEST['client_id'] ) ? false : $_REQUEST['client_id'];
         $newClientContactName = empty( $_REQUEST['contact_name'] ) ? false : $_REQUEST['contact_name'];
         $newClientContactEmail = empty( $_REQUEST['contact_email'] ) ? false : $_REQUEST['contact_email'];
         $newClientContactPhone = empty( $_REQUEST['contact_phone'] ) ? '' : $_REQUEST['contact_phone'];
 
         addCOEClientContact($clientID, $newClientContactName, $newClientContactEmail, $newClientContactPhone);
-
-        $manufacturers = getCOEManufacturers();
-        $equipments = getCOEEquipment();
-        $STEquipments = getCOESTEquipment();
-        $clients = getCOEClients();
-        $clientContacts = getCOEClientContacts();
-
-        // If this was an AJAX call, return json output then terminate execution
-        $APICode = empty( $_REQUEST['api_code'] ) ? 0 : $_REQUEST['api_code'];
-
-        switch ($APICode) {
-            case '0':
-                break;
-            case '1':
-                echo json_encode($manufacturers);
-                exit();
-                break;
-            case '2':
-                echo json_encode($equipments);
-                exit();
-                break;
-            case '3':
-                echo json_encode($STEquipments);
-                exit();
-                break;
-            case '4':
-                echo json_encode($clients);
-                exit();
-                break;
-            case '5':
-                echo json_encode($clientContacts);
-                exit();
-                break;
-        }
-    }
-
-}else if($COEPage == 3){
-    $requestedCertificate = $_REQUEST['ccc_id'];
-    
-    if(!empty( $_REQUEST['status'] )){  // Verify COE CC Certificate
-        verifyConditionedChamberCertificate($_REQUEST);
-        exit();
-    }else{                              //Show COE CC Certificate
-        $certification = getCOECCCertificate($requestedCertificate);
-    }
-}else if($COEPage == 4){
-    $requestedCertificate = $_REQUEST['ccc_id'];
-    
-    if(!empty( $_REQUEST['status'] )){  // Verify COE Thermometer Certificate
-        verifyConditionedChamberCertificate($_REQUEST);
-        exit();
-    }else{                              //Show COE Thermometer Certificate
-        $certification = getCOECCCertificate($requestedCertificate);
-
-        $manufacturers = getCOEManufacturers();
-        $equipments = getCOEEquipment();
-        $STEquipments = getCOESTEquipment();
-        $clients = getCOEClients();
-        $clientContacts = getCOEClientContacts();
-    }
+        $APICode = 11;
+        break;
 }
 
-$currentUser = wp_get_current_user();
+//Return JSON output and exit
+switch ($APICode) {
+    case '7': // get manufacturers
+        $manufacturers = getCOEManufacturers();
+        echo json_encode($manufacturers);
+        exit();
+        break;
+    case '8': // get equipments
+        $equipments = getCOEEquipment();
+        echo json_encode($equipments);
+        exit();
+        break;
+    case '9': // get standard test equipment
+        $STEquipments = getCOESTEquipment();
+        echo json_encode($STEquipments);
+        exit();
+        break;
+    case '10': // get clients
+        $clients = getCOEClients();
+        echo json_encode($clients);
+        exit();
+        break;
+    case '11': // get client contacts
+        $clientContacts = getCOEClientContacts();
+        echo json_encode($clientContacts);
+        exit();
+        break;
+}
+
+// Redirect to page - where do we go now?
+switch ($COEPage) {
+    case '0':
+        $certicates = getCOEConditionedChamberCertificatesList();
+        break;
+    case '1':
+        $manufacturers = getCOEManufacturers();
+        $equipments = getCOEEquipment();
+        $STEquipments = getCOESTEquipment();
+        $clients = getCOEClients();
+        $clientContacts = getCOEClientContacts();
+        break;
+    case '2':
+        $requestedCertificate = $_REQUEST['ccc_id'];
+        $certification = getCOECCCertificate($requestedCertificate);
+        break;
+    case '3':
+        $requestedCertificate = $_REQUEST['ccc_id'];
+        $certification = getCOECCCertificate($requestedCertificate);
+
+        $manufacturers = getCOEManufacturers();
+        $equipments = getCOEEquipment();
+        $STEquipments = getCOESTEquipment();
+        $clients = getCOEClients();
+        $clientContacts = getCOEClientContacts();
+        break;
+    case '4':
+        # code...
+        break;
+}
+
 
 /*
  * Conditioned Chamber specific functions

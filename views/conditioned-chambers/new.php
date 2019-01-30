@@ -6,8 +6,7 @@
     <br>
     <br>
     <form name="calibration_calculations_form" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
-        <input type="hidden" name="form_ready_for_submit" value="false" />
-        <input type="hidden" name="calibration_calculation" value="false" />
+        <input type="hidden" name="api_code" value="2" />
 
         <div class="card">
             <div class="card-body">
