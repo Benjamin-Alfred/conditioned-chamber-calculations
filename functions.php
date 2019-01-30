@@ -655,4 +655,13 @@ function sd($array) {
             ) / (count($array)-1)
         ); 
 }
+
+/*
+ * Log to file
+ */
+function log2File($logText, $logFile = "coesite.log"){
+    $now = new DateTime("now", new DateTimeZone('Africa/Nairobi'));
+    error_log("{$now->format('Y-m-d G:i:s')} $logText\n", 3, $logFile);
+}
+
 ?>

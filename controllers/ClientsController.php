@@ -83,7 +83,7 @@ switch ($APICode) {
         break;
     case '10': //Save service request
         echo addServiceRequest($_REQUEST);
-
+        exit();
         break;
     case '11':
         $serviceRequest = getServiceRequest($currentUser->client_id, $_REQUEST['service_request_id']);
@@ -110,44 +110,52 @@ function authenticateClient($email, $password){
 }
 
 function getServiceRequests($facilityID){
-    error_log("getServiceRequests");
-    error_log("facilityID: $facilityID");
+    log2File("getServiceRequests");
+    log2File("facilityID: $facilityID");
     global $wpdb;
     
     $query = "SELECT sr.id AS service_request_id, m.name AS manufacturer_name, e.name AS equipment_name, sr.equipment_model, sr.equipment_serial_number, sr.equipment_inventory_number, srs.status_text AS status, srs.done_at AS request_date, cc.name AS requested_by, sr.calibration_interval FROM wp_coe_service_requests sr LEFT JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE status='created' AND sr.facility_id = $facilityID;";
-    error_log($query);
+    log2File($query);
 
     return $wpdb->get_results($query, ARRAY_A);
 }
 
 function getServiceRequest($facilityID, $serviceRequestID){
-    error_log("getServiceRequest");
-    error_log("facilityID: $facilityID");
-    error_log("serviceRequestID: $serviceRequestID");
+    log2File("getServiceRequest");
+    log2File("facilityID: $facilityID");
+    log2File("serviceRequestID: $serviceRequestID");
     global $wpdb;
     
-    $query = "SELECT sr.id AS service_request_id, m.name AS manufacturer_name, e.name AS equipment_name, sr.equipment_model, sr.equipment_serial_number, sr.equipment_inventory_number, srs.status_text AS status, srs.done_at AS request_date, cc.name AS requested_by, sr.calibration_interval FROM wp_coe_service_requests sr LEFT JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE status='created' AND sr.facility_id = $facilityID AND sr.id = $serviceRequestID;";
-    error_log($query);
+    $query = "SELECT sr.id AS service_request_id, m.name AS manufacturer_name, e.name AS equipment_name, sr.equipment_model, sr.equipment_serial_number, sr.equipment_inventory_number, srs.status_text AS status, srs.done_at AS request_date, cc.name AS requested_by, sr.calibration_interval, sr.comments FROM wp_coe_service_requests sr LEFT JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE status='created' AND sr.facility_id = $facilityID AND sr.id = $serviceRequestID;";
+    log2File($query);
 
     return $wpdb->get_row($query, ARRAY_A);
 }
 
 function addServiceRequest($request){
+    log2File("addServiceRequest");
     global $currentUser, $wpdb;
 
-    $query = "SELECT sr.id AS service_request_id, srs.id AS service_request_status_id FROM wp_coe_service_requests sr INNER JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE srs.status='created' AND sr.facility_id = $facilityID AND sr.id = $serviceRequestID;";
-    error_log($query);
-
-    return $wpdb->get_row($query, ARRAY_A);
-
     $serviceRequest = ["facility_id" => $currentUser->client_id, "equipment_id" => $request["equipment"], "manufacturer_id" => $request["manufacturer"], "equipment_model" => $request["model"], "equipment_serial_number" => $request["serial_number"], "equipment_inventory_number" => $request["inventory_number"], "calibration_interval" => $request["calibration_interval"], "comments" => $request["comments"]];
+    log2File(json_encode($request));
+    log2File(json_encode($serviceRequest));
 
-    $rowsInserted = $wpdb->insert("wp_coe_service_requests", $serviceRequest);
+    $query = "SELECT sr.id AS service_request_id, srs.id AS service_request_status_id FROM wp_coe_service_requests sr INNER JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE srs.status='created' AND sr.facility_id = {$serviceRequest['facility_id']} AND sr.equipment_serial_number = '{$serviceRequest['equipment_serial_number']}' AND sr.equipment_inventory_number = '{$serviceRequest['equipment_inventory_number']}';";
+    log2File($query);
 
-    if($rowsInserted > 0){
-        $serviceRequestID = $wpdb->insert_id;
-        $serviceRequestStatus = ["service_request_id" => $serviceRequestID, "status" => "created", "status_text" => "Initiated", "done_by" => $currentUser->id];
-        $rowsInserted = $wpdb->insert("wp_coe_service_request_status", $serviceRequestStatus);
+    $previousRequestSearch = $wpdb->get_row($query, ARRAY_A);
+    
+    $rowsInserted = 0;
+
+    if (count($previousRequestSearch) == 0) {
+        $rowsInserted = $wpdb->insert("wp_coe_service_requests", $serviceRequest);
+
+        if($rowsInserted > 0){
+            $serviceRequestID = $wpdb->insert_id;
+            $serviceRequestStatus = ["service_request_id" => $serviceRequestID, "status" => "created", "status_text" => "Initiated", "done_by" => $currentUser->id];
+
+            $wpdb->insert("wp_coe_service_request_status", $serviceRequestStatus);
+        }
     }
 
     return $rowsInserted;
