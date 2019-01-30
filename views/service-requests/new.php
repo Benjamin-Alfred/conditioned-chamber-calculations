@@ -65,13 +65,23 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="calibration_interval" class="col-form-label col-sm-4">
+                        <sup style="color: red;" title="Mandatory">*</sup>
+                        Calibration Interval
+                    </label>
+                    <select class="form-control form-control-sm col-sm-8" id="calibration_interval" name="calibration_interval" required >
+                        <option value='3'>3 Months </option>
+                        <option value='6'>6 Months </option>
+                        <option value='12'>12 Months </option>
+                    </select>
+                </div>
+                <div class="form-group row">
                     <label class="col-form-label col-sm-4" for="comments">
                         <sup style="color: red;" title="Mandatory">&nbsp;</sup>
                         Comments
                     </label>
-                    <textarea name="comments" id="comments" 
-                        class="form-control form-control-sm col-sm-8" title="Enter any additional comments here">
-                    </textarea>
+                    <textarea name="comments" id="comments" class="form-control form-control-sm col-sm-8"
+                        title="Enter any additional comments here"></textarea>
                 </div>
 
                 <div class="form-group row">

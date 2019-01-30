@@ -28,7 +28,8 @@ get_header();
                 ?>
                 <div class="col" style="text-align: right;font-size: 0.75em;">
                     <span>
-                        Logged in as <?php echo $currentUser->name; ?> |    
+                        Logged in as 
+                        <?php echo "{$currentUser->name} - {$currentUser->facility_name}"; ?> |    
                     </span>
                     <form method="POST" action="<?php echo get_site_url().'/clients/'; ?>" id="client_logout_link" style="display: inline-block;">
                         <input type="hidden" name="api_code" value="1">

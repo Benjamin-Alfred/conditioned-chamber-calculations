@@ -35,11 +35,13 @@
                     echo "<td>{$serviceRequest['requested_by']}</td>";
                     echo "<td>{$serviceRequest['status']}</td>";
             ?>
-                    <td><form method="POST" action="<?php echo get_site_url(); ?>/clients/">
-                        <input type="hidden" name="api_code" value="11">
-                        <input type="hidden" name="service_request_id" value="<?php echo $serviceRequest->id; ?>" />
-                        <button class="btn btn-sm btn-outline-dark">View</button>
-                    </form>
+                    <td>
+                        <form method="POST" action="<?php echo get_site_url(); ?>/clients/">
+                            <input type="hidden" name="api_code" value="11">
+                            <input type="hidden" name="service_request_id" 
+                                value="<?php echo $serviceRequest['service_request_id']; ?>" />
+                            <button class="btn btn-sm btn-outline-dark">View</button>
+                        </form>
                     </td></tr>
             <?php
                 }
