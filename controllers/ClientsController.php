@@ -16,13 +16,13 @@ else $currentUser = [];
  */
 
 $COEPageURI['clients'][0] = "views/clients/login.php";
-$COEPageURI['clients'][1] = "views/clients/list.php";
-$COEPageURI['clients'][2] = "views/clients/new.php";
+$COEPageURI['clients'][2] = "views/clients/register.php";
 $COEPageURI['clients'][3] = "views/clients/view.php";
 $COEPageURI['clients'][4] = "views/service-requests/list.php";
 $COEPageURI['clients'][5] = "views/service-requests/new.php";
 $COEPageURI['clients'][6] = "views/service-requests/view.php";
 
+$pageURL = get_site_url().'/clients/';
 
 // Navigation based on the value of $_REQUEST['api_code']
 
@@ -51,14 +51,14 @@ switch ($APICode) {
         $serviceRequests = getServiceRequests($currentUser->client_id);
         $COEPage = 4;
         break;
-    case '5': //Add new Facility contact
+    case '600': //Search for facility by MFL Code
+        echo json_encode(getCOEFacility($_REQUEST['search_text']));
+        exit();
+        break;
+    case '601': //Add new Facility contact
         $newContact = addCOEClientContact($_REQUEST['facility_id'], $_REQUEST['contact_name'], 
             $_REQUEST['contact_email'], $_REQUEST['contact_phone'], $_REQUEST['password']);
         echo json_encode($newContact);
-        exit();
-        break;
-    case '6': //Search for facility by MFL Code
-        echo json_encode(getCOEFacility($_REQUEST['search_text']));
         exit();
         break;
     case '7': //Registration page

@@ -1,9 +1,9 @@
-<!-- New Client Contact from admin -->
+<!-- New Registrations -->
 <div>
     <div class="row">
         <div id="info_block" class="col-sm-10"></div>
-        <form name="ccc_back" method="POST" action="<?php echo $pageURL; ?>" class="col-sm-2">
-            <button class="btn btn-sm float-right" onclick="window.history.back();" title="Back">
+        <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/" class="col-sm-2">
+            <button class="btn btn-sm float-right" onclick="document.ccc_back.submit" title="Back">
                 <svg class="icon icon-arrow-left" aria-hidden="true" role="img">
                     <use href="#icon-arrow-left" xlink:href="#icon-arrow-left"></use>
                 </svg>
@@ -83,10 +83,26 @@
                     <input type="text" name="contact_phone" id="contact_phone" 
                         class="form-control form-control-sm col-sm-8" required />
                 </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4" for="password">
+                        <sup style="color: red;" title="Mandatory">*</sup>
+                        Password
+                    </label>
+                    <input type="password" name="password" id="password" 
+                        class="form-control form-control-sm col-sm-8" required />
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4" for="repeat_password">
+                        <sup style="color: red;" title="Mandatory">*</sup>
+                        Repeat Password
+                    </label>
+                    <input type="password" name="repeat_password" id="repeat_password" 
+                        class="form-control form-control-sm col-sm-8" required />
+                </div>
                 <div class="form-group row justify-content-end">
                     <input type="hidden" name="api_code" value="601">
-                    <label class="col-form-label sr-only" for="client_self_registration">Add User</label>
-                    <input type="submit" id="add_new_user" class="button btn form-control form-control-sm col-sm-8" value="Add User" />
+                    <label class="col-form-label sr-only" for="client_self_registration">Register</label>
+                    <input type="submit" id="client_self_registration" class="button btn form-control form-control-sm col-sm-8" value="Register" />
                 </div>
             </form>
         </div>
@@ -101,5 +117,4 @@
         </div>
     </div>
 </div>
-<!-- /New Client Contact from admin -->
-<?php include('js.php'); ?>
+<!-- /New Registrations -->

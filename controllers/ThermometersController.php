@@ -13,7 +13,10 @@ $COEPageURI['thermometers'][2] = "views/thermometers/entry-form.php";
 $COEPageURI['thermometers'][3] = "views/thermometers/certificate.php";
 $COEPageURI['thermometers'][4] = "views/thermometers/edit-form.php";
 
+$pageURL = get_site_url().'/thermometers/';
+
 $COEPage = 1; 
+
 if(!empty( $_REQUEST['calibration_calculation'] )) $COEPage = 2;
 else if(!empty( $_REQUEST['show_calibration_certificate'] )) $COEPage = 3;
 else if(!empty( $_REQUEST['edit_calibration_calculation'] )) $COEPage = 4;

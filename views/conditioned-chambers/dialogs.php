@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/" 
+                <form method="POST" action="<?php echo $pageURL; ?>" 
                     name="newManufacturer">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="manufacturer_name">Name</label>
@@ -39,7 +39,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/" 
+                <form method="POST" action="<?php echo $pageURL; ?>" 
                     name="newEquipment">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="equipment_name">Name</label>
@@ -68,7 +68,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/" 
+                <form method="POST" action="<?php echo $pageURL; ?>" 
                     name="newSTEquipment">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="s_t_equipment_name">Name</label>
@@ -98,7 +98,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/" 
+                <form method="POST" action="<?php echo $pageURL; ?>" 
                     name="newClient">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="client_name">Name</label>
@@ -128,7 +128,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/" 
+                <form method="POST" action="<?php echo $pageURL; ?>" 
                     name="newClientContact">
                     <div class="form-group row">
                         <label for="client" class="col-form-label col-sm-4">Name</label>

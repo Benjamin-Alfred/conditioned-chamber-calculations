@@ -1,6 +1,6 @@
 <!-- List Conditioned Chamber Items -->
 <div class="row justify-content-end" style="padding-bottom: 20px;">
-    <form name="ccc_post" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
+    <form name="ccc_post" method="POST" action="<?php echo $pageURL; ?>">
         <input type="hidden" name="api_code" value="1" />
     <?php
         if(hasRole('CALIBRATOR')){
@@ -37,13 +37,13 @@
             ?>
                     <td>
                         <form name="ccc_cert" id="ccc_cert" method="POST" 
-                            action="<?php echo get_site_url(); ?>/conditioned-chambers/" class="inline-form">
+                            action="<?php echo $pageURL; ?>" class="inline-form">
                             <input type="hidden" name="api_code" value="4" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
                             <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert').submit()">View</button>
                         </form>
                         <form name="ccc_cert_1" id="ccc_cert_1" method="POST"
-                            action="<?php echo get_site_url(); ?>/conditioned-chambers/" class="inline-form">
+                            action="<?php echo $pageURL; ?>" class="inline-form">
                             <input type="hidden" name="api_code" value="5" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
                             <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>

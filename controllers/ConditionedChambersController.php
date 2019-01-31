@@ -14,6 +14,7 @@ $COEPageURI['conditioned-chambers'][2] = "views/conditioned-chambers/certificate
 $COEPageURI['conditioned-chambers'][3] = "views/conditioned-chambers/edit.php";
 
 $COEPageURI['conditioned-chambers'][4] = "views/clients/list.php";
+$COEPageURI['conditioned-chambers'][5] = "views/clients/new.php";
 
 $COEPage = 0;
 
@@ -64,22 +65,22 @@ switch ($APICode) {
     case '12': // add new manufacturer
         $newManufacturer = empty( $_REQUEST['manufacturer_name'] ) ? false : $_REQUEST['manufacturer_name'];
         addCOEManufacturer($newManufacturer);
-        $APICode = 7;
+        $APICode = 500;
         break;
     case '13': // add new equipment
         $newEquipment = empty( $_REQUEST['equipment_name'] ) ? false : $_REQUEST['equipment_name'];
         addCOEEquipment($newEquipment);
-        $APICode = 8;
+        $APICode = 501;
         break;
     case '14': // add new standard test equipment 
         $newSTEquipment = empty( $_REQUEST['s_t_equipment_name'] ) ? false : $_REQUEST['s_t_equipment_name'];
         addCOESTEquipment($newSTEquipment);
-        $APICode = 9;
+        $APICode = 502;
         break;
     case '15': // add new client
         $newClient = empty( $_REQUEST['client_name'] ) ? false : $_REQUEST['client_name'];
         addCOEClient($newClient);
-        $APICode = 10;
+        $APICode = 503;
         break;
     case '16': // add new client contact
         $clientID = empty( $_REQUEST['client_id'] ) ? false : $_REQUEST['client_id'];
@@ -88,7 +89,7 @@ switch ($APICode) {
         $newClientContactPhone = empty( $_REQUEST['contact_phone'] ) ? '' : $_REQUEST['contact_phone'];
 
         addCOEClientContact($clientID, $newClientContactName, $newClientContactEmail, $newClientContactPhone);
-        $APICode = 11;
+        $APICode = 504;
         break;
     case '17': // list client contacts
         $COEPage = 4;
@@ -98,33 +99,46 @@ switch ($APICode) {
         activateCOEClientContact($contactID, $_REQUEST['can_login']);
         $COEPage = 4;
         break;
+    case '19': // new client contact
+        $COEPage = 5;
+        break;
 }
 
-//Return JSON output and exit
+//Return JSON output and exit - codes from 500
 switch ($APICode) {
-    case '7': // get manufacturers
+    case '500': // get manufacturers
         $manufacturers = getCOEManufacturers();
         echo json_encode($manufacturers);
         exit();
         break;
-    case '8': // get equipments
+    case '501': // get equipments
         $equipments = getCOEEquipment();
         echo json_encode($equipments);
         exit();
         break;
-    case '9': // get standard test equipment
+    case '502': // get standard test equipment
         $STEquipments = getCOESTEquipment();
         echo json_encode($STEquipments);
         exit();
         break;
-    case '10': // get clients
+    case '503': // get clients
         $clients = getCOEClients();
         echo json_encode($clients);
         exit();
         break;
-    case '11': // get client contacts
+    case '504': // get client contacts
         $clientContacts = getCOEClientContacts();
         echo json_encode($clientContacts);
+        exit();
+        break;
+    case '600': //Search for facility by MFL Code
+        echo json_encode(getCOEFacility($_REQUEST['search_text']));
+        exit();
+        break;
+    case '601': //Add new Facility contact
+        $newContact = addCOEClientContact($_REQUEST['facility_id'], $_REQUEST['contact_name'], 
+            $_REQUEST['contact_email'], $_REQUEST['contact_phone']);
+        echo json_encode($newContact);
         exit();
         break;
 }

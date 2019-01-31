@@ -138,8 +138,15 @@ function addCOEClientContact($clientID, $name, $email, $phone, $password = ""){
         $inputArray["name"] = trim($name);
         $inputArray["email"] = trim($email);
         $inputArray["phone"] = trim($phone);
-        if($password !== false) $inputArray["password"] = md5(trim($password));
+        if($password !== false && strcmp(trim($password), "") != 0){
+            $inputArray["password"] = md5(trim($password));
+        }else{
+            $randomPassword = substr(md5(rand()), 0, 7);
+            $inputArray["password"] = md5($randomPassword);
+        }
         $result = $wpdb->insert("wp_coe_client_contacts", $inputArray);
+
+        log2File("Email: {$inputArray['email']} Random Password: $randomPassword");
     }
     return $result;
 }

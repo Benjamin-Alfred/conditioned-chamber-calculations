@@ -3,7 +3,7 @@
     <div class="row justify-content-end d-print-none">
         <div class="col">
             <form name="ccc_back" id="ccc_back" method="POST"
-                action="<?php echo get_site_url(); ?>/conditioned-chambers/">
+                action="<?php echo $pageURL; ?>">
                 <input type="hidden" name="ccc_id" id="ccc_id" value="<?php echo $requestedCertificate; ?>">
                 <input type="hidden" name="api_code" value="4">
                 <div class="btn-group float-right" role="group" aria-label="Status">
@@ -27,7 +27,7 @@
                     <?php
                     } 
                     ?>
-                    <a class="btn btn-sm btn-outline-dark" href="<?php echo get_site_url(); ?>/conditioned-chambers/">
+                    <a class="btn btn-sm btn-outline-dark" href="<?php echo $pageURL; ?>">
                         Close
                     </a>
                 </div>

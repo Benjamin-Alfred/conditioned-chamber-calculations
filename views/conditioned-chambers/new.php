@@ -1,11 +1,11 @@
 <!-- Conditioned Chamber Calculations -->
 <div>
-    <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
+    <form name="ccc_back" method="POST" action="<?php echo $pageURL; ?>">
         <button class="btn btn-sm btn-outline-dark float-right" onclick="document.ccc_back.submit">Back</button>
     </form>
     <br>
     <br>
-    <form name="calibration_calculations_form" method="POST" action="<?php echo get_site_url(); ?>/conditioned-chambers/">
+    <form name="calibration_calculations_form" method="POST" action="<?php echo $pageURL; ?>">
         <input type="hidden" name="api_code" value="2" />
 
         <div class="card">

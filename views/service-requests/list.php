@@ -1,6 +1,6 @@
 <!-- List Client Service Requests -->
 <div class="row justify-content-end" style="padding-bottom: 20px;">
-    <form name="ccc_post" method="POST" action="<?php echo get_site_url(); ?>/clients/">
+    <form name="ccc_post" method="POST" action="<?php echo $pageURL; ?>">
         <input type="hidden" name="api_code" value="9">
         <button onclick="document.ccc_post.submit()" title="New Service Request" class="btn-nav-coe btn-info">
             &plus;
@@ -36,7 +36,7 @@
                     echo "<td>{$serviceRequest['status']}</td>";
             ?>
                     <td>
-                        <form method="POST" action="<?php echo get_site_url(); ?>/clients/">
+                        <form method="POST" action="<?php echo $pageURL; ?>">
                             <input type="hidden" name="api_code" value="11">
                             <input type="hidden" name="service_request_id" 
                                 value="<?php echo $serviceRequest['service_request_id']; ?>" />
