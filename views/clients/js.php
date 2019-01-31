@@ -120,6 +120,14 @@ jQuery( document ).ready(function( $ ) {
         }
     });
 
+    $( "#user_enable" ).click(function(){
+        $( this ).parent().submit();
+    });
+
+    $( "#user_edit" ).click(function(){
+        $( this ).parent().submit();
+    });
+
     $( "#mfl_search" ).click(function() {
         url = "<?php echo $pageURL; ?>";
         if($("#mfl_code").val().trim().length > 4){

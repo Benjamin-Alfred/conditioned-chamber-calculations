@@ -12,15 +12,15 @@
     <div class="card" style="margin-top: 20px;">
         <div class="card-body">
             <h5 class="card-title">Client Details</h5>
-            <form name="registration_form" id="registration_form">
+            <form method="POST" action="<?php echo $pageURL; ?>">
                 <div class="form-group row">
-                    <label for="mfl_code" class="col-form-label col-sm-4">
+                    <label for="client_id" class="col-form-label col-sm-4">
                         <sup style="color: red;">&nbsp;</sup>
                         MFL Code
                     </label>
                     <div class="col-sm-8" style="padding: 0;">
                         <div class="search-form" style="width: 100%;color: #606060;font-size: 0.9em;">
-                            <input type="search" name="mfl_code" id="mfl_code" class="search-field" placeholder="Type MFL Code" />
+                            <input type="search" name="mfl_code" id="mfl_code" class="search-field" placeholder="Type MFL Code" value="<?php echo $contact->code ?>" />
                             <button type="button" class="search-submit" id="mfl_search">
                                 <svg class="icon icon-search" aria-hidden="true" role="img">
                                     <use href="#icon-search" xlink:href="#icon-search"></use>
@@ -63,7 +63,7 @@
                         Contact Person
                     </label>
                     <input type="text" name="contact_name" id="contact_name" 
-                        class="form-control form-control-sm col-sm-8" required />
+                        class="form-control form-control-sm col-sm-8" value="<?php echo $contact->name ?>" required />
                 </div>
                 <div class="form-group row">
                     <label class="col-form-label col-sm-4" for="contact_email">
@@ -71,7 +71,7 @@
                         Contact Email
                     </label>
                     <input type="email" name="contact_email" id="contact_email" 
-                        class="form-control form-control-sm col-sm-8" required />
+                        class="form-control form-control-sm col-sm-8" value="<?php echo $contact->email ?>" required />
                 </div>
                 <div class="form-group row">
                     <label class="col-form-label col-sm-4" for="contact_phone">
@@ -79,12 +79,13 @@
                         Contact Phone
                     </label>
                     <input type="text" name="contact_phone" id="contact_phone" 
-                        class="form-control form-control-sm col-sm-8" required />
+                        class="form-control form-control-sm col-sm-8" value="<?php echo $contact->phone ?>" required />
                 </div>
                 <div class="form-group row justify-content-end">
-                    <input type="hidden" name="api_code" value="601">
-                    <label class="col-form-label sr-only" for="client_self_registration">Add User</label>
-                    <input type="submit" id="add_new_user" class="button btn form-control form-control-sm col-sm-8" value="Add User" />
+                    <input type="hidden" name="api_code" value="17">
+                    <input type="hidden" name="contact_id" value="<?php echo $contact->id; ?>">
+                    <label class="col-form-label sr-only" for="update_user">Update User</label>
+                    <input type="submit" id="update_user" class="button btn form-control form-control-sm col-sm-8" value="Update User" />
                 </div>
             </form>
         </div>

@@ -110,7 +110,7 @@ jQuery( document ).ready(function( $ ) {
     $( "#client-contacts-menu" ).click(function() {
         url = "<?php echo $pageURL; ?>";
 
-        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="17" /></form>').appendTo('body').hide().submit();
+        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="7" /></form>').appendTo('body').hide().submit();
     });
 
 

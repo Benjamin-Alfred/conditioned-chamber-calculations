@@ -15,6 +15,7 @@ $COEPageURI['conditioned-chambers'][3] = "views/conditioned-chambers/edit.php";
 
 $COEPageURI['conditioned-chambers'][4] = "views/clients/list.php";
 $COEPageURI['conditioned-chambers'][5] = "views/clients/new.php";
+$COEPageURI['conditioned-chambers'][6] = "views/clients/edit.php";
 
 $COEPage = 0;
 
@@ -62,6 +63,20 @@ switch ($APICode) {
         }
         exit();
         break;
+    case '7': // list client contacts
+        $COEPage = 4;
+        break;
+    case '8': // Activate/De-activate client contact
+        $contactID = empty( $_REQUEST['contact_id'] ) ? false : $_REQUEST['contact_id'];
+        activateCOEClientContact($contactID, $_REQUEST['can_login']);
+        $COEPage = 4;
+        break;
+    case '9': // new client contact
+        $COEPage = 5;
+        break;
+    case '10': // edit contact
+        $COEPage = 6;
+        break;
     case '12': // add new manufacturer
         $newManufacturer = empty( $_REQUEST['manufacturer_name'] ) ? false : $_REQUEST['manufacturer_name'];
         addCOEManufacturer($newManufacturer);
@@ -91,16 +106,15 @@ switch ($APICode) {
         addCOEClientContact($clientID, $newClientContactName, $newClientContactEmail, $newClientContactPhone);
         $APICode = 504;
         break;
-    case '17': // list client contacts
-        $COEPage = 4;
-        break;
-    case '18': // Activate/De-activate client contact
+    case '17': // update client contact
+        $faciltyID = empty( $_REQUEST['facility_id'] ) ? false : $_REQUEST['facility_id'];
         $contactID = empty( $_REQUEST['contact_id'] ) ? false : $_REQUEST['contact_id'];
-        activateCOEClientContact($contactID, $_REQUEST['can_login']);
+        $contactName = empty( $_REQUEST['contact_name'] ) ? false : $_REQUEST['contact_name'];
+        $contactEmail = empty( $_REQUEST['contact_email'] ) ? false : $_REQUEST['contact_email'];
+        $contactPhone = empty( $_REQUEST['contact_phone'] ) ? '' : $_REQUEST['contact_phone'];
+
+        updateCOEClientContact($contactID, $faciltyID, $contactName, $contactEmail, $contactPhone);
         $COEPage = 4;
-        break;
-    case '19': // new client contact
-        $COEPage = 5;
         break;
 }
 
@@ -171,6 +185,11 @@ switch ($COEPage) {
         break;
     case '4':
         $contacts = getCOEClientContacts(true); //Get client contacts with facility details
+        break;
+    case '6':
+        $contactID = $_REQUEST['contact_id'];
+        $contact = getCOEClientContact($contactID); //Get client contacts with facility details
+        log2File(json_encode($contact));
         break;
 }
 

@@ -151,6 +151,33 @@ function addCOEClientContact($clientID, $name, $email, $phone, $password = ""){
     return $result;
 }
 
+function updateCOEClientContact($contactID, $facilityID, $name, $email, $phone, $password = ""){
+    global $wpdb;
+    $inputArray = $where = [];
+    $result = false;
+    if ($contactID !== false && $facilityID !== false && $name !== false && $email !== false) {
+        $where["id"] = $contactID;
+        $inputArray["name"] = trim($name);
+        $inputArray["client_id"] = trim($facilityID);
+        $inputArray["phone"] = trim($phone);
+        if($password !== false && strcmp(trim($password), "") != 0){
+            $inputArray["password"] = md5(trim($password));
+        }
+        $result = $wpdb->update("wp_coe_client_contacts", $inputArray, $where);
+
+        log2File("Email: {$inputArray['email']} updated");
+    }
+    return $result;
+}
+
+function getCOEClientContact($contactID){
+    global $wpdb;
+
+    $query = "SELECT f.code, c.* FROM wp_coe_client_contacts c LEFT JOIN wp_coe_facilities f ON c.client_id = f.id WHERE c.id = '$contactID'";
+    log2File($query);
+    return $wpdb->get_row($query);
+}
+
 function getCOEClientContacts($withFacilityDetails = false){
     global $wpdb;
 
