@@ -21,6 +21,8 @@ $APICode = empty( $_REQUEST['api_code'] ) ? 0 : $_REQUEST['api_code'];
 
 $currentUser = wp_get_current_user();
 
+$pageURL = get_site_url()."/conditioned-chambers/";
+
 switch ($APICode) {
     case '0': // list CC
         $COEPage = 0;
@@ -88,6 +90,14 @@ switch ($APICode) {
         addCOEClientContact($clientID, $newClientContactName, $newClientContactEmail, $newClientContactPhone);
         $APICode = 11;
         break;
+    case '17': // list client contacts
+        $COEPage = 4;
+        break;
+    case '18': // Activate/De-activate client contact
+        $contactID = empty( $_REQUEST['contact_id'] ) ? false : $_REQUEST['contact_id'];
+        activateCOEClientContact($contactID, $_REQUEST['can_login']);
+        $COEPage = 4;
+        break;
 }
 
 //Return JSON output and exit
@@ -146,7 +156,7 @@ switch ($COEPage) {
         $clientContacts = getCOEClientContacts();
         break;
     case '4':
-        # code...
+        $contacts = getCOEClientContacts(true); //Get client contacts with facility details
         break;
 }
 

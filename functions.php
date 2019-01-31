@@ -113,6 +113,22 @@ function getCOEClients(){
     return $wpdb->get_results("SELECT * FROM wp_coe_clients ORDER BY name;");
 }
 
+function activateCOEClientContact($contactID, $enable = 1){
+    global $wpdb;
+    $inputArray = [];
+    $where = [];
+    $result = false;
+    if($enable == 0)$enable = 1;
+    else if($enable == 1)$enable = 0;
+
+    if ($clientID !== false) {
+        $where["id"] = $contactID;
+        $inputArray["can_login"] = $enable;
+        $result = $wpdb->update("wp_coe_client_contacts", $inputArray, $where);
+    }
+    return $result;
+}
+
 function addCOEClientContact($clientID, $name, $email, $phone, $password = ""){
     global $wpdb;
     $inputArray = [];
@@ -128,10 +144,14 @@ function addCOEClientContact($clientID, $name, $email, $phone, $password = ""){
     return $result;
 }
 
-function getCOEClientContacts(){
+function getCOEClientContacts($withFacilityDetails = false){
     global $wpdb;
-    
-    return $wpdb->get_results("SELECT * FROM wp_coe_client_contacts ORDER BY name;");
+
+    if($withFacilityDetails)
+        $results = $wpdb->get_results("SELECT f.code, f.name AS facility_name, cc.* FROM wp_coe_client_contacts cc INNER JOIN wp_coe_facilities f ON cc.client_id = f.id ORDER BY f.name, cc.name;");
+    else
+        $results = $wpdb->get_results("SELECT * FROM wp_coe_client_contacts ORDER BY name;");
+    return $results;
 }
 
 function getCOEFacility($facilityCode){

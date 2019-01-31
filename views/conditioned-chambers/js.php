@@ -5,7 +5,7 @@ jQuery( document ).ready(function( $ ) {
     } );
 
     $( "#status-pass" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( url, {ccc_id: $( "#ccc_id").val(), status: "PASSED", api_code: 6} )
             .done(function(data) {
                 $( "#ccc_back" ).submit();
@@ -13,7 +13,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
     $( "#status-fail" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( url, {ccc_id: $( "#ccc_id").val(), status: "FAILED", api_code: 6} )
             .done(function(data) {
                 $( "#ccc_back" ).submit();
@@ -21,7 +21,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
     $( "#add_client_button" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( 
             url, 
             {client_name: $( "#client_name").val(), api_code: 15} 
@@ -36,7 +36,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
     $( "#add_manufacturer_button" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( 
             url, 
             {manufacturer_name: $( "#manufacturer_name").val(), api_code: 12} 
@@ -52,7 +52,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
     $( "#add_equipment_button" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( 
             url, 
             {equipment_name: $( "#equipment_name").val(), api_code: 13} 
@@ -67,7 +67,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
     $( "#add_ste_equipment_button" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( 
             url, 
             {s_t_equipment_name: $( "#s_t_equipment_name").val(), api_code: 14} 
@@ -82,7 +82,7 @@ jQuery( document ).ready(function( $ ) {
     });
 
     $( "#add_client_contact_button" ).click(function() {
-        url = "<?php echo get_site_url().'/conditioned-chambers/'; ?>";
+        url = "<?php echo $pageURL; ?>";
         $.post( 
             url, 
             {
@@ -104,6 +104,15 @@ jQuery( document ).ready(function( $ ) {
 
 
     $( "#conditioned-chambers-list" ).DataTable();
+    $( "#clients-list" ).DataTable();
+
+
+    $( "#client-contacts-menu" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+
+        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="17" /></form>').appendTo('body').hide().submit();
+    });
+
 
 });
 </script>

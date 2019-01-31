@@ -35,10 +35,13 @@ get_header();
                         <span class="oi" data-glyph="menu" title="menu" aria-hidden="true" style="color: #000;"></span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <?php if(hasRole('USER_ADMIN')){ ?>
+                        <a class="dropdown-item" href="/conditioned-chambers/">Conditioned Chambers</a>
                         <a class="dropdown-item" href="/clients/">Service Requests</a>
-                        <?php } ?>
                         <a class="dropdown-item" href="/thermometers/">Thermometers</a>
+                        <?php if(hasRole('USER_ADMIN')){ ?>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" id="client-contacts-menu">Client Contacts</button>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="col">
