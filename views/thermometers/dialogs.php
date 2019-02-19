@@ -139,8 +139,10 @@
                         <select class="form-control form-control-sm col-sm-8" id="client_id" 
                             name="client_id" required >
                             <?php
-                                foreach ($clients as $client) {
-                                    echo "<option value='".$client->id."'>".$client->name."</option>";
+                                if(count($clients) > 0){
+                                    foreach ($clients as $client) {
+                                        echo "<option value='".$client->id."'>".$client->name."</option>";
+                                    }
                                 }
                             ?>
                         </select>

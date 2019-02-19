@@ -58,6 +58,18 @@ function my_theme_enqueue_styles() {
         get_stylesheet_directory_uri() . '/js/datatables.net/js/jquery.dataTables.min.js',
         array('jquery')
     );
+
+    wp_enqueue_script(
+        'feather-icons',
+        get_stylesheet_directory_uri() . '/js/feather-icons/feather.min.js',
+        array('jquery')
+    );
+
+    wp_enqueue_script(
+        'chart-js',
+        get_stylesheet_directory_uri() . '/js/Chart.js/Chart.min.js',
+        array('jquery')
+    );
 }
 add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 
@@ -335,4 +347,17 @@ function log2File($logText, $logFile = "coesite.log"){
     error_log("{$now->format('Y-m-d G:i:s')} $logText\n", 3, $logFile);
 }
 
+function cleanFormInput($input, $type = "") {
+    $input = trim($input);
+    $input = stripslashes($input);
+    $input = htmlspecialchars($input);
+
+    switch ($type) {
+        case 'DATE':
+            $input = (new DateTime($input, new DateTimeZone("Africa/Nairobi")))->format('Y-m-d');
+            break;
+    }
+
+    return $input;
+}
 ?>

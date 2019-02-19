@@ -135,8 +135,10 @@
                         <select class="form-control form-control-sm col-sm-8" id="client_id" 
                             name="client_id" required >
                             <?php
-                                foreach ($clients as $client) {
-                                    echo "<option value='".$client->id."'>".$client->name."</option>";
+                                if(count($clients) > 0){
+                                    foreach ($clients as $client) {
+                                        echo "<option value='".$client->id."'>".$client->name."</option>";
+                                    }
                                 }
                             ?>
                         </select>
@@ -162,6 +164,44 @@
                 <button id="add_client_contact_button" type="button" class="btn btn-primary" data-dismiss="modal">
                     Save
                 </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="serviceRequestAcceptModal" tabindex="-1" role="dialog" 
+    aria-labelledby="serviceRequestAcceptModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="serviceRequestAcceptModalLabel">Accept Service Equipment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="<?php echo $pageURL; ?>"  name="acceptServiceRequest">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4" for="facility_name">Facility</label>
+                        <input type="text" name="facility_name" id="facility_name" class="form-control form-control-sm col-sm-8" readonly />
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4" for="equipment_name">Equipment</label>
+                        <input type="text" name="equipment_name" id="equipment_name" class="form-control form-control-sm col-sm-8" readonly />
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4" for="comment">Comment</label>
+                        <input type="hidden" name="service_request_action" id="service_request_action" />
+                        <input type="hidden" name="service_request_id" id="service_request_id" />
+                        <textarea name="service_request_comment" id="service_request_comment" class="form-control form-control-sm col-sm-8"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="accept_service_request_button" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Save
+                </button> 
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

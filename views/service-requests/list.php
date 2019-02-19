@@ -2,21 +2,24 @@
 <div class="row justify-content-end" style="padding-bottom: 20px;">
     <form name="ccc_post" method="POST" action="<?php echo $pageURL; ?>">
         <input type="hidden" name="api_code" value="9">
+        <?php if(!hasRole('USER_ADMIN')){ ?>
         <button onclick="document.ccc_post.submit()" title="New Service Request" class="btn-nav-coe btn-info">
             &plus;
         </button>
-        <button class="float-right btn-nav-coe btn-info" onclick="window.history.back();" title="Back">
-            <svg class="icon icon-arrow-left" aria-hidden="true" role="img">
-                <use href="#icon-arrow-left" xlink:href="#icon-arrow-left"></use>
-            </svg>
+        <?php } ?>
+        <button id="status-fail" type="button" class="btn btn-sm btn-outline-dark" onclick="window.history.back()">
+            Close
         </button>
     </form>
 </div>
 <div class="">
-    <table class="table table-striped table-sm" style="font-size: 0.9em;" id="service-request-list" data-page-length="25">
+    <table class="table table-striped table-sm table-bordered" style="font-size: 0.8rem;" id="service-requests-list" data-page-length="25">
         <thead>
             <tr>
                 <th scope="col" title="Request Date">Date</th>
+                <?php if(hasRole('USER_ADMIN')){ ?>
+                <th scope="col">Facility</th>
+                <?php } ?>
                 <th scope="col">Equipment</th>
                 <th scope="col">Model</th>
                 <th scope="col" title="Serial Number">Serial #</th>
@@ -27,20 +30,29 @@
         </thead>
         <tbody>
             <?php
+                $status = ['Initiated'=>'info', 'Received' => 'success', 'Rejected' => 'danger'];
                 foreach ($serviceRequests as $serviceRequest) {
                     echo "<tr><td>".substr($serviceRequest['request_date'],0,10)."</td>";
+                    if(hasRole('USER_ADMIN')){
+                        echo "<td>{$serviceRequest['facility_name']}</td>";
+                    }
                     echo "<td>{$serviceRequest['equipment_name']}</td>";
                     echo "<td>{$serviceRequest['equipment_model']}</td>";
                     echo "<td>{$serviceRequest['equipment_serial_number']}</td>";
                     echo "<td>{$serviceRequest['requested_by']}</td>";
-                    echo "<td>{$serviceRequest['status']}</td>";
+                    echo "<td><span class='badge badge-{$status[$serviceRequest['status']]}'>{$serviceRequest['status']}</span></td>";
             ?>
                     <td>
                         <form method="POST" action="<?php echo $pageURL; ?>">
-                            <input type="hidden" name="api_code" value="11">
+                            <?php if(hasRole('USER_ADMIN')){ ?>
+                                <input type="hidden" name="facility_id" value="<?php echo $serviceRequest['facility_id']; ?>" />
+                                <input type="hidden" name="api_code" value="19">
+                            <?php }else{?>
+                                <input type="hidden" name="api_code" value="11">
+                            <?php } ?>
                             <input type="hidden" name="service_request_id" 
                                 value="<?php echo $serviceRequest['service_request_id']; ?>" />
-                            <button class="btn btn-sm btn-outline-dark">View</button>
+                            <button class="btn btn-sm btn-outline-primary">View</button>
                         </form>
                     </td></tr>
             <?php

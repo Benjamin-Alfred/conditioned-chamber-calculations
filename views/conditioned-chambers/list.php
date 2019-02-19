@@ -14,7 +14,7 @@
     </form>
 </div>
 <div class="">
-    <table class="table table-striped table-sm" id="conditioned-chambers-list" data-page-length="25">
+    <table class="table table-striped table-sm table-bordered" style="font-size: 0.8rem;" id="conditioned-chambers-list" data-page-length="25">
         <thead>
             <tr>
                 <th scope="col">Date</th>
@@ -40,13 +40,13 @@
                             action="<?php echo $pageURL; ?>" class="inline-form">
                             <input type="hidden" name="api_code" value="4" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
-                            <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert').submit()">View</button>
+                            <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('ccc_cert').submit()">View</button>
                         </form>
                         <form name="ccc_cert_1" id="ccc_cert_1" method="POST"
                             action="<?php echo $pageURL; ?>" class="inline-form">
                             <input type="hidden" name="api_code" value="5" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
-                            <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
                         </form>
                     </td></tr>
             <?php

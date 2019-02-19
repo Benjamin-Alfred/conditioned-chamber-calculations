@@ -35,8 +35,12 @@ get_header();
                         <span class="oi" data-glyph="menu" title="menu" aria-hidden="true" style="color: #000;"></span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/conditioned-chambers/">Conditioned Chambers</a>
-                        <a class="dropdown-item" href="/clients/">Service Requests</a>
+                        <?php if(hasRole('USER_ADMIN')){ ?>
+                            <button class="dropdown-item" id="dashboard-menu">Dashboard</button>
+                            <div class="dropdown-divider"></div>
+                        <?php } ?>
+                        <button class="dropdown-item" id="conditioned-chambers-menu">Conditioned Chambers</button>
+                        <button class="dropdown-item" id="service-requests-menu">Service Requests</button>
                         <a class="dropdown-item" href="/thermometers/">Thermometers</a>
                         <?php if(hasRole('USER_ADMIN')){ ?>
                             <div class="dropdown-divider"></div>
@@ -45,7 +49,7 @@ get_header();
                     </div>
                 </div>
                 <div class="col">
-                    <h4>Conditioned Chambers</h4>
+                    <h4><?php echo $pageHeader; ?></h4>
                 </div>
                 <div class="col" style="text-align: right;font-size: 0.75em;">
                     <span>

@@ -14,7 +14,7 @@
     </form>
 </div>
 <div class="">
-    <table class="table table-striped table-sm" id="thermometers-list" data-page-length="25">
+    <table class="table table-striped table-sm table-bordered" style="font-size: 0.8rem;" id="thermometers-list" data-page-length="25">
         <thead>
             <tr>
                 <th scope="col">Date</th>
@@ -40,13 +40,13 @@
                             action="<?php echo get_site_url(); ?>/thermometers/" class="inline-form">
                             <input type="hidden" name="show_calibration_certificate" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
-                            <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert').submit()">View</button>
+                            <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('ccc_cert').submit()">View</button>
                         </form>
                         <form name="ccc_cert_1" id="ccc_cert_1" method="POST"
                             action="<?php echo get_site_url(); ?>/thermometers/" class="inline-form">
                             <input type="hidden" name="edit_calibration_calculation" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
-                            <button class="btn btn-sm btn-outline-dark" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
                         </form>
                     </td></tr>
             <?php

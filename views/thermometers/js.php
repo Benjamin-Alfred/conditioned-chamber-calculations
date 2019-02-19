@@ -108,5 +108,31 @@ jQuery( document ).ready(function( $ ) {
 
     $( "#thermometers-list" ).DataTable();
 
+
+    var uri = "/conditioned-chambers/";
+    $( "#client-contacts-menu" ).click(function() {
+
+        $('<form action="' + uri + '" method="POST"><input type="hidden" name="api_code" value="7" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#client-contacts-menu" ).click(function() {
+
+        $('<form action="' + uri + '" method="POST"><input type="hidden" name="api_code" value="7" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#dashboard-menu" ).click(function() {
+
+        $('<form action="' + uri + '" method="POST"><input type="hidden" name="api_code" value="11" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#conditioned-chambers-menu" ).click(function() {
+
+        $('<form action="' + uri + '" method="POST"><input type="hidden" name="api_code" value="0" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#service-requests-menu" ).click(function() {
+
+        $('<form action="' + uri + '" method="POST"><input type="hidden" name="api_code" value="18" /></form>').appendTo('body').hide().submit();
+    });
 });
 </script>

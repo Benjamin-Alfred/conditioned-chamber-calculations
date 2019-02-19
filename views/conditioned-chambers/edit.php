@@ -364,15 +364,9 @@
                 </div>
             </div>
         </div>
-        <?php
-            if(hasRole('CALIBRATOR')){
-        ?>
-            <div class="form-group">
-                <input type="submit" class="button btn form-control" value="Update" />
-            </div>
-        <?php
-            }
-        ?>
+        <div class="form-group">
+            <input type="submit" class="button btn form-control" value="Update" />
+        </div>
     </form>
 </div>
 <!-- /Conditioned Chamber Calculations -->

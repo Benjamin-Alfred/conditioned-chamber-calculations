@@ -105,12 +105,71 @@ jQuery( document ).ready(function( $ ) {
 
     $( "#conditioned-chambers-list" ).DataTable();
     $( "#clients-list" ).DataTable();
+    $( "#service-requests-list" ).DataTable();
 
 
     $( "#client-contacts-menu" ).click(function() {
         url = "<?php echo $pageURL; ?>";
 
         $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="7" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#client-contacts-menu" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+
+        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="7" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#dashboard-menu" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+
+        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="11" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#conditioned-chambers-menu" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+
+        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="0" /></form>').appendTo('body').hide().submit();
+    });
+
+    $( "#service-requests-menu" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+
+        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="18" /></form>').appendTo('body').hide().submit();
+    });
+
+
+
+    $('#serviceRequestAcceptModal').on('show.bs.modal', function (event) {
+        
+        var button = $(event.relatedTarget);
+        var serviceRequestID = button.data('service-request-id');
+        var serviceRequestFacility = button.data('service-request-facility');
+        var serviceRequestEquipment = button.data('service-request-equipment');
+        var serviceRequestAction = button.data('service-request-action');
+        console.log(serviceRequestFacility);
+
+        var modal = $(this);
+        modal.find('.modal-title').text(serviceRequestAction + ' Service Request');
+        modal.find('#service_request_id').val(serviceRequestID);
+        modal.find('#service_request_action').val(serviceRequestAction);
+        modal.find('#facility_name').val(serviceRequestFacility);
+        modal.find('#equipment_name').val(serviceRequestEquipment);
+    });
+
+
+    $( "#accept_service_request_button" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+        $.post( url, 
+            {
+                service_request_id: $( "#service_request_id").val(), 
+                service_request_action: $( "#service_request_action").val(), 
+                service_request_comment: $( "#service_request_comment").val(), 
+                api_code: 20
+            } )
+            .done(function(data) {
+                $( "#service-requests-menu" ).click();
+            });
     });
 
 
