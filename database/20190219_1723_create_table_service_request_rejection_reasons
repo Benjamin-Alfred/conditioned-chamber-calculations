@@ -1,0 +1,10 @@
+CREATE TABLE `wp_coe_service_request_rejection_reasons` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_request_id` int(10) unsigned NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+ALTER TABLE wp_coe_service_requests ADD COLUMN calibration_interval TINYINT UNSIGNED NOT NULL DEFAULT 12 AFTER equipment_inventory_number;
+
+ALTER TABLE wp_coe_clients ADD COLUMN facility_code VARCHAR(30) AFTER name;
