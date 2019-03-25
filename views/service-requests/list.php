@@ -3,13 +3,10 @@
     <form name="ccc_post" method="POST" action="<?php echo $pageURL; ?>">
         <input type="hidden" name="api_code" value="9">
         <?php if(!hasRole('USER_ADMIN')){ ?>
-        <button onclick="document.ccc_post.submit()" title="New Service Request" class="btn-nav-coe btn-info">
+        <button onclick="document.ccc_post.submit()" title="New Service Request" class="btn btn-info" style="border-radius: 0;">
             &plus;
         </button>
         <?php } ?>
-        <button id="status-fail" type="button" class="btn btn-sm btn-outline-dark" onclick="window.history.back()">
-            Close
-        </button>
     </form>
 </div>
 <div class="">
@@ -43,7 +40,7 @@
                     echo "<td><span class='badge badge-{$status[$serviceRequest['status']]}'>{$serviceRequest['status']}</span></td>";
             ?>
                     <td>
-                        <form method="POST" action="<?php echo $pageURL; ?>">
+                        <form method="POST" action="<?php echo $pageURL; ?>" style="display: inline-block;">
                             <?php if(hasRole('USER_ADMIN')){ ?>
                                 <input type="hidden" name="facility_id" value="<?php echo $serviceRequest['facility_id']; ?>" />
                                 <input type="hidden" name="api_code" value="19">
@@ -52,8 +49,16 @@
                             <?php } ?>
                             <input type="hidden" name="service_request_id" 
                                 value="<?php echo $serviceRequest['service_request_id']; ?>" />
-                            <button class="btn btn-sm btn-outline-primary">View</button>
+                            <button class="btn btn-sm btn-outline-info">View</button>
                         </form>
+                        <?php if(hasRole('USER_ADMIN')){ ?>
+                            <form method="POST" action="<?php echo $pageURL; ?>" style="display: inline-block;">
+                                <input type="hidden" name="api_code" value="19">
+                                <input type="hidden" name="service_request_id" 
+                                    value="<?php echo $serviceRequest['service_request_id']; ?>" />
+                                <button class="btn btn-sm btn-outline-primary">Calibrate</button>
+                            </form>
+                        <?php } ?>
                     </td></tr>
             <?php
                 }

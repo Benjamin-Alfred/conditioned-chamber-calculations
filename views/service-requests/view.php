@@ -148,6 +148,19 @@
                     </table>
                 </div>
             </div>
+            <?php
+            if(isset($serviceRequest['rejection_reason'])){
+            ?>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">
+                        Rejection Reason
+                    </label>
+                    <span><?php echo $serviceRequest['rejection_reason']['comment']; ?></span>
+                </div>
+            <?php
+            }
+            ?>
 
         </div>
     </div>

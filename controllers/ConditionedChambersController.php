@@ -81,7 +81,8 @@ switch ($APICode) {
         break;
     case '13': // add new equipment
         $newEquipment = empty( $_REQUEST['equipment_name'] ) ? false : $_REQUEST['equipment_name'];
-        addCOEEquipment($newEquipment);
+        $equipmentType = empty( $_REQUEST['equipment_type_id'] ) ? null : $_REQUEST['equipment_type_id'];
+        addCOEEquipment($newEquipment, $equipmentType);
         $APICode = 501;
         break;
     case '14': // add new standard test equipment 
@@ -172,6 +173,7 @@ switch ($COEPage) {
     case '1':
         $manufacturers = getCOEManufacturers();
         $equipments = getCOEEquipment();
+        $equipmentTypes = getCOEEquipmentTypes();
         $STEquipments = getCOESTEquipment();
         $clients = getCOEClients();
         $clientContacts = getCOEClientContacts();
@@ -186,6 +188,7 @@ switch ($COEPage) {
 
         $manufacturers = getCOEManufacturers();
         $equipments = getCOEEquipment();
+        $equipmentTypes = getCOEEquipmentTypes();
         $STEquipments = getCOESTEquipment();
         $clients = getCOEClients();
         $clientContacts = getCOEClientContacts();

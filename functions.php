@@ -86,17 +86,29 @@ function getCOEManufacturers(){
     return $wpdb->get_results("SELECT * FROM wp_coe_manufacturers ORDER BY name;");
 }
 
-function addCOEEquipment($name){
+function addCOEEquipment($name, $equipmentType=NULL){
     global $wpdb;
+    $newEquipment = ['name' => trim($name)];
+    if(isset($equipmentType)) $newEquipment['equipment_type_id'] = $equipmentType;
     if ($name != false) {
-        $result = $wpdb->insert("wp_coe_equipment", array('name' => trim($name)));
+        $result = $wpdb->insert("wp_coe_equipment", $newEquipment);
     }
 }
 
-function getCOEEquipment(){
+function getCOEEquipment($equipmentType=NULL){
     global $wpdb;
     
-    return $wpdb->get_results("SELECT * FROM wp_coe_equipment ORDER BY name;");
+    $whereClause = "";
+    if($equipmentType)
+        $whereClause = "WHERE equipment_type_id = $equipmentType";
+
+    return $wpdb->get_results("SELECT * FROM wp_coe_equipment $whereClause ORDER BY name;");
+}
+
+function getCOEEquipmentTypes(){
+    global $wpdb;
+    
+    return $wpdb->get_results("SELECT * FROM wp_coe_equipment_types ORDER BY name;");
 }
 
 function addCOESTEquipment($name){
@@ -232,58 +244,6 @@ function getCOECCCertificate($certificateID){
     $result = $wpdb->get_row($query);
     
     $subQuery = "SELECT * FROM wp_coe_conditioned_chamber_calculation_readings WHERE conditioned_chamber_calculation_id = ".$result->id;
-
-    $result->readings = $wpdb->get_results($subQuery, ARRAY_A);
-
-    // Creators, verifiers and approvers
-    $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->created_by;
-
-    $result->creator = $wpdb->get_row($subQuery, ARRAY_A);
-
-    $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->verified_by;
-
-    $result->verifier = $wpdb->get_row($subQuery, ARRAY_A);
-
-    $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->approved_by;
-
-    $result->approver = $wpdb->get_row($subQuery, ARRAY_A);
-
-    // Standard Test Equipment Info: Name and manufacturer
-    $subQuery = "SELECT name FROM wp_coe_standard_test_equipment WHERE id = ".$result->standard_test_equipment_id;
-
-    $result->ste_equipment = $wpdb->get_row($subQuery, ARRAY_A);
-
-    $subQuery = "SELECT name FROM wp_coe_manufacturers WHERE id = ".$result->standard_test_equipment_manufacturer_id;
-
-    $result->ste_manufacturer = $wpdb->get_row($subQuery, ARRAY_A);
-
-    return $result;
-}
-
-function getCOEThermometerCertificate($certificateID){
-    global $wpdb;
-
-    $query = "SELECT wp_coe_thermometer_calculations.*,
-                wp_coe_clients.name AS client_name,
-                wp_coe_client_contacts.name AS client_contact_name,
-                wp_coe_client_contacts.email AS client_contact_email,
-                wp_coe_equipment.name AS equipment_name,
-                wp_coe_manufacturers.name AS manufacturer_name,
-                DATE_FORMAT(DATE_ADD(wp_coe_thermometer_calculations.date_performed, INTERVAL 1 YEAR),'%M %Y') AS certificate_validity
-            FROM wp_coe_thermometer_calculations 
-            LEFT JOIN wp_coe_clients 
-                ON wp_coe_thermometer_calculations.client_id = wp_coe_clients.id
-            LEFT JOIN wp_coe_client_contacts 
-                ON wp_coe_thermometer_calculations.client_contact_id = wp_coe_client_contacts.id
-            LEFT JOIN wp_coe_equipment 
-                ON wp_coe_thermometer_calculations.equipment_id = wp_coe_equipment.id
-            LEFT JOIN wp_coe_manufacturers
-                ON wp_coe_thermometer_calculations.manufacturer_id = wp_coe_manufacturers.id
-            WHERE wp_coe_thermometer_calculations.id = $certificateID;";
-
-    $result = $wpdb->get_row($query);
-    
-    $subQuery = "SELECT * FROM wp_coe_thermometer_calculation_readings WHERE thermometer_calculation_id = ".$result->id;
 
     $result->readings = $wpdb->get_results($subQuery, ARRAY_A);
 

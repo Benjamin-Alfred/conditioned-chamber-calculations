@@ -86,7 +86,7 @@ switch ($APICode) {
         exit();
         break;
     case '11':
-        $serviceRequest = getServiceRequest($currentUser->client_id, $_REQUEST['service_request_id']);
+        $serviceRequest = getServiceRequest($_REQUEST['service_request_id']);
         $COEPage = 6;
         break;
 }
@@ -120,16 +120,43 @@ function getServiceRequests($facilityID){
     return $wpdb->get_results($query, ARRAY_A);
 }
 
-function getServiceRequest($facilityID, $serviceRequestID){
+function getServiceRequest($serviceRequestID){
     log2File("getServiceRequest");
-    log2File("facilityID: $facilityID");
     log2File("serviceRequestID: $serviceRequestID");
     global $wpdb;
     
-    $query = "SELECT sr.id AS service_request_id, m.name AS manufacturer_name, e.name AS equipment_name, sr.equipment_model, sr.equipment_serial_number, sr.equipment_inventory_number, srs.status_text AS status, srs.done_at AS request_date, cc.name AS requested_by, sr.calibration_interval, sr.comments FROM wp_coe_service_requests sr LEFT JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE status='created' AND sr.facility_id = $facilityID AND sr.id = $serviceRequestID;";
+    $query = "SELECT sr.id AS service_request_id, f.id AS facility_id, f.name AS facility_name, "
+            ."m.name AS manufacturer_name, e.name AS equipment_name, sr.equipment_model, sr.equipment_serial_number, "
+            ."sr.equipment_inventory_number, sr.calibration_interval, sr.comments, srs.status_text AS status "
+            ."FROM wp_coe_service_requests sr " 
+            ."INNER JOIN (SELECT sr.id, MAX(srs.done_at) time_done FROM wp_coe_service_requests sr "
+                ."LEFT JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id GROUP BY sr.id) AS xsr "
+                ."ON sr.id = xsr.id "
+            ."LEFT JOIN wp_coe_service_request_status srs ON sr.id = srs.service_request_id AND srs.done_at = xsr.time_done " 
+            ."LEFT JOIN wp_coe_facilities f ON sr.facility_id = f.id "
+            ."LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id "
+            ."LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id "
+            ."WHERE sr.id = $serviceRequestID;";
+
     log2File($query);
 
-    return $wpdb->get_row($query, ARRAY_A);
+    $serviceRequest = $wpdb->get_row($query, ARRAY_A);
+
+    $query = "SELECT srs.status, srs.status_text, srs.done_at, IF(srs.status = 'created', cc.name, u.display_name) name "
+            ."FROM wp_coe_service_request_status srs "
+            ."LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id AND srs.status = 'created' "
+            ."LEFT JOIN wp_users u ON srs.done_by = u.ID AND srs.status != 'created' "
+            ."WHERE service_request_id = $serviceRequestID";
+
+    log2File($query);
+
+    $serviceRequestStatus = $wpdb->get_results($query, ARRAY_A);
+    $serviceRequest['stati'] = $serviceRequestStatus;
+
+    $query = "SELECT comment FROM wp_coe_service_request_rejection_reasons WHERE service_request_id = $serviceRequestID";
+    $serviceRequest['rejection_reason'] = $wpdb->get_row($query, ARRAY_A);
+
+    return $serviceRequest;
 }
 
 function addServiceRequest($request){

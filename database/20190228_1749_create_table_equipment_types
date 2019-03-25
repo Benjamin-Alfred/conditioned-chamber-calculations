@@ -1,0 +1,18 @@
+CREATE TABLE `wp_coe_equipment_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `created_by` int(10) unsigned NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+);
+
+INSERT INTO `wp_coe_equipment_types` (`name`) VALUES ('Conditioned Chamber'),('Thermometer'),('Centrifuge'),('Timers');
+
+DROP INDEX `name_2` ON `wp_coe_equipment`;
+
+ALTER TABLE `wp_coe_equipment` ADD COLUMN `equipment_type_id` INT UNSIGNED ;
+
+UPDATE `wp_coe_equipment` SET `equipment_type_id` = 1 WHERE `id`<5;
+UPDATE `wp_coe_equipment` SET `equipment_type_id` = 2 WHERE `id`=5;

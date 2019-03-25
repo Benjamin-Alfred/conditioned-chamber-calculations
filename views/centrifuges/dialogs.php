@@ -9,12 +9,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo $pageURL; ?>" 
+                <form method="POST" action="<?php echo get_site_url(); ?>/centrifuges/" 
                     name="newManufacturer">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="manufacturer_name">Name</label>
                         <input type="text" name="manufacturer_name" id="manufacturer_name" 
                             class="form-control form-control-sm col-sm-8" required />
+                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -39,25 +40,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo $pageURL; ?>" 
+                <form method="POST" action="<?php echo get_site_url(); ?>/centrifuges/" 
                     name="newEquipment">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="equipment_name">Name</label>
                         <input type="text" name="equipment_name" id="equipment_name" class="form-control form-control-sm col-sm-8" required />
-                    </div>
-                    <div class="form-group row">
-                        <label for="client" class="col-form-label col-sm-4">Category</label>
-                        <select class="form-control form-control-sm col-sm-8" id="equipment_type_id" 
-                            name="equipment_type_id" required >
-                            <option> -- Select Category -- </option>
-                            <?php
-                                if(count($equipmentTypes) > 0){
-                                    foreach ($equipmentTypes as $equipmentType) {
-                                        echo "<option value='".$equipmentType->id."'>".$equipmentType->name."</option>";
-                                    }
-                                }
-                            ?>
-                        </select>
+                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -82,12 +70,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo $pageURL; ?>" 
+                <form method="POST" action="<?php echo get_site_url(); ?>/centrifuges/" 
                     name="newSTEquipment">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="s_t_equipment_name">Name</label>
                         <input type="text" name="s_t_equipment_name" id="s_t_equipment_name" 
                             class="form-control form-control-sm col-sm-8" required />
+                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -112,12 +101,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo $pageURL; ?>" 
+                <form method="POST" action="<?php echo get_site_url(); ?>/centrifuges/" 
                     name="newClient">
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="client_name">Name</label>
                         <input type="text" name="client_name" id="client_name" 
                             class="form-control form-control-sm col-sm-8" required />
+                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                 </form>
             </div>
@@ -142,7 +132,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="<?php echo $pageURL; ?>" name="newClientContact">
+                <form method="POST" action="<?php echo get_site_url(); ?>/centrifuges/" 
+                    name="newClientContact">
                     <div class="form-group row">
                         <label for="client" class="col-form-label col-sm-4">Name</label>
                         <select class="form-control form-control-sm col-sm-8" id="client_id" 
@@ -160,6 +151,7 @@
                         <label class="col-form-label col-sm-4" for="contact_name">Contact Name</label>
                         <input type="text" name="contact_name" id="contact_name" 
                             class="form-control form-control-sm col-sm-8" required />
+                        <input type="hidden" name="calibration_calculation" value="false" />
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="contact_email">Contact Email</label>
@@ -177,44 +169,6 @@
                 <button id="add_client_contact_button" type="button" class="btn btn-primary" data-dismiss="modal">
                     Save
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="serviceRequestAcceptModal" tabindex="-1" role="dialog" 
-    aria-labelledby="serviceRequestAcceptModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="serviceRequestAcceptModalLabel">Accept Service Equipment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="<?php echo $pageURL; ?>"  name="acceptServiceRequest">
-                    <div class="form-group row">
-                        <label class="col-form-label col-sm-4" for="facility_name">Facility</label>
-                        <input type="text" name="facility_name" id="facility_name" class="form-control form-control-sm col-sm-8" readonly />
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-form-label col-sm-4" for="equipment_name">Equipment</label>
-                        <input type="text" name="equipment_name" id="equipment_name" class="form-control form-control-sm col-sm-8" readonly />
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-form-label col-sm-4" for="comment">Comment</label>
-                        <input type="hidden" name="service_request_action" id="service_request_action" />
-                        <input type="hidden" name="service_request_id" id="service_request_id" />
-                        <textarea name="service_request_comment" id="service_request_comment" class="form-control form-control-sm col-sm-8"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="accept_service_request_button" type="button" class="btn btn-primary" data-dismiss="modal">
-                    Save
-                </button> 
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

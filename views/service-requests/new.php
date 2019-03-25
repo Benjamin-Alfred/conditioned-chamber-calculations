@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="info_block"></div>
-            <button class="btn-nav-coe float-right btn-info" onclick="window.history.back()" title="Back">
+            <button class="btn float-right btn-info" style="border-radius: 0;" onclick="window.history.back()" title="Back">
                 <svg class="icon icon-arrow-left" aria-hidden="true" role="img">
                     <use href="#icon-arrow-left" xlink:href="#icon-arrow-left"></use>
                 </svg>
@@ -87,8 +87,8 @@
                 <div class="form-group row">
                     <label class="col-form-label col-sm-4"></label>
                     <input type="hidden" name="api_code" value="10">
-                    <button id="service_request_button" class="btn-info" style="height: 54px;padding-top:12px;margin-right:1px;">Submit</button>
-                    <button onclick="window.history.back();" style="height: 54px;padding-top:12px;margin-right:1px;" class="btn-secondary">Cancel</button>
+                    <button id="service_request_button" class="btn btn-info" style="border-radius: 0; margin-right: 10px;">Submit</button>
+                    <button onclick="window.history.back();" style="border-radius: 0" class="btn btn-secondary">Cancel</button>
                 </div>
             </form>
         </div>

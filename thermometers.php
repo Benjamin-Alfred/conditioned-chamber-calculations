@@ -41,6 +41,7 @@ get_header();
                         <?php } ?>
                         <button class="dropdown-item" id="conditioned-chambers-menu">Conditioned Chambers</button>
                         <button class="dropdown-item" id="service-requests-menu">Service Requests</button>
+                        <a class="dropdown-item" href="/centrifuges/">Centrifuges</a>
                         <a class="dropdown-item" href="/thermometers/">Thermometers</a>
                         <?php if(hasRole('USER_ADMIN')){ ?>
                             <div class="dropdown-divider"></div>

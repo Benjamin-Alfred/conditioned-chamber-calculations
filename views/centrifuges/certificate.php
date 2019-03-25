@@ -3,7 +3,7 @@
     <div class="row justify-content-end d-print-none">
         <div class="col">
             <form name="ccc_back" id="ccc_back" method="POST"
-                action="<?php echo get_site_url(); ?>/thermometers/">
+                action="<?php echo get_site_url(); ?>/centrifuges/">
                 <input type="hidden" name="ccc_id" id="ccc_id" value="<?php echo $requestedCertificate; ?>">
                 <div class="btn-group float-right" role="group" aria-label="Status">
                     <?php
@@ -137,32 +137,42 @@
                     <strong>STICKER No:</strong>
                     <?php echo $certification->standard_test_equipment_sticker_number;?>
                 </div>
+                <div class="col-6">
+                    <strong>Resolution:</strong>
+                    <?php echo $certification->resolution_of_standard;?>
+                </div>
             </div>
         </div>
         <div class="calibration-procedure" style="font-size: 0.75em">
             <div><strong>2.0 CALIBRATION PROCEDURE</strong></div>
             <div style="margin-left: 30px;">
-                <p>The equipment was calibrated as per <strong>NPHL/COE/TCP/001</strong> thermometer calibration 
-                    procedure document. Procedure for digital and analogue thermometers calibration.</p>
+                <p>The centrifuge was calibrated using the DIRECT COMPARISON METHOD as per 
+                    <strong>NPHL/COE/TECH/11</strong> procedure for calibration of laboratory centrifuges.</p>
+            </div>
+        </div>
+        <div class="calibration-procedure" style="font-size: 0.75em">
+            <div><strong>3.0 CALIBRATION PROCEDURE</strong></div>
+            <div style="margin-left: 30px;">
                 <p>The environmental conditions were recorded during the period of calibration.
-                    The temperature was
-                    <strong><?php echo number_format($certification->environmental_temperature, 2);?> </strong>⁰C
-                    with relative humidity of 
-                    <strong><?php echo number_format($certification->environmental_humidity, 2);?></strong> %.
+                    The temperature was recorded as
+                    <strong><?php echo number_format($certification->environmental_temperature, 2);?> ⁰C
+                    &plusmn; 2 ⁰C</strong> with the relative humidity recorded as  
+                    <strong>
+                        <?php echo number_format($certification->environmental_humidity, 2);?> &plusmn; 2% RH
+                    </strong>
                 </p>
             </div>
         </div>
         <div class="traceability" style="font-size: 0.75em">
-            <div><strong>3.0 TRACEABILITY</strong></div>
+            <div><strong>4.0 TRACEABILITY</strong></div>
             <div style="margin-left: 30px;">
-                <p>The thermometer has been calibrated against a thermocouple thermometer traceable to 
-                    international standards through  
+                <p>The equipment has been calibrated against reference standards whose claibration is traceable to the Kenya Bureau of Standards through certificate
                     <?php echo $certification->standard_test_equipment_certificate_number;?>.
                  </p>
             </div>
         </div>
         <div class="validity" style="font-size: 0.75em;">
-            <div><strong>4.0 VALIDITY</strong></div>
+            <div><strong>5.0 VALIDITY</strong></div>
             <div style="margin-left: 30px;">
                 <p>This certificate is valid until <strong><?php echo $certification->certificate_validity; ?></strong></p>
                 <table class="table table-sm table-borderless">
@@ -186,7 +196,7 @@
                     <tr>
                         <td class="signatories-label-left">REVIEWED BY</td>
                         <td class="signatories-space">
-                            <?php echo $certification->verifier['display_name']; ?>
+                            <?php echo isset($certification->verifier['display_name'])?$certification->verifier['display_name']:""; ?>
                         </td>
                         <td class="signatories-label">DATE</td>
                         <td class="signatories-space">
@@ -208,7 +218,7 @@
                     <tr>
                         <td class="signatories-label-left">APPROVED BY</td>
                         <td class="signatories-space">
-                            <?php echo $certification->approver['display_name']; ?>
+                            <?php echo isset($certification->approver['display_name'])?$certification->approver['display_name']:""; ?>
                         </td>
                         <td class="signatories-label">DATE</td>
                         <td class="signatories-space">
@@ -244,22 +254,20 @@
 <div class="certificate-frame" style="margin-top:60px;font-size:0.75em;">
     <div class="certificate-inner-frame">
         <div class="results">
-            <div><strong>5.0 CALIBRATION RESULTS</strong></div>
+            <div><strong>6.0 CALIBRATION RESULTS</strong></div>
             <div style="margin-left: 30px;">
                 <table class="table table-sm table-bordered">
-                    <tbody class="table-border-dark">
+                    <thead>
                         <tr>
-                            <td><strong>Thermometer</strong></td>
-                            <td style="text-align: right;" colspan="3">
-                                <?php echo $certification->manufacturer_name . " " . $certification->equipment_name . " " . $certification->equipment_model; ?>
-                            </td>
+                            <th>Set Points (Nominal)</th>
+                            <th style="text-align: right;"><?php echo number_format($certification->expected_set_point_a, 2); ?></th>
+                            <th style="text-align: right;"><?php echo number_format($certification->expected_set_point_b, 2); ?></th>
+                            <th style="text-align: right;"><?php echo number_format($certification->expected_set_point_c, 2); ?></th>
+                            <th style="text-align: right;"><?php echo number_format($certification->expected_set_point_d, 2); ?></th>
+                            <th style="text-align: right;"><?php echo number_format($certification->expected_set_point_e, 2); ?></th>
                         </tr>
-                        <tr style="font-weight: bold;">
-                            <td><strong>Standard Setting (⁰C)</strong></td>
-                            <td style="text-align: right;"><?php echo $certification->expected_temperature_a; ?></td>
-                            <td style="text-align: right;"><?php echo $certification->expected_temperature_b; ?></td>
-                            <td style="text-align: right;"><?php echo $certification->expected_temperature_c; ?></td>
-                        </tr>
+                    </thead>
+                    <tbody class="table-border-dark">
                         <?php
 
                         $errorValues = array();
@@ -268,21 +276,27 @@
                         $divisor = 2;
 
                         foreach ($certification->readings as $reading) {
-                            $error[1] = $reading['reading_a'] - $certification->expected_temperature_a;
-                            $error[2] = $reading['reading_b'] - $certification->expected_temperature_b;
-                            $error[3] = $reading['reading_c'] - $certification->expected_temperature_c;
+                            $error[1] = $reading['reading_a'] - $certification->expected_set_point_a;
+                            $error[2] = $reading['reading_b'] - $certification->expected_set_point_b;
+                            $error[3] = $reading['reading_c'] - $certification->expected_set_point_c;
+                            $error[4] = $reading['reading_d'] - $certification->expected_set_point_d;
+                            $error[5] = $reading['reading_e'] - $certification->expected_set_point_e;
                         ?>
                             <tr>
-                                <td><strong>READ <?php echo $reading['reading_id'];?> (⁰C)</strong></td>
-                                <td style="text-align: right;"><?php echo $reading['reading_a'];?></td>
-                                <td style="text-align: right;"><?php echo $reading['reading_b'];?></td>
-                                <td style="text-align: right;"><?php echo $reading['reading_c'];?></td>
+                                <td><strong>READING <?php echo $reading['reading_id'];?></strong></td>
+                                <td style="text-align: right;"><?php echo number_format($reading['reading_a'], 2);?></td>
+                                <td style="text-align: right;"><?php echo number_format($reading['reading_b'], 2);?></td>
+                                <td style="text-align: right;"><?php echo number_format($reading['reading_c'], 2);?></td>
+                                <td style="text-align: right;"><?php echo number_format($reading['reading_d'], 2);?></td>
+                                <td style="text-align: right;"><?php echo number_format($reading['reading_e'], 2);?></td>
                             </tr>
                         <?php
 
                             $errorValues[1][$counter] = $error[1];
                             $errorValues[2][$counter] = $error[2];
                             $errorValues[3][$counter] = $error[3];
+                            $errorValues[4][$counter] = $error[4];
+                            $errorValues[5][$counter] = $error[5];
                             
                             $counter++;
                         }
@@ -290,63 +304,83 @@
                         $averageError[1] = array_sum($errorValues[1])/count($errorValues[1]);
                         $averageError[2] = array_sum($errorValues[2])/count($errorValues[2]);
                         $averageError[3] = array_sum($errorValues[3])/count($errorValues[3]);
+                        $averageError[4] = array_sum($errorValues[4])/count($errorValues[4]);
+                        $averageError[5] = array_sum($errorValues[5])/count($errorValues[5]);
                         ?>
                         <tr style="font-weight: bold;">
-                            <td><strong>Average Correction</strong></td>
-                            <td style="text-align: right;"><?php echo number_format($averageError[1],7); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($averageError[2],7); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($averageError[3],7); ?></td>
+                            <td><strong>Average</strong></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[1] + $certification->expected_set_point_a, 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[2] + $certification->expected_set_point_b, 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[3] + $certification->expected_set_point_c, 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[4] + $certification->expected_set_point_d, 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[5] + $certification->expected_set_point_e, 2); ?></td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td><strong>Deviation</strong></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[1], 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[2], 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[3], 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[4], 2); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($averageError[5], 2); ?></td>
                         </tr>
                         <?php
 
                         $variance[1] = pow((max($errorValues[1]) - min($errorValues[1]))/$divisor, 2);
                         $variance[2] = pow((max($errorValues[2]) - min($errorValues[2]))/$divisor, 2);
                         $variance[3] = pow((max($errorValues[3]) - min($errorValues[3]))/$divisor, 2);
+                        $variance[4] = pow((max($errorValues[4]) - min($errorValues[4]))/$divisor, 2);
+                        $variance[5] = pow((max($errorValues[5]) - min($errorValues[5]))/$divisor, 2);
 
                         $homogeneity = 0;
 
                         $repeatability[1] = pow(sd($errorValues[1])/sqrt(count($errorValues[1]))/$divisor, 2);
                         $repeatability[2] = pow(sd($errorValues[2])/sqrt(count($errorValues[2]))/$divisor, 2);
                         $repeatability[3] = pow(sd($errorValues[3])/sqrt(count($errorValues[3]))/$divisor, 2);
+                        $repeatability[4] = pow(sd($errorValues[4])/sqrt(count($errorValues[4]))/$divisor, 2);
+                        $repeatability[5] = pow(sd($errorValues[5])/sqrt(count($errorValues[5]))/$divisor, 2);
 
-                        $standardOfUncertainity = pow($certification->uncertainity_of_standard/sqrt(3), 2);
+                        $standardOfUncertainity = pow($certification->uncertainity_of_standard/2, 2);
 
                         $standardOfResolution = pow($certification->resolution_of_standard/$divisor/sqrt(3), 2);
 
                         $resolutionOfDeviceUnderTest = pow(($certification->resolution_of_device_under_test/2/sqrt(3)), 2);
 
-                        $uncertainity[1] = sqrt(pow(($averageError[1]/$divisor), 2) + $variance[1] + $homogeneity  + $repeatability[1] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
-                        $uncertainity[2] = sqrt(pow(($averageError[2]/$divisor), 2) + $variance[2] + $homogeneity  + $repeatability[2] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
-                        $uncertainity[3] = sqrt(pow(($averageError[3]/$divisor), 2) + $variance[3] + $homogeneity  + $repeatability[3] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[1] = sqrt($repeatability[1] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[2] = sqrt($repeatability[2] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[3] = sqrt($repeatability[3] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[4] = sqrt($repeatability[4] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[5] = sqrt($repeatability[5] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
                         ?>
                         <tr>
                             <td><strong>Uncertainty Expanded</strong></td>
-                            <td style="text-align: right;"><?php echo number_format($uncertainity[1]*2,7); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($uncertainity[2]*2,7); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($uncertainity[3]*2,7); ?></td>
+                            <td style="text-align: right;font-weight: bold;color: #F33">
+                                <?php echo number_format($uncertainity[1]*2, 4); ?>
+                            </td>
+                            <td style="text-align: right;font-weight: bold;color: #F33">
+                                <?php echo number_format($uncertainity[2]*2, 4); ?>
+                            </td>
+                            <td style="text-align: right;font-weight: bold;color: #F33">
+                                <?php echo number_format($uncertainity[3]*2, 4); ?>
+                            </td>
+                            <td style="text-align: right;font-weight: bold;color: #F33">
+                                <?php echo number_format($uncertainity[4]*2, 4); ?>
+                            </td>
+                            <td style="text-align: right;font-weight: bold;color: #F33">
+                                <?php echo number_format($uncertainity[5]*2, 4); ?>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Remarks</strong></td>
-                            <td style="text-align: right; color:#F00;" colspan="3"><?php echo $certification->result; ?></td>
+                            <td style="text-align: right; color:#F00;" colspan="6">
+                                <?php echo $certification->result; ?>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-        <div class="uncertainity">
-            <div>
-                <strong>6.0 UNCERTAINITY</strong>
-            </div>
-            <div style="margin-left: 30px;">
-                <p>
-                    <?php
-                        echo "<span style='margin-right:20px'>".number_format($uncertainity[1]*2,7)."</span>";
-                        echo "<span style='margin-right:20px'>".number_format($uncertainity[2]*2,7)."</span>";
-                        echo "<span>".number_format($uncertainity[3]*2,7)."</span>";
-                    ?>
-                </p>
-                <p>The reported expanded uncertainty is stated as expanded uncertainty of measurements multiplied 
-                    by coverage factor K= 2, providing a confidence level of approximately 95%.</p>
+                <p>The reported uncertainties of measurements were calculated and expressed in 
+                accordance with EA-4/02 publication and were based on a standard uncertainty multiplied
+                by a coverage factor of k=2, which, unless stated otherwise provides a level of 
+                confidence of approximately 95%.</p>
             </div>
         </div><br>
         <div class="remarks">
@@ -356,10 +390,6 @@
                     Calibration Complete. STATUS: 
                     <span id="ccc_status" style="color:#F00;"><strong><?php echo $certification->result; ?></strong></span>
                 </p>
-                <p>The maximum error is within the specified limits of accuracy of <strong style="color:red">&plusmn; 2⁰C</strong>
-                    as specified by the manufacturer for liquid in glass, dial thermometers.</p>
-                <p>The maximum error is within the specified limits of accuracy of <strong style="color:red">&plusmn; 1.5⁰C</strong>
-                    as specified by the manufacturer for digital thermometers.</p>
             </div>
             <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
                 <p>Calibration certificate issued without signature is not valid.

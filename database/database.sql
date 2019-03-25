@@ -1,3 +1,8 @@
+CREATE TABLE `migrations` (
+  `migration` varchar(255) NOT NULL,
+  `batch` smallint NOT NULL
+  );
+
 CREATE TABLE `wp_coe_client_contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `client_id` int(10) unsigned DEFAULT NULL,

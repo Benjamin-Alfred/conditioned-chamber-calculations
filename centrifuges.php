@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Conditioned Chambers
+ * Template Name: Centrifuges
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *
@@ -19,7 +19,7 @@ if (!is_user_logged_in()) {
     get_footer();
 }else{
 
-    include('controllers/ConditionedChambersController.php');
+    include('controllers/CentrifugesController.php');
 
 get_header();
 
@@ -50,7 +50,7 @@ get_header();
                     </div>
                 </div>
                 <div class="col">
-                    <h4><?php echo $pageHeader; ?></h4>
+                    <h4>Centrifuges</h4>
                 </div>
                 <div class="col" style="text-align: right;font-size: 0.75em;">
                     <span>
@@ -60,7 +60,7 @@ get_header();
                 </div>
             </div>
             <?php
-                include($COEPageURI['conditioned-chambers'][$COEPage]);
+                include($COEPageURI['centrifuges'][$COEPage]);
             ?>
         </main><!-- #main -->
     </div><!-- #primary -->
@@ -69,11 +69,11 @@ get_header();
 
 <?php 
 
-    include('views/conditioned-chambers/dialogs.php');
+    include('views/centrifuges/dialogs.php');
 
     get_footer();
 
-    include('views/conditioned-chambers/js.php');
+    include('views/centrifuges/js.php');
 
 }
 ?>

@@ -1,19 +1,19 @@
 <?php
 /*
- * Thermometers Controller
+ * Centrifuges Controller
  *---------------------------------
- * Thermometers Page Values
+ * Centrifuges Page Values
  * 1 => List
  * 2 => Add
  * 3 => View Certificate
  * 4 => Edit
  */
-$COEPageURI['thermometers'][1] = "views/thermometers/list.php";
-$COEPageURI['thermometers'][2] = "views/thermometers/new.php";
-$COEPageURI['thermometers'][3] = "views/thermometers/certificate.php";
-$COEPageURI['thermometers'][4] = "views/thermometers/edit.php";
+$COEPageURI['centrifuges'][1] = "views/centrifuges/list.php";
+$COEPageURI['centrifuges'][2] = "views/centrifuges/new.php";
+$COEPageURI['centrifuges'][3] = "views/centrifuges/certificate.php";
+$COEPageURI['centrifuges'][4] = "views/centrifuges/edit.php";
 
-$pageURL = get_site_url().'/thermometers/';
+$pageURL = get_site_url().'/centrifuges/';
 
 $COEPage = 1; 
 
@@ -23,19 +23,19 @@ else if(!empty( $_REQUEST['edit_calibration_calculation'] )) $COEPage = 4;
 
 
 if ($COEPage == 1) {
-    $certicates = getCOEThermometerCertificatesList();
+    $certicates = getCOECentrifugeCertificatesList();
 }else if($COEPage == 2){
 
     $validated = empty( $_REQUEST['form_ready_for_submit'] ) ? false : true;
     $updatedForm = empty( $_REQUEST['form_ready_for_update'] ) ? false : true;
 
     if ($validated || $updatedForm) {
-        if($validated)$response = addThermometerRecordings($_REQUEST);
-        else if($updatedForm)$response = updateThermometerRecordings($_REQUEST);
+        if($validated)$response = addCentrifugeRecordings($_REQUEST);
+        else if($updatedForm)$response = updateCentrifugeRecordings($_REQUEST);
 
         if($response){
             $COEPage = 1;
-            $certicates = getCOEThermometerCertificatesList();
+            $certicates = getCOECentrifugeCertificatesList();
         }
     }else{
 
@@ -96,20 +96,20 @@ if ($COEPage == 1) {
 }else if($COEPage == 3){
     $requestedCertificate = $_REQUEST['ccc_id'];
     
-    if(!empty( $_REQUEST['status'] )){  // Verify COE Thermometer Certificate
-        verifyThermometerCertificate($_REQUEST);
+    if(!empty( $_REQUEST['status'] )){  // Verify COE Centrifuge Certificate
+        verifyCentrifugeCertificate($_REQUEST);
         exit();
-    }else{                              //Show COE Thermometer Certificate
-        $certification = getCOEThermometerCertificate($requestedCertificate);
+    }else{                              //Show COE Centrifuge Certificate
+        $certification = getCOECentrifugeCertificate($requestedCertificate);
     }
 }else if($COEPage == 4){
     $requestedCertificate = $_REQUEST['ccc_id'];
     
-    if(!empty( $_REQUEST['status'] )){  // Verify COE Thermometer Certificate
-        verifyThermometerCertificate($_REQUEST);
+    if(!empty( $_REQUEST['status'] )){  // Verify COE Centrifuge Certificate
+        verifyCentrifugeCertificate($_REQUEST);
         exit();
-    }else{                              //Show COE Thermometer Certificate
-        $certification = getCOEThermometerCertificate($requestedCertificate);
+    }else{                              //Show COE Centrifuge Certificate
+        $certification = getCOECentrifugeCertificate($requestedCertificate);
 
         $manufacturers = getCOEManufacturers();
         $equipments = getCOEEquipment();
@@ -122,10 +122,10 @@ if ($COEPage == 1) {
 $currentUser = wp_get_current_user();
 
 /*
- * Thermometer specific functions
+ * Centrifuge specific functions
  */
 
-function addThermometerRecordings($request){
+function addCentrifugeRecordings($request){
     global $wpdb;
 
     $currentUser = wp_get_current_user();
@@ -154,9 +154,11 @@ function addThermometerRecordings($request){
         uncertainity_of_standard => $request['uncertainity_of_standard'],
         resolution_of_standard => $request['resolution_of_standard'],
         resolution_of_device_under_test => $request['resolution_of_device_under_test'],
-        expected_temperature_a => $request['expected_temperature_a'],
-        expected_temperature_b => $request['expected_temperature_b'],
-        expected_temperature_c => $request['expected_temperature_c'],
+        expected_set_point_a => $request['expected_set_point_a'],
+        expected_set_point_b => $request['expected_set_point_b'],
+        expected_set_point_c => $request['expected_set_point_c'],
+        expected_set_point_d => $request['expected_set_point_d'],
+        expected_set_point_e => $request['expected_set_point_e'],
         environmental_temperature => $request['environmental_temperature'],
         environmental_humidity => $request['environmental_humidity'],
 
@@ -164,27 +166,29 @@ function addThermometerRecordings($request){
 
     );
 
-    $wpdb->insert("wp_coe_thermometer_calculations", $testDetails);
+    $wpdb->insert("wp_coe_centrifuge_calculations", $testDetails);
     $calculationID = $wpdb->insert_id;
 
-    $intervals = array(1, 2, 3, 4);
+    $intervals = array(1, 2, 3, 4, 5);
 
     foreach ($intervals as $interval) {
         $intervalArray = array(
-                'thermometer_calculation_id' => $calculationID,
+                'centrifuge_calculation_id' => $calculationID,
                 'reading_id' => $interval,
                 'reading_a' => $request['reading_1_'.$interval],
                 'reading_b' => $request['reading_2_'.$interval],
                 'reading_c' => $request['reading_3_'.$interval],
+                'reading_d' => $request['reading_4_'.$interval],
+                'reading_e' => $request['reading_5_'.$interval],
                 'created_by' => $currentUser->ID
             );
-        $wpdb->insert("wp_coe_thermometer_calculation_readings", $intervalArray);
+        $wpdb->insert("wp_coe_centrifuge_calculation_readings", $intervalArray);
     }
 
     return true;
 }
 
-function updateThermometerRecordings($request){
+function updateCentrifugeRecordings($request){
     global $wpdb;
 
     $currentUser = wp_get_current_user();
@@ -215,9 +219,11 @@ function updateThermometerRecordings($request){
         uncertainity_of_standard => $request['uncertainity_of_standard'],
         resolution_of_standard => $request['resolution_of_standard'],
         resolution_of_device_under_test => $request['resolution_of_device_under_test'],
-        expected_temperature_a => $request['expected_temperature_a'],
-        expected_temperature_b => $request['expected_temperature_b'],
-        expected_temperature_c => $request['expected_temperature_c'],
+        expected_set_point_a => $request['expected_set_point_a'],
+        expected_set_point_b => $request['expected_set_point_b'],
+        expected_set_point_c => $request['expected_set_point_c'],
+        expected_set_point_d => $request['expected_set_point_d'],
+        expected_set_point_e => $request['expected_set_point_e'],
         environmental_temperature => $request['environmental_temperature'],
         environmental_humidity => $request['environmental_humidity'],
 
@@ -225,95 +231,111 @@ function updateThermometerRecordings($request){
 
     );
 
-    $wpdb->update("wp_coe_thermometer_calculations", $testDetails, ['id' => $calculationID]);
+    $wpdb->update("wp_coe_centrifuge_calculations", $testDetails, ['id' => $calculationID]);
 
-    $intervals = array(1, 2, 3, 4);
+    $intervals = array(1, 2, 3, 4, 5);
     $now = date("Y-m-d H:i:s");
 
     foreach ($intervals as $interval) {
-        $results = $wpdb->get_results("SELECT id FROM wp_coe_thermometer_calculation_readings WHERE thermometer_calculation_id = $calculationID AND reading_id = $interval", ARRAY_A);
+        $results = $wpdb->get_results("SELECT id FROM wp_coe_centrifuge_calculation_readings WHERE centrifuge_calculation_id = $calculationID AND reading_id = $interval", ARRAY_A);
 
         if (count($results > 0)) {
             $intervalArray = array(
                 'reading_a' => $request['reading_1_'.$interval],
                 'reading_b' => $request['reading_2_'.$interval],
                 'reading_c' => $request['reading_3_'.$interval],
+                'reading_d' => $request['reading_4_'.$interval],
+                'reading_e' => $request['reading_5_'.$interval],
                 'updated_at' => $now
             );
 
-            $wpdb->update("wp_coe_thermometer_calculation_readings", $intervalArray, ['id' => $results[0]['id']]);
+            $wpdb->update("wp_coe_centrifuge_calculation_readings", $intervalArray, ['id' => $results[0]['id']]);
         }else{
             $intervalArray = array(
                 'reading_a' => $request['reading_1_'.$interval],
                 'reading_b' => $request['reading_2_'.$interval],
                 'reading_c' => $request['reading_3_'.$interval],
-                'thermometer_calculation_id' => $calculationID,
+                'reading_d' => $request['reading_4_'.$interval],
+                'reading_e' => $request['reading_5_'.$interval],
+                'centrifuge_calculation_id' => $calculationID,
                 'reading_id' => $interval
             );
 
-            $wpdb->insert("wp_coe_thermometer_calculation_readings", $intervalArray);
+            $wpdb->insert("wp_coe_centrifuge_calculation_readings", $intervalArray);
         }
     }
 
     return true;
 }
 
-function getCOEThermometerCertificatesList(){
+function getCOECentrifugeCertificatesList(){
     global $wpdb;
 
-    $query = "SELECT wp_coe_thermometer_calculations.id, 
-                wp_coe_thermometer_calculations.date_performed, 
+    $query = "SELECT wp_coe_centrifuge_calculations.id, 
+                wp_coe_centrifuge_calculations.date_performed, 
                 wp_coe_clients.name AS client_name, 
                 wp_coe_equipment.name AS equipment_name, 
-                wp_coe_thermometer_calculations.equipment_serial_number, 
-                wp_coe_thermometer_calculations.result 
-            FROM wp_coe_thermometer_calculations 
+                wp_coe_centrifuge_calculations.equipment_serial_number, 
+                wp_coe_centrifuge_calculations.result 
+            FROM wp_coe_centrifuge_calculations 
             INNER JOIN wp_coe_equipment 
-                ON wp_coe_thermometer_calculations.equipment_id = wp_coe_equipment.id
-            INNER JOIN wp_coe_clients ON wp_coe_thermometer_calculations.client_id = wp_coe_clients.id;";
+                ON wp_coe_centrifuge_calculations.equipment_id = wp_coe_equipment.id
+            INNER JOIN wp_coe_clients ON wp_coe_centrifuge_calculations.client_id = wp_coe_clients.id;";
 
     return $wpdb->get_results($query);
 }
 
-function getCOEThermometerCertificate($certificateID){
+function getCOECentrifugeCertificate($certificateID){
     global $wpdb;
 
-    $query = "SELECT wp_coe_thermometer_calculations.*,
+    $query = "SELECT wp_coe_centrifuge_calculations.*,
                 wp_coe_clients.name AS client_name,
                 wp_coe_client_contacts.name AS client_contact_name,
                 wp_coe_client_contacts.email AS client_contact_email,
                 wp_coe_equipment.name AS equipment_name,
                 wp_coe_manufacturers.name AS manufacturer_name,
-                DATE_FORMAT(DATE_ADD(wp_coe_thermometer_calculations.date_performed, INTERVAL 1 YEAR),'%M %Y') AS certificate_validity
-            FROM wp_coe_thermometer_calculations 
+                DATE_FORMAT(DATE_ADD(wp_coe_centrifuge_calculations.date_performed, INTERVAL 1 YEAR),'%M %Y') AS certificate_validity
+            FROM wp_coe_centrifuge_calculations 
             LEFT JOIN wp_coe_clients 
-                ON wp_coe_thermometer_calculations.client_id = wp_coe_clients.id
+                ON wp_coe_centrifuge_calculations.client_id = wp_coe_clients.id
             LEFT JOIN wp_coe_client_contacts 
-                ON wp_coe_thermometer_calculations.client_contact_id = wp_coe_client_contacts.id
+                ON wp_coe_centrifuge_calculations.client_contact_id = wp_coe_client_contacts.id
             LEFT JOIN wp_coe_equipment 
-                ON wp_coe_thermometer_calculations.equipment_id = wp_coe_equipment.id
+                ON wp_coe_centrifuge_calculations.equipment_id = wp_coe_equipment.id
             LEFT JOIN wp_coe_manufacturers
-                ON wp_coe_thermometer_calculations.manufacturer_id = wp_coe_manufacturers.id
-            WHERE wp_coe_thermometer_calculations.id = $certificateID;";
+                ON wp_coe_centrifuge_calculations.manufacturer_id = wp_coe_manufacturers.id
+            WHERE wp_coe_centrifuge_calculations.id = $certificateID;";
 
     $result = $wpdb->get_row($query);
     
-    $subQuery = "SELECT * FROM wp_coe_thermometer_calculation_readings WHERE thermometer_calculation_id = ".$result->id;
+    $subQuery = "SELECT * FROM wp_coe_centrifuge_calculation_readings WHERE centrifuge_calculation_id = ".$result->id;
 
     $result->readings = $wpdb->get_results($subQuery, ARRAY_A);
 
     // Creators, verifiers and approvers
-    $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->created_by;
+    if ($result->created_by) {
+        $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->created_by;
 
-    $result->creator = $wpdb->get_row($subQuery, ARRAY_A);
+        $result->creator = $wpdb->get_row($subQuery, ARRAY_A);
+    }else{
+        $result->creator = "";
+    }
 
-    $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->verified_by;
+    if ($result->verified_by) {
+        $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->verified_by;
 
-    $result->verifier = $wpdb->get_row($subQuery, ARRAY_A);
+        $result->verifier = $wpdb->get_row($subQuery, ARRAY_A);
+    }else{
+        $result->verifier = "";
+    }
 
-    $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->approved_by;
+    if ($result->approved_by) {
+        $subQuery = "SELECT display_name FROM wp_users WHERE ID = ".$result->approved_by;
 
-    $result->approver = $wpdb->get_row($subQuery, ARRAY_A);
+        $result->approver = $wpdb->get_row($subQuery, ARRAY_A);
+    }else{
+        $result->approver = "";
+    }
 
     // Standard Test Equipment Info: Name and manufacturer
     $subQuery = "SELECT name FROM wp_coe_standard_test_equipment WHERE id = ".$result->standard_test_equipment_id;
@@ -327,7 +349,7 @@ function getCOEThermometerCertificate($certificateID){
     return $result;
 }
 
-function verifyThermometerCertificate($data){
+function verifyCentrifugeCertificate($data){
     global $wpdb;
 
     $currentUser = wp_get_current_user();
@@ -337,20 +359,20 @@ function verifyThermometerCertificate($data){
     $datetime = date("Y-m-d H:i:s", time() + (3*60*60)); //UTC+3
     $year = substr($datetime, 0, 4);
 
-    $subQuery = "SELECT COUNT(id) hits FROM wp_coe_thermometer_calculations WHERE verified_at LIKE '$year%'";
+    $subQuery = "SELECT COUNT(id) hits FROM wp_coe_centrifuge_calculations WHERE verified_at LIKE '$year%'";
 
     $result = $wpdb->get_row($subQuery, ARRAY_A);
     $certificateNumber = str_pad((intval($result['hits'])+1), 4, "0", STR_PAD_LEFT);
 
     $verifierData = [
         'result' => $data['status'], 
-        'certificate_number' => "COE/THERM/".$year."/$certificateNumber", 
+        'certificate_number' => "COE/CENT/".$year."/$certificateNumber", 
         'verified_by' => $_VERIFIER, 
         'verified_at' => $datetime, 
         'approved_by' => $_APPROVER, 
         'approved_at' => $datetime
     ];
 
-    $wpdb->update("wp_coe_thermometer_calculations", $verifierData, ['id' => $data['ccc_id']]);
+    $wpdb->update("wp_coe_centrifuge_calculations", $verifierData, ['id' => $data['ccc_id']]);
 }
 ?>
