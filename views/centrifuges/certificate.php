@@ -62,7 +62,7 @@
                 </div>
             </div>
         </div>
-        <div class="customer-and-equipment-details" style="font-size: 0.7em">
+        <div class="customer-and-equipment-details" style="font-size: 0.65em">
             <table class="table table-bordered table-sm">
                 <tbody class="table-border-dark">
                     <tr>
@@ -100,57 +100,57 @@
                         <td><?php echo $certification->equipment_model;?></td>
                     </tr>
                     <tr>
-                        <td><strong>SERIAL No.</strong></td>
+                        <td><strong>SERIAL NUMBER</strong></td>
                         <td><?php echo $certification->equipment_serial_number;?></td>
                     </tr>
                     <tr>
-                        <td><strong>INVENTORY No.</strong></td>
+                        <td><strong>INVENTORY NUMBER</strong></td>
                         <td><?php echo $certification->submission_number;?></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="standard-equipment" style="font-size: 0.75em">
+        <div class="standard-equipment" style="font-size: 0.7em">
             <div><strong>1.0 STANDARD TEST EQUIPMENT USED:</strong></div>
-            <div style="margin-left: 30px;margin-bottom: 20px;" class="row">
+            <div style="margin-bottom: 10px;" class="row">
                 <div class="col-12">
-                    <strong>DESCRIPTION:</strong>
-                    <?php echo $certification->ste_equipment['name'];?>
-                </div>
-                <div class="col-12">
-                    <strong>MANUFACTURER:</strong>
-                    <?php echo $certification->ste_manufacturer['name'];?>
-                </div>
-                <div class="col-6">
-                    <strong>MODEL:</strong>
-                    <?php echo $certification->standard_test_equipment_model;?>
-                </div>
-                <div class="col-6">
-                    <strong>SERIAL No:</strong>
-                    <?php echo $certification->standard_test_equipment_serial_number;?>
-                </div>
-                <div class="col-6">
-                    <strong>CERTIFICATE No:</strong>
-                    <?php echo $certification->standard_test_equipment_certificate_number;?>
-                </div>
-                <div class="col-6">
-                    <strong>STICKER No:</strong>
-                    <?php echo $certification->standard_test_equipment_sticker_number;?>
-                </div>
-                <div class="col-6">
-                    <strong>Resolution:</strong>
-                    <?php echo $certification->resolution_of_standard;?>
+                    <table class="table table-bordered table-sm">
+                        <tbody class="table-border-dark">
+                            <tr>
+                                <td><strong>DESCRIPTION</strong></td>
+                                <td><?php echo $certification->ste_equipment['name'];?></td>
+                                <td><strong>MANUFACTURER</strong></td>
+                                <td><?php echo $certification->ste_manufacturer['name'];?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>MODEL</strong></td>
+                                <td><?php echo $certification->standard_test_equipment_model;?></td>
+                                <td><strong>SERIAL NUMBER</strong></td>
+                                <td><?php echo $certification->standard_test_equipment_serial_number;?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CERTIFICATE NUMBER</strong></td>
+                                <td><?php echo $certification->standard_test_equipment_certificate_number;?></td>
+                                <td><strong>STICKER NUMBER</strong></td>
+                                <td><?php echo $certification->standard_test_equipment_sticker_number;?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resolution</strong></td>
+                                <td colspan="3"><?php echo number_format($certification->resolution_of_standard,2);?></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <div class="calibration-procedure" style="font-size: 0.75em">
+        <div class="calibration-procedure" style="font-size: 0.7em">
             <div><strong>2.0 CALIBRATION PROCEDURE</strong></div>
             <div style="margin-left: 30px;">
                 <p>The centrifuge was calibrated using the DIRECT COMPARISON METHOD as per 
                     <strong>NPHL/COE/TECH/11</strong> procedure for calibration of laboratory centrifuges.</p>
             </div>
         </div>
-        <div class="calibration-procedure" style="font-size: 0.75em">
+        <div class="calibration-procedure" style="font-size: 0.7em">
             <div><strong>3.0 CALIBRATION PROCEDURE</strong></div>
             <div style="margin-left: 30px;">
                 <p>The environmental conditions were recorded during the period of calibration.
@@ -163,17 +163,18 @@
                 </p>
             </div>
         </div>
-        <div class="traceability" style="font-size: 0.75em">
+        <div class="traceability" style="font-size: 0.7em">
             <div><strong>4.0 TRACEABILITY</strong></div>
             <div style="margin-left: 30px;">
-                <p>The equipment has been calibrated against reference standards whose claibration is traceable to the Kenya Bureau of Standards through certificate
+                <p>The equipment has been calibrated against reference standards whose claibration is traceable 
+                    to the Kenya Bureau of Standards through certificate
                     <?php echo $certification->standard_test_equipment_certificate_number;?>.
                  </p>
             </div>
         </div>
-        <div class="validity" style="font-size: 0.75em;">
+        <div class="validity" style="font-size: 0.7em;">
             <div><strong>5.0 VALIDITY</strong></div>
-            <div style="margin-left: 30px;">
+            <div style="margin-left: 10px;">
                 <p>This certificate is valid until <strong><?php echo $certification->certificate_validity; ?></strong></p>
                 <table class="table table-sm table-borderless">
                     <tr>
@@ -245,7 +246,7 @@
             </div>
         </div>
     </div>
-    <div class="row" style="font-size: 0.75em;page-break-after: always;">
+    <div class="row" style="font-size: 0.7em;page-break-after: always;">
         <div class="col">
             <center>Page 1 of 2</center>
         </div>
@@ -257,7 +258,7 @@
             <div><strong>6.0 CALIBRATION RESULTS</strong></div>
             <div style="margin-left: 30px;">
                 <table class="table table-sm table-bordered">
-                    <thead>
+                    <thead class="table-border-dark">
                         <tr>
                             <th>Set Points (Nominal)</th>
                             <th style="text-align: right;"><?php echo number_format($certification->expected_set_point_a, 2); ?></th>
@@ -367,12 +368,6 @@
                             </td>
                             <td style="text-align: right;font-weight: bold;color: #F33">
                                 <?php echo number_format($uncertainity[5]*2, 4); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Remarks</strong></td>
-                            <td style="text-align: right; color:#F00;" colspan="6">
-                                <?php echo $certification->result; ?>
                             </td>
                         </tr>
                     </tbody>
