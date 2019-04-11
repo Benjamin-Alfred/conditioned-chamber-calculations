@@ -147,7 +147,7 @@
             <div><strong>2.0 CALIBRATION PROCEDURE</strong></div>
             <div style="margin-left: 30px;">
                 <p>The timer was calibrated using the DIRECT COMPARISON METHOD as per 
-                    <strong>NPHL/COE/TECH/11</strong> procedure for calibration of laboratory timers.</p>
+                    <strong>NPHL-COE-TECH-10</strong> procedure for calibration of STOPWATCHES and TIMERS.</p>
             </div>
         </div>
         <div class="calibration-procedure" style="font-size: 0.7em">
@@ -270,6 +270,7 @@
                         <?php
 
                         $errorValues = array();
+                        $values = array();
 
                         $counter = 0;
                         $divisor = 2;
@@ -287,6 +288,9 @@
                             </tr>
                         <?php
 
+                            $values[1][$counter] = $reading['reading_a'];
+                            $values[2][$counter] = $reading['reading_b'];
+                            $values[3][$counter] = $reading['reading_c'];
                             $errorValues[1][$counter] = $error[1];
                             $errorValues[2][$counter] = $error[2];
                             $errorValues[3][$counter] = $error[3];
@@ -312,36 +316,29 @@
                         </tr>
                         <?php
 
-                        $variance[1] = pow((max($errorValues[1]) - min($errorValues[1]))/$divisor, 2);
-                        $variance[2] = pow((max($errorValues[2]) - min($errorValues[2]))/$divisor, 2);
-                        $variance[3] = pow((max($errorValues[3]) - min($errorValues[3]))/$divisor, 2);
+                        $accuracyOfStandard = $certification->accuracy_of_standard/$divisor/sqrt(3);
 
-                        $homogeneity = 0;
+                        $resolutionOfStandard = $certification->resolution_of_standard/$divisor/sqrt(3);
 
-                        $repeatability[1] = pow(sd($errorValues[1])/sqrt(count($errorValues[1]))/$divisor, 2);
-                        $repeatability[2] = pow(sd($errorValues[2])/sqrt(count($errorValues[2]))/$divisor, 2);
-                        $repeatability[3] = pow(sd($errorValues[3])/sqrt(count($errorValues[3]))/$divisor, 2);
+                        $uncertainityOfStandard = $certification->uncertainity_of_standard/2;
 
-                        $standardOfUncertainity = pow($certification->uncertainity_of_standard/2, 2);
+                        $resolutionOfDeviceUnderTest = $certification->resolution_of_device_under_test/2/sqrt(3);
 
-                        $standardOfResolution = pow($certification->resolution_of_standard/$divisor/sqrt(3), 2);
-
-                        $resolutionOfDeviceUnderTest = pow(($certification->resolution_of_device_under_test/2/sqrt(3)), 2);
-
-                        $uncertainity[1] = sqrt($repeatability[1] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
-                        $uncertainity[2] = sqrt($repeatability[2] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
-                        $uncertainity[3] = sqrt($repeatability[3] + $standardOfUncertainity + $standardOfResolution + $resolutionOfDeviceUnderTest);
+                        $uncertainity[1] = pow($averageError[1]/sqrt(3), 2) + pow(sd($values[1])/sqrt(5), 2) + pow($accuracyOfStandard + $uncertainityOfStandard + $resolutionOfStandard + $resolutionOfDeviceUnderTest, 2);
+                        $uncertainity[2] = pow($averageError[2]/sqrt(3), 2) + pow(sd($values[2])/sqrt(5), 2) + pow($accuracyOfStandard + $uncertainityOfStandard + $resolutionOfStandard + $resolutionOfDeviceUnderTest, 2);
+                        $uncertainity[3] = pow($averageError[3]/sqrt(3), 2) + pow(sd($values[3])/sqrt(5), 2) + pow($accuracyOfStandard + $uncertainityOfStandard + $resolutionOfStandard + $resolutionOfDeviceUnderTest, 2);
                         ?>
                         <tr>
-                            <td><strong>Uncertainty Expanded</strong></td>
+                            <td><strong>Uncertainty Expanded (s)</strong></td>
                             <td style="text-align: right;font-weight: bold;color: #F33">
-                                <?php echo number_format($uncertainity[1]*2, 4); ?>
+                                <?php echo number_format(sqrt($uncertainity[1])*2, 3); ?>
+                            </td>
                             </td>
                             <td style="text-align: right;font-weight: bold;color: #F33">
-                                <?php echo number_format($uncertainity[2]*2, 4); ?>
+                                <?php echo number_format(sqrt($uncertainity[2])*2, 3); ?>
                             </td>
                             <td style="text-align: right;font-weight: bold;color: #F33">
-                                <?php echo number_format($uncertainity[3]*2, 4); ?>
+                                <?php echo number_format(sqrt($uncertainity[3])*2, 3); ?>
                             </td>
                         </tr>
                     </tbody>

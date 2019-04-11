@@ -176,8 +176,8 @@
                     <label for="uncertainity_of_standard" class="col-form-label col-sm-4">
                         Accuracy of the Standard
                     </label>
-                    <input type="text" class="form-control form-control-sm col-sm-8" id="uncertainity_of_standard" 
-                        name="uncertainity_of_standard" value="<?php echo $certification->uncertainity_of_standard; ?>" />
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="accuracy_of_standard" 
+                        name="accuracy_of_standard" value="<?php echo $certification->accuracy_of_standard; ?>" />
                 </div>
                 <div class="form-group row">
                     <label for="resolution_of_standard" class="col-form-label col-sm-4">
@@ -185,6 +185,13 @@
                     </label>
                     <input type="text" class="form-control form-control-sm col-sm-8" id="resolution_of_standard"
                         name="resolution_of_standard" value="<?php echo $certification->resolution_of_standard; ?>" />
+                </div>
+                <div class="form-group row">
+                    <label for="uncertainity_of_standard" class="col-form-label col-sm-4">
+                        Uncertainity of the Standard
+                    </label>
+                    <input type="text" class="form-control form-control-sm col-sm-8" id="uncertainity_of_standard" 
+                        name="uncertainity_of_standard" value="<?php echo $certification->uncertainity_of_standard; ?>" />
                 </div>
             </div>
         </div>

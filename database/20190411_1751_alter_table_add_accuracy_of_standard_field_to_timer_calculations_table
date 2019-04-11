@@ -1,0 +1,1 @@
+ALTER TABLE wp_coe_timer_calculations ADD column accuracy_of_standard DECIMAL(10,6) NOT NULL DEFAULT 0 AFTER resolution_of_standard;

@@ -151,8 +151,9 @@ function addTimerRecordings($request){
         standard_test_equipment_certificate_number => $request['ste_certificate_number'],
         standard_test_equipment_sticker_number => $request['ste_sticker_number'],
 
-        uncertainity_of_standard => $request['uncertainity_of_standard'],
+        accuracy_of_standard => $request['accuracy_of_standard'],
         resolution_of_standard => $request['resolution_of_standard'],
+        uncertainity_of_standard => $request['uncertainity_of_standard'],
         resolution_of_device_under_test => $request['resolution_of_device_under_test'],
         expected_set_point_a => $request['expected_set_point_a'],
         expected_set_point_b => $request['expected_set_point_b'],
@@ -212,8 +213,9 @@ function updateTimerRecordings($request){
         standard_test_equipment_certificate_number => $request['ste_certificate_number'],
         standard_test_equipment_sticker_number => $request['ste_sticker_number'],
 
-        uncertainity_of_standard => $request['uncertainity_of_standard'],
+        accuracy_of_standard => $request['accuracy_of_standard'],
         resolution_of_standard => $request['resolution_of_standard'],
+        uncertainity_of_standard => $request['uncertainity_of_standard'],
         resolution_of_device_under_test => $request['resolution_of_device_under_test'],
         expected_set_point_a => $request['expected_set_point_a'],
         expected_set_point_b => $request['expected_set_point_b'],
