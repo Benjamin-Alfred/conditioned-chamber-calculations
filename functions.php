@@ -73,6 +73,12 @@ function my_theme_enqueue_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 
+// Equipment types
+const CONDITIONED_CHAMBERS = 1;
+const THERMOMETERS = 2;
+const CENTRIFUGES = 3;
+const TIMERS = 4;
+
 function addCOEManufacturer($name){
     global $wpdb;
     if ($name != false) {
