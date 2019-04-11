@@ -1,4 +1,4 @@
-<!-- List Thermometer Items -->
+<!-- List Centrifuge Items -->
 <div class="row justify-content-end" style="padding-bottom: 20px;">
     <form name="ccc_post" method="POST" action="<?php echo get_site_url(); ?>/centrifuges/">
         <input type="hidden" name="calibration_calculation" value="false" />
@@ -55,4 +55,4 @@
         </tbody>
     </table>
 </div>
-<!-- / List Thermometer Items -->
+<!-- / List Centrifuge Items -->
