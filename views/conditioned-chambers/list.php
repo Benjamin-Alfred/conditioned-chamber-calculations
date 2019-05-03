@@ -12,6 +12,12 @@
         }
     ?>
     </form>
+    <?php if(hasRole('USER_ADMIN') || hasRole('CALIBRATOR')){ ?>
+        <form method="POST" action="<?php echo $pageURL; ?>" style="display: inline-block;">
+            <input type="hidden" name="api_code" value="21">
+            <button class="btn btn-sm btn-outline-info">New Calculation</button>
+        <?php } ?>
+    </form>
 </div>
 <div class="">
     <table class="table table-striped table-sm table-bordered" style="font-size: 0.8rem;" id="conditioned-chambers-list" data-page-length="25">

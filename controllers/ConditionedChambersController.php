@@ -21,6 +21,7 @@ $COEPageURI['conditioned-chambers'][7] = "views/dashboard/view.php";
 
 $COEPageURI['conditioned-chambers'][8] = "views/service-requests/list.php";
 $COEPageURI['conditioned-chambers'][9] = "views/service-requests/view.php";
+$COEPageURI['conditioned-chambers'][10] = "views/service-requests/new.php";
 
 $COEPage = $APICode = 0;
 
@@ -124,6 +125,11 @@ switch ($APICode) {
 
         exit();
         break;
+    case '21': $COEPage = 10; break; // new service request detail
+    case '22': // save service request detail
+        addServiceRequest($_REQUEST);
+        $COEPage = 1;
+        break;
 }
 
 //Return JSON output and exit - codes from 500
@@ -222,6 +228,8 @@ switch ($COEPage) {
 
         $CCSummary = getCCSummary($interval, $startDate, $endDate);
         $thermometerSummary = getThermometerSummary($interval, $startDate, $endDate);
+        $centrifugeSummary = getCentrifugeSummary($interval, $startDate, $endDate);
+        $timerSummary = getTimerSummary($interval, $startDate, $endDate);
         break;
     case '8':
         $pageHeader = "Service Requests";
@@ -230,6 +238,10 @@ switch ($COEPage) {
     case '9':
         $pageHeader = "Service Requests";
         $serviceRequest = getServiceRequest($_REQUEST['service_request_id']);
+        break;
+    case '10':
+        $manufacturers = getCOEManufacturers();
+        $equipments = getCOEEquipment(CONDITIONED_CHAMBERS);
         break;
 }
 
@@ -558,6 +570,122 @@ function getThermometerSummary($interval="monthly", $startDate, $endDate, $maxim
     return $thermometerSummary;
 }
 
+function getCentrifugeSummary($interval="monthly", $startDate, $endDate, $maximumDataPoints = 15){
+
+    global $wpdb;
+
+    log2File("$interval, $startDate, $endDate");
+    $intervalRange = [];
+    $firstDate = new DateTime($startDate);
+    $lastDate = new DateTime($endDate);
+    $dataPoints = 0;
+
+    $labels = "";
+    $totals = "";
+    $passed = "";
+    $failed = "";
+    $pending = "";
+
+    $dateFormats = ['daily' => "Y-m-d", 'monthly' => "Y-m", 'yearly' => "Y"];
+    $dateIntervalFormats = ['daily' => "P1D", 'monthly' => "P1M", 'yearly' => "P1Y"];
+    $whereClause = [
+        'daily' => "substring(date_performed, 1, 10)", 
+        'monthly' => "substring(date_performed, 1, 7)", 
+        'yearly' => "substring(date_performed, 1, 4)"
+        ];
+
+    while ( $firstDate <= $lastDate && $dataPoints < $maximumDataPoints) {
+    
+        $query = "SELECT count(*) total, count(IF(result='PASSED',1,NULL)) passed, count(IF(result='FAILED',1,NULL)) " .
+                "failed, count(IF(result='PENDING',1,NULL)) pending FROM wp_coe_centrifuge_calculations WHERE " .
+                "{$whereClause[$interval]} = '".$firstDate->format($dateFormats[$interval])."'";
+
+        log2File($query);
+
+        $result = $wpdb->get_row($query, ARRAY_A);
+
+        if(count($result) > 0){
+            $labels .=  ",'".$firstDate->format($dateFormats[$interval])."'";
+            $totals .=  ",'".$result['total']."'";
+            $passed .=  ",'".$result['passed']."'";
+            $failed .=  ",'".$result['failed']."'";
+            $pending .=  ",'".$result['pending']."'";
+        }
+        
+        $firstDate->add(new DateInterval($dateIntervalFormats[$interval]));
+        $dataPoints++;
+    }
+
+    $labels = "[".substr($labels, 1)."]";
+    $totals = "[".substr($totals, 1)."]";
+    $passed = "[".substr($passed, 1)."]";
+    $failed = "[".substr($failed, 1)."]";
+    $pending = "[".substr($pending, 1)."]";
+
+    $centrifugeSummary = ['labels' => $labels, 'totals' => $totals, 'passed' => $passed, 'failed' => $failed, 'pending' => $pending];
+    log2File(json_encode($centrifugeSummary));
+
+    return $centrifugeSummary;
+}
+
+function getTimerSummary($interval="monthly", $startDate, $endDate, $maximumDataPoints = 15){
+
+    global $wpdb;
+
+    log2File("$interval, $startDate, $endDate");
+    $intervalRange = [];
+    $firstDate = new DateTime($startDate);
+    $lastDate = new DateTime($endDate);
+    $dataPoints = 0;
+
+    $labels = "";
+    $totals = "";
+    $passed = "";
+    $failed = "";
+    $pending = "";
+
+    $dateFormats = ['daily' => "Y-m-d", 'monthly' => "Y-m", 'yearly' => "Y"];
+    $dateIntervalFormats = ['daily' => "P1D", 'monthly' => "P1M", 'yearly' => "P1Y"];
+    $whereClause = [
+        'daily' => "substring(date_performed, 1, 10)", 
+        'monthly' => "substring(date_performed, 1, 7)", 
+        'yearly' => "substring(date_performed, 1, 4)"
+        ];
+
+    while ( $firstDate <= $lastDate && $dataPoints < $maximumDataPoints) {
+    
+        $query = "SELECT count(*) total, count(IF(result='PASSED',1,NULL)) passed, count(IF(result='FAILED',1,NULL)) " .
+                "failed, count(IF(result='PENDING',1,NULL)) pending FROM wp_coe_timer_calculations WHERE " .
+                "{$whereClause[$interval]} = '".$firstDate->format($dateFormats[$interval])."'";
+
+        log2File($query);
+
+        $result = $wpdb->get_row($query, ARRAY_A);
+
+        if(count($result) > 0){
+            $labels .=  ",'".$firstDate->format($dateFormats[$interval])."'";
+            $totals .=  ",'".$result['total']."'";
+            $passed .=  ",'".$result['passed']."'";
+            $failed .=  ",'".$result['failed']."'";
+            $pending .=  ",'".$result['pending']."'";
+        }
+        
+        $firstDate->add(new DateInterval($dateIntervalFormats[$interval]));
+        $dataPoints++;
+    }
+
+    $labels = "[".substr($labels, 1)."]";
+    $totals = "[".substr($totals, 1)."]";
+    $passed = "[".substr($passed, 1)."]";
+    $failed = "[".substr($failed, 1)."]";
+    $pending = "[".substr($pending, 1)."]";
+
+    $timerSummary = ['labels' => $labels, 'totals' => $totals, 'passed' => $passed, 'failed' => $failed, 'pending' => $pending];
+    log2File(json_encode($timerSummary));
+
+    return $timerSummary;
+}
+
 function getServiceRequests(){
     global $wpdb;
     
@@ -648,5 +776,34 @@ function updateServiceRequest($serviceRequestID, $serviceRequestAction, $comment
 
         $wpdb->insert('wp_coe_service_request_rejection_reasons', $serviceRequestRejectionReason);
     }
+}
+
+function addServiceRequest($request){
+    log2File("addServiceRequest");
+    global $currentUser, $wpdb;
+
+    $serviceRequest = ["facility_id" => $request["facility_id"], "equipment_id" => $request["equipment"], "manufacturer_id" => $request["manufacturer"], "equipment_model" => $request["model"], "equipment_serial_number" => $request["serial_number"], "equipment_inventory_number" => $request["inventory_number"], "calibration_interval" => $request["calibration_interval"], "comments" => $request["comments"]];
+    log2File(json_encode($request));
+    log2File(json_encode($serviceRequest));
+
+    $query = "SELECT sr.id AS service_request_id, srs.id AS service_request_status_id FROM wp_coe_service_requests sr INNER JOIN wp_coe_service_request_status srs ON sr.id=srs.service_request_id LEFT JOIN wp_coe_client_contacts cc ON srs.done_by = cc.id LEFT JOIN wp_coe_equipment e ON sr.equipment_id = e.id LEFT JOIN wp_coe_manufacturers m ON sr.manufacturer_id = m.id WHERE srs.status='created' AND sr.facility_id = {$serviceRequest['facility_id']} AND sr.equipment_serial_number = '{$serviceRequest['equipment_serial_number']}' AND sr.equipment_inventory_number = '{$serviceRequest['equipment_inventory_number']}';";
+    log2File($query);
+
+    $previousRequestSearch = $wpdb->get_row($query, ARRAY_A);
+    
+    $rowsInserted = 0;
+
+    if (count($previousRequestSearch) == 0) {
+        $rowsInserted = $wpdb->insert("wp_coe_service_requests", $serviceRequest);
+
+        if($rowsInserted > 0){
+            $serviceRequestID = $wpdb->insert_id;
+            $serviceRequestStatus = ["service_request_id" => $serviceRequestID, "status" => "created", "status_text" => "Initiated", "done_by" => $currentUser->id];
+
+            $wpdb->insert("wp_coe_service_request_status", $serviceRequestStatus);
+        }
+    }
+
+    return $rowsInserted;
 }
 ?>

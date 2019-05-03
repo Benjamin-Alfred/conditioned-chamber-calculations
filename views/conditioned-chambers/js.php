@@ -172,6 +172,35 @@ jQuery( document ).ready(function( $ ) {
             });
     });
 
+    $( "#mfl_search" ).click(function() {
+        url = "<?php echo $pageURL; ?>";
+        if($("#mfl_code").val().trim().length > 4){
+            $.post( 
+                url, 
+                {
+                    search_text: $("#mfl_code").val(),
+                    api_code: 600
+                } 
+            ).done(function(data) {
+                    console.log(JSON.parse(data));
+                    var facility = JSON.parse(data);
+                    if(facility.length > 0){
+                        $("#facility_name").val(facility[0].name + " - " + facility[0].county + ", " + facility[0].sub_county);
+                        $("#facility_id").val(facility[0].id);
+                    }else{
+                        $("#facility_name").val("The facility was not found!");
+                        $("#facility_id").val("");
+                    }
+                });
+        }
+    });
+
+    $( "#mfl_code" ).keypress(function(event){
+        if(event.which == 13) {
+            event.preventDefault();
+            $( "#mfl_search" ).click();
+        }
+    });
 
 });
 </script>
