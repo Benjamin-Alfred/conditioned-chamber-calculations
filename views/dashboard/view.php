@@ -253,6 +253,108 @@
                     </div>
                     <!-- /Timers data -->
                 </div>
+
+                <!-- Pipette Charts -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas class="my-4 w-100" id="pipetteChart" width="900" height="380"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas class="my-4 w-100" id="pipetteTATChart" width="900" height="380"></canvas>
+                    </div>
+                </div>
+                <!-- /Pipette Charts -->
+
+                <div class="row show-data" style="font-size: 0.8rem;">
+                    <!-- Pipette data -->
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3"><center>Pipette Data</center></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Interval</th>
+                                        <th>Total</th>
+                                        <th>Passed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    if(count($pipetteSummary) > 0){
+                                        if(strlen($pipetteSummary['labels']) > 0){
+                                            $labelString = str_replace("'", "", $pipetteSummary['labels']);
+                                            $labels = explode(",", substr($labelString, 1, strlen($labelString) - 2));
+
+                                            $totalString = str_replace("'", "", $pipetteSummary['totals']);
+                                            $totals = explode(",", substr($totalString, 1, strlen($totalString) - 2));
+
+                                            $passString = str_replace("'", "", $pipetteSummary['passed']);
+                                            $passed = explode(",", substr($passString, 1, strlen($passString) - 2));
+
+                                            for ($i = 0; $i < count($labels); $i++) {
+                                    ?>
+                                                <tr>
+                                                    <td><?php echo $labels[$i]; ?></td>
+                                                    <td><?php echo $totals[$i]; ?></td>
+                                                    <td><?php echo $passed[$i]; ?></td>
+                                                </tr>
+                                    <?php
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /Pipette data -->
+                    <!-- Pipette TAT data -->
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3"><center>Pipette TAT Data</center></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Interval</th>
+                                        <th>Total</th>
+                                        <th>Passed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    if(count($pipetteSummary) > 0){
+                                        if(strlen($pipetteSummary['labels']) > 0){
+                                            $labelString = str_replace("'", "", $pipetteSummary['labels']);
+                                            $labels = explode(",", substr($labelString, 1, strlen($labelString) - 2));
+
+                                            $totalString = str_replace("'", "", $pipetteSummary['totals']);
+                                            $totals = explode(",", substr($totalString, 1, strlen($totalString) - 2));
+
+                                            $passString = str_replace("'", "", $pipetteSummary['passed']);
+                                            $passed = explode(",", substr($passString, 1, strlen($passString) - 2));
+
+                                            for ($i = 0; $i < count($labels); $i++) {
+                                    ?>
+                                                <tr>
+                                                    <td><?php echo $labels[$i]; ?></td>
+                                                    <td><?php echo $totals[$i]; ?></td>
+                                                    <td><?php echo $passed[$i]; ?></td>
+                                                </tr>
+                                    <?php
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /Timers data -->
+                </div>
             </main>
         </div>
     </div>
@@ -275,6 +377,8 @@
   var thermoChart = document.getElementById('thermometerChart')
   var cfChart = document.getElementById('centrifugeChart')
   var tChart = document.getElementById('timerChart')
+  var pChart = document.getElementById('pipetteChart')
+  var ptatChart = document.getElementById('pipetteTATChart')
 
   // eslint-disable-next-line no-unused-vars
   <?php if(count($CCSummary) > 0){ ?>
@@ -433,6 +537,124 @@
           scaleLabel: {
             display: true,
             labelString: 'Timer Count'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Interval'
+          }
+        }]
+
+      },
+      legend: {
+        display: true,
+        position: 'bottom'
+      }
+    }
+  });
+
+<?php 
+
+  } 
+
+  if(count($pipetteSummary) > 0){ ?>
+    var pipetteChart = new Chart(pChart, {
+    type: '<?php echo $chartType;?>',
+    data: {
+      labels: <?php echo $pipetteSummary['labels'];?>,
+      datasets: [{
+        label: 'Total',
+        data: <?php echo $pipetteSummary['totals'];?>,
+        lineTension: 0,
+        backgroundColor: '<?php echo strcmp($chartType, "bar")==0?"#007bff":"transparent";?>',
+        borderColor: '#007bff',
+        borderWidth: 4,
+        pointBackgroundColor: '#007bff'
+      },
+      {
+        label: 'Passed',
+        data: <?php echo $pipetteSummary['passed'];?>,
+        lineTension: 0,
+        backgroundColor: '<?php echo strcmp($chartType, "bar")==0?"#ff7b7b":"transparent";?>',
+        borderColor: '#ff7b7b',
+        borderWidth: 4,
+        pointBackgroundColor: '#ff7b7b'
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        fontSize: 18,
+        text: 'Pipettes Calibrated over time'},
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            precision: 0
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Pipette Count'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Interval'
+          }
+        }]
+
+      },
+      legend: {
+        display: true,
+        position: 'bottom'
+      }
+    }
+  });
+
+<?php 
+
+  } 
+
+  if(count($pipetteSummary) > 0){ ?>
+    var pipetteTATChart = new Chart(ptatChart, {
+    type: '<?php echo $chartType;?>',
+    data: {
+      labels: <?php echo $pipetteSummary['labels'];?>,
+      datasets: [{
+        label: 'Total',
+        data: <?php echo $pipetteSummary['totals'];?>,
+        lineTension: 0,
+        backgroundColor: '<?php echo strcmp($chartType, "bar")==0?"#007bff":"transparent";?>',
+        borderColor: '#007bff',
+        borderWidth: 4,
+        pointBackgroundColor: '#007bff'
+      },
+      {
+        label: 'Passed',
+        data: <?php echo $pipetteSummary['passed'];?>,
+        lineTension: 0,
+        backgroundColor: '<?php echo strcmp($chartType, "bar")==0?"#ff7b7b":"transparent";?>',
+        borderColor: '#ff7b7b',
+        borderWidth: 4,
+        pointBackgroundColor: '#ff7b7b'
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        fontSize: 18,
+        text: 'Pipettes Calibration TAT'},
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            precision: 0
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Pipette Count'
           }
         }],
         xAxes: [{

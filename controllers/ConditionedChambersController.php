@@ -230,6 +230,7 @@ switch ($COEPage) {
         $thermometerSummary = getThermometerSummary($interval, $startDate, $endDate);
         $centrifugeSummary = getCentrifugeSummary($interval, $startDate, $endDate);
         $timerSummary = getTimerSummary($interval, $startDate, $endDate);
+        $pipetteSummary = getPipetteSummary($interval, $startDate, $endDate);
         break;
     case '8':
         $pageHeader = "Service Requests";
@@ -684,6 +685,64 @@ function getTimerSummary($interval="monthly", $startDate, $endDate, $maximumData
     log2File(json_encode($timerSummary));
 
     return $timerSummary;
+}
+
+function getPipetteSummary($interval="monthly", $startDate, $endDate, $maximumDataPoints = 15){
+
+    global $wpdb;
+
+    log2File("$interval, $startDate, $endDate");
+    $intervalRange = [];
+    $firstDate = new DateTime($startDate);
+    $lastDate = new DateTime($endDate);
+    $dataPoints = 0;
+
+    $labels = "";
+    $totals = "";
+    $passed = "";
+    $failed = "";
+    $pending = "";
+
+    $dateFormats = ['daily' => "Y-m-d", 'monthly' => "Y-m", 'yearly' => "Y"];
+    $dateIntervalFormats = ['daily' => "P1D", 'monthly' => "P1M", 'yearly' => "P1Y"];
+    $whereClause = [
+        'daily' => "substring(completed_at, 1, 10)", 
+        'monthly' => "substring(completed_at, 1, 7)", 
+        'yearly' => "substring(completed_at, 1, 4)"
+        ];
+
+    while ( $firstDate <= $lastDate && $dataPoints < $maximumDataPoints) {
+    
+        $query = "SELECT count(*) total, count(IF(result='PASS',1,NULL)) passed, count(IF(result='FAIL',1,NULL)) " .
+                "failed, count(IF(result='PENDING',1,NULL)) pending FROM wp_coe_pipette_data WHERE " .
+                "{$whereClause[$interval]} = '".$firstDate->format($dateFormats[$interval])."'";
+
+        log2File($query);
+
+        $result = $wpdb->get_row($query, ARRAY_A);
+
+        if(count($result) > 0){
+            $labels .=  ",'".$firstDate->format($dateFormats[$interval])."'";
+            $totals .=  ",'".$result['total']."'";
+            $passed .=  ",'".$result['passed']."'";
+            $failed .=  ",'".$result['failed']."'";
+            $pending .=  ",'".$result['pending']."'";
+        }
+        
+        $firstDate->add(new DateInterval($dateIntervalFormats[$interval]));
+        $dataPoints++;
+    }
+
+    $labels = "[".substr($labels, 1)."]";
+    $totals = "[".substr($totals, 1)."]";
+    $passed = "[".substr($passed, 1)."]";
+    $failed = "[".substr($failed, 1)."]";
+    $pending = "[".substr($pending, 1)."]";
+
+    $pipetteSummary = ['labels' => $labels, 'totals' => $totals, 'passed' => $passed, 'failed' => $failed, 'pending' => $pending];
+    log2File(json_encode($pipetteSummary));
+
+    return $pipetteSummary;
 }
 
 function getServiceRequests(){
