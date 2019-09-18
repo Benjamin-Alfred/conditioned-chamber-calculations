@@ -1,0 +1,1 @@
+CREATE TABLE wp_coe_pipette_data (id INT PRIMARY KEY auto_increment, pipette_id varchar(30) NOT NULL, mfl_code INT unsigned NOT NULL, logged_at datetime DEFAULT NULL, completed_at datetime DEFAULT NULL, reviewed_at datetime DEFAULT NULL, result varchar(20) DEFAULT NULL, status varchar(8))
