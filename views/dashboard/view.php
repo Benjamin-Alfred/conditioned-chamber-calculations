@@ -316,33 +316,33 @@
                             <table class="table table-striped table-bordered table-sm">
                                 <thead>
                                     <tr>
-                                        <th colspan="3"><center>Pipette TAT Data</center></th>
+                                        <th colspan="3"><center>Pipette TAT Data (days)</center></th>
                                     </tr>
                                     <tr>
                                         <th>Interval</th>
-                                        <th>Total</th>
-                                        <th>Passed</th>
+                                        <th>Time to complete</th>
+                                        <th>Time to review</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    if(count($pipetteSummary) > 0){
-                                        if(strlen($pipetteSummary['labels']) > 0){
-                                            $labelString = str_replace("'", "", $pipetteSummary['labels']);
+                                    if(count($pipetteTAT) > 0){
+                                        if(strlen($pipetteTAT['labels']) > 0){
+                                            $labelString = str_replace("'", "", $pipetteTAT['labels']);
                                             $labels = explode(",", substr($labelString, 1, strlen($labelString) - 2));
 
-                                            $totalString = str_replace("'", "", $pipetteSummary['totals']);
-                                            $totals = explode(",", substr($totalString, 1, strlen($totalString) - 2));
+                                            $completedString = str_replace("'", "", $pipetteTAT['completed']);
+                                            $completed = explode(",", substr($completedString, 1, strlen($completedString) - 2));
 
-                                            $passString = str_replace("'", "", $pipetteSummary['passed']);
-                                            $passed = explode(",", substr($passString, 1, strlen($passString) - 2));
+                                            $reviewedString = str_replace("'", "", $pipetteTAT['reviewed']);
+                                            $reviewed = explode(",", substr($reviewedString, 1, strlen($reviewedString) - 2));
 
                                             for ($i = 0; $i < count($labels); $i++) {
                                     ?>
                                                 <tr>
                                                     <td><?php echo $labels[$i]; ?></td>
-                                                    <td><?php echo $totals[$i]; ?></td>
-                                                    <td><?php echo $passed[$i]; ?></td>
+                                                    <td><?php echo $completed[$i]; ?></td>
+                                                    <td><?php echo $reviewed[$i]; ?></td>
                                                 </tr>
                                     <?php
                                             }
@@ -353,7 +353,7 @@
                             </table>
                         </div>
                     </div>
-                    <!-- /Timers data -->
+                    <!-- /Pipette data -->
                 </div>
             </main>
         </div>
@@ -617,14 +617,14 @@
 
   } 
 
-  if(count($pipetteSummary) > 0){ ?>
+  if(count($pipetteTAT) > 0){ ?>
     var pipetteTATChart = new Chart(ptatChart, {
     type: '<?php echo $chartType;?>',
     data: {
-      labels: <?php echo $pipetteSummary['labels'];?>,
+      labels: <?php echo $pipetteTAT['labels'];?>,
       datasets: [{
-        label: 'Total',
-        data: <?php echo $pipetteSummary['totals'];?>,
+        label: 'Complete',
+        data: <?php echo $pipetteTAT['completed'];?>,
         lineTension: 0,
         backgroundColor: '<?php echo strcmp($chartType, "bar")==0?"#007bff":"transparent";?>',
         borderColor: '#007bff',
@@ -632,8 +632,8 @@
         pointBackgroundColor: '#007bff'
       },
       {
-        label: 'Passed',
-        data: <?php echo $pipetteSummary['passed'];?>,
+        label: 'Review',
+        data: <?php echo $pipetteTAT['reviewed'];?>,
         lineTension: 0,
         backgroundColor: '<?php echo strcmp($chartType, "bar")==0?"#ff7b7b":"transparent";?>',
         borderColor: '#ff7b7b',
@@ -645,7 +645,7 @@
       title: {
         display: true,
         fontSize: 18,
-        text: 'Pipettes Calibration TAT'},
+        text: 'Pipettes Calibration Average TAT'},
       scales: {
         yAxes: [{
           ticks: {
@@ -654,7 +654,7 @@
           },
           scaleLabel: {
             display: true,
-            labelString: 'Pipette Count'
+            labelString: 'Average TAT (days)'
           }
         }],
         xAxes: [{

@@ -231,6 +231,7 @@ switch ($COEPage) {
         $centrifugeSummary = getCentrifugeSummary($interval, $startDate, $endDate);
         $timerSummary = getTimerSummary($interval, $startDate, $endDate);
         $pipetteSummary = getPipetteSummary($interval, $startDate, $endDate);
+        $pipetteTAT = getPipetteTAT($interval, $startDate, $endDate);
         break;
     case '8':
         $pageHeader = "Service Requests";
@@ -740,6 +741,66 @@ function getPipetteSummary($interval="monthly", $startDate, $endDate, $maximumDa
     $pending = "[".substr($pending, 1)."]";
 
     $pipetteSummary = ['labels' => $labels, 'totals' => $totals, 'passed' => $passed, 'failed' => $failed, 'pending' => $pending];
+    log2File(json_encode($pipetteSummary));
+
+    return $pipetteSummary;
+}
+
+function getPipetteTAT($interval="monthly", $startDate, $endDate, $maximumDataPoints = 15){
+
+    global $wpdb;
+
+    log2File("$interval, $startDate, $endDate");
+    $intervalRange = [];
+    $firstDate = new DateTime($startDate);
+    $lastDate = new DateTime($endDate);
+    $dataPoints = 0;
+
+    $labels = "";
+    $totals = "";
+    $completed = "";
+    $reviewed = "";
+
+    $dateFormats = ['daily' => "Y-m-d", 'monthly' => "Y-m", 'yearly' => "Y"];
+    $dateIntervalFormats = ['daily' => "P1D", 'monthly' => "P1M", 'yearly' => "P1Y"];
+    $whereClause = [
+        'daily' => "substring(logged_at, 1, 10)", 
+        'monthly' => "substring(logged_at, 1, 7)", 
+        'yearly' => "substring(logged_at, 1, 4)"
+        ];
+
+    while ( $firstDate <= $lastDate && $dataPoints < $maximumDataPoints) {
+    
+        $query = "SELECT count(*) total, sum((unix_timestamp(completed_at)-unix_timestamp(logged_at))/(60*60*24)) completion_tat, ".
+                "sum((unix_timestamp(reviewed_at)-unix_timestamp(completed_at))/(60*60*24)) review_tat FROM wp_coe_pipette_data ".
+                "WHERE {$whereClause[$interval]} = '".$firstDate->format($dateFormats[$interval])."'";
+
+        log2File($query);
+
+        $result = $wpdb->get_row($query, ARRAY_A);
+
+        if(count($result) > 0){
+            $labels .=  ",'".$firstDate->format($dateFormats[$interval])."'";
+            $totals .=  ",'".$result['total']."'";
+            if ($result['total'] > 0) {
+                $completed .=  ",'".round($result['completion_tat']/$result['total'],2)."'";
+                $reviewed .=  ",'".round($result['review_tat']/$result['total'],2)."'";
+            }else{
+                $completed .=  ",'0'";
+                $reviewed .=  ",'0'";
+            }
+        }
+        
+        $firstDate->add(new DateInterval($dateIntervalFormats[$interval]));
+        $dataPoints++;
+    }
+
+    $labels = "[".substr($labels, 1)."]";
+    $totals = "[".substr($totals, 1)."]";
+    $completed = "[".substr($completed, 1)."]";
+    $reviewed = "[".substr($reviewed, 1)."]";
+
+    $pipetteSummary = ['labels' => $labels, 'totals' => $totals, 'completed' => $completed, 'reviewed' => $reviewed];
     log2File(json_encode($pipetteSummary));
 
     return $pipetteSummary;
