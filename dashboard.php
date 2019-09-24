@@ -19,7 +19,11 @@ if (!is_user_logged_in()) {
     get_footer();
 }else{
 
-    include('controllers/DashboardController.php');
+    if(hasRole('DATA_ANALYST')){
+        include('controllers/DashboardController.php');
+    }else{
+        header("Location: /conditioned-chambers");
+    }
 
 get_header();
 
@@ -43,8 +47,6 @@ get_header();
             <?php
                 if(hasRole('DATA_ANALYST')){
                     include($COEPageURI['dashboard'][$COEPage]);
-                }else if(hasRole('USER_ADMIN') || hasRole('CALIBRATOR') || hasRole('REVIEWER') || hasRole('APPROVER')){
-                    header("Location: /conditioned-chambers");
                 }else{
                     echo NO_PERMISSION_ERROR;
                 }
