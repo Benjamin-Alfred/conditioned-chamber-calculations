@@ -4,7 +4,7 @@
 (function () {
   'use strict'
 
-  jQuery('.show-data').hide();
+  // jQuery('.show-data').hide();
   jQuery('#showChartData').click(function(event){
     jQuery('.show-data').toggle();
   })

@@ -41,7 +41,11 @@ get_header();
                 </div>
             </div>
             <?php
-                include($COEPageURI['dashboard'][$COEPage]);
+                if(hasRole('DATA_ANALYST')){
+                    include($COEPageURI['dashboard'][$COEPage]);
+                }else{
+                    echo "<div style='padding-top:30px;'>You do not have permission to access this data! Contact your system administrator.</div>";
+                }
             ?>
         </main><!-- #main -->
     </div><!-- #primary -->

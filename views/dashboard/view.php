@@ -44,7 +44,7 @@
                             <div class="form-row">
                                 <div class="form-check" style="font-size: 0.8rem;">
                                     <input class="form-check-input" type="checkbox" id="showChartData" >
-                                    <label class="form-check-label" for="showChartData">Show Chart Data</label>
+                                    <label class="form-check-label" for="showChartData">Hide Chart Data</label>
                                 </div>
                             </div>
                         </form>

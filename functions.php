@@ -281,7 +281,7 @@ function getCOECCCertificate($certificateID){
 function hasRole($role){
     global $wpdb;
 
-    $roles = ['CALIBRATOR' => 1, 'REVIEWER' => 2, 'APPROVER' => 3, 'USER_ADMIN' => 4];
+    $roles = ['CALIBRATOR' => 1, 'REVIEWER' => 2, 'APPROVER' => 3, 'USER_ADMIN' => 4, 'DATA_ANALYST' => 5];
     $currentUser = wp_get_current_user();
 
     $query = "SELECT COUNT(*) hits FROM wp_coe_user_roles WHERE user_id = ".$currentUser->ID." AND role_id = ".$roles[$role];
