@@ -5,7 +5,7 @@
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <?php if(hasRole('USER_ADMIN')){ ?>
-            <button class="dropdown-item" id="dashboard-menu">Dashboard</button>
+            <a class="dropdown-item" href="/dashboard/">Dashboard</a>
         <?php } ?>
         <button class="dropdown-item" id="service-requests-menu">Service Requests</button>
         <div class="dropdown-divider"></div>

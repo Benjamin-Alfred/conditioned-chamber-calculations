@@ -120,12 +120,6 @@ jQuery( document ).ready(function( $ ) {
         $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="7" /></form>').appendTo('body').hide().submit();
     });
 
-    $( "#dashboard-menu" ).click(function() {
-        url = "<?php echo $pageURL; ?>";
-
-        $('<form action="' + url + '" method="POST"><input type="hidden" name="api_code" value="11" /></form>').appendTo('body').hide().submit();
-    });
-
     $( "#conditioned-chambers-menu" ).click(function() {
         url = "<?php echo $pageURL; ?>";
 
