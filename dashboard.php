@@ -43,6 +43,8 @@ get_header();
             <?php
                 if(hasRole('DATA_ANALYST')){
                     include($COEPageURI['dashboard'][$COEPage]);
+                }else if(hasRole('USER_ADMIN') || hasRole('CALIBRATOR') || hasRole('REVIEWER') || hasRole('APPROVER')){
+                    header("Location: /conditioned-chambers");
                 }else{
                     echo NO_PERMISSION_ERROR;
                 }
