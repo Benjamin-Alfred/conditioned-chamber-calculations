@@ -9,6 +9,8 @@ $COEPageURI['dashboard'][0] = "views/dashboard/view.php";
 
 $pageURL = get_site_url().'/dashboard/';
 
+$currentUser = wp_get_current_user();
+
 $COEPage = 0; 
 
 $pageHeader = "COE Dashboard";
