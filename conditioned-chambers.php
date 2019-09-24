@@ -41,7 +41,11 @@ get_header();
                 </div>
             </div>
             <?php
-                include($COEPageURI['conditioned-chambers'][$COEPage]);
+                if(hasRole('USER_ADMIN') || hasRole('CALIBRATOR') || hasRole('REVIEWER') || hasRole('APPROVER')){
+                    include($COEPageURI['conditioned-chambers'][$COEPage]);
+                }else{
+                    echo NO_PERMISSION_ERROR;
+                }
             ?>
         </main><!-- #main -->
     </div><!-- #primary -->

@@ -79,6 +79,8 @@ const THERMOMETERS = 2;
 const CENTRIFUGES = 3;
 const TIMERS = 4;
 
+const NO_PERMISSION_ERROR = "<div style='padding-top:30px;'>You do not have permission to access this data! Contact your system administrator.</div>";
+
 function addCOEManufacturer($name){
     global $wpdb;
     if ($name != false) {

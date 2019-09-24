@@ -41,7 +41,11 @@ get_header();
                 </div>
             </div>
             <?php
-                include($COEPageURI['centrifuges'][$COEPage]);
+                if(hasRole('USER_ADMIN') || hasRole('CALIBRATOR') || hasRole('REVIEWER') || hasRole('APPROVER')){
+                    include($COEPageURI['centrifuges'][$COEPage]);
+                }else{
+                    echo NO_PERMISSION_ERROR;
+                }
             ?>
         </main><!-- #main -->
     </div><!-- #primary -->
