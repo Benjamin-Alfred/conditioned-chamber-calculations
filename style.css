@@ -20,8 +20,9 @@ Template: twentyseventeen
 .calibration-login{
 	border: 1px solid #000;
 	border-radius: 8px;
-	margin: 0 30px;
+	margin: auto;
 	padding: 25px;
+	width: 500px;
 }
 
 .certificate-frame {

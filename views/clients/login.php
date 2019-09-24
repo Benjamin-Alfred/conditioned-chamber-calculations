@@ -1,15 +1,15 @@
 <!-- Client Login -->
-<div>
+<div class="calibration-login">
     <div class="row">
         <div id="info_block" class="col-sm-10"><?php echo $infoMessage; ?></div>
-        <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/" class="col-sm-2">
+<!--         <form name="ccc_back" method="POST" action="<?php echo get_site_url(); ?>/" class="col-sm-2">
             <button class="btn btn-sm float-right" onclick="document.ccc_back.submit" title="Back">
                 <svg class="icon icon-arrow-left" aria-hidden="true" role="img">
                     <use href="#icon-arrow-left" xlink:href="#icon-arrow-left"></use>
                 </svg>
             </button>
         </form>
-    </div>
+ -->    </div>
     <br>
 
     <div class="card">
@@ -41,6 +41,12 @@
                     <input type="hidden" name="api_code" value="7">
                     New user? 
                     <a href="#" onclick="document.getElementById('client_registration_link').submit();">Register here</a>.
+
+                    <button class="btn btn-sm float-right" onclick="window.history.back();return(false);" title="Back">
+                        <svg class="icon icon-arrow-left" aria-hidden="true" role="img">
+                            <use href="#icon-arrow-left" xlink:href="#icon-arrow-left"></use>
+                        </svg>
+                    </button>
                 </form>
             </div>
         </div>
