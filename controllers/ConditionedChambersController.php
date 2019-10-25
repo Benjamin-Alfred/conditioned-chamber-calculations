@@ -257,6 +257,7 @@ function addConditionedChamberRecordings($request){
         expected_temperature => $request['expected_temperature'],
         environmental_temperature => $request['environmental_temperature'],
         environmental_humidity => $request['environmental_humidity'],
+        comment => $request['comment'],
 
         result => 'PENDING'
 
@@ -349,6 +350,7 @@ function updateConditionedChamberRecordings($request){
         expected_temperature => $request['expected_temperature'],
         environmental_temperature => $request['environmental_temperature'],
         environmental_humidity => $request['environmental_humidity'],
+        comment => $request['comment'],
 
         result => 'PENDING'
 

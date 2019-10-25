@@ -335,6 +335,14 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="comment" class="col-form-label col-sm-5">Comment</label>
+                    <textarea class="form-control form-control-sm col-sm-7" id="comment" name="comment" title=""></textarea>
+                </div>
+            </div>
+        </div>
         <?php
             if(hasRole('CALIBRATOR')){
         ?>

@@ -356,6 +356,14 @@
                 <p>If undelivered please return to the above address.</p>
             </div><br>
         </div>
+        <div class="remarks">
+            <div><strong>8.0 COMMENTS</strong></div>
+            <div style="margin-left: 30px;">
+                <p>
+                    <?php echo $certification->comment; ?>
+                </p>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col">

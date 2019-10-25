@@ -364,6 +364,14 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="comment" class="col-form-label col-sm-5">Comment</label>
+                    <textarea class="form-control form-control-sm col-sm-7" id="comment" name="comment"><?php echo $certification->comment; ?></textarea>
+                </div>
+            </div>
+        </div>
         <div class="form-group">
             <input type="submit" class="button btn form-control" value="Update" />
         </div>
