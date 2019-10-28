@@ -349,12 +349,6 @@
                     <span id="ccc_status" style="color:#F00;"><strong><?php echo $certification->result; ?></strong></span>
                 </p>
             </div>
-            <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
-                <p>Calibration certificate issued without signature is not valid.
-                    This certificate has been issued without any alteration and may not be reproduced
-                    other than in full and with the approval of the head of NPHL-COE.</p>
-                <p>If undelivered please return to the above address.</p>
-            </div><br>
         </div>
         <div class="remarks">
             <div><strong>8.0 COMMENTS</strong></div>
@@ -363,6 +357,12 @@
                     <?php echo $certification->comment; ?>
                 </p>
             </div>
+            <div style="margin-left: 30px;padding: 5px; border: 1px solid #000;">
+                <p>Calibration certificate issued without signature is not valid.
+                    This certificate has been issued without any alteration and may not be reproduced
+                    other than in full and with the approval of the head of NPHL-COE.</p>
+                <p>If undelivered please return to the above address.</p>
+            </div><br>
         </div>
     </div>
     <div class="row">
