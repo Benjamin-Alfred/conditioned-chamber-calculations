@@ -54,6 +54,9 @@
                     <span style="font-size: 0.65em; display: inline-block;border: 1px solid #000;padding: 0 10px;">
                         <?php echo $certification->certificate_number;?>
                     </span>
+                    <div>
+                        <img style="width: 90px;height:90px;margin-top:10px;" src="<?php bloginfo('template_url'); ?>-child/i/kenas_logo.jpg">
+                    </div>
                 </div>
             </div>
             <div class="row">

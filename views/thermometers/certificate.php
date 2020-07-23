@@ -55,7 +55,7 @@
                         <?php echo $certification->certificate_number;?>
                     </span>
                     <div>
-                        <img style="width: 90px;height:90px;" src="<?php bloginfo('template_url'); ?>-child/i/kenas_logo.jpg">
+                        <img style="width: 90px;height:90px;margin-top:10px;" src="<?php bloginfo('template_url'); ?>-child/i/kenas_logo.jpg">
                     </div>
                 </div>
             </div>
