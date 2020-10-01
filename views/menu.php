@@ -12,6 +12,7 @@
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/centrifuges/">Centrifuges</a>
             <a class="dropdown-item" href="/conditioned-chambers/">Conditioned Chambers</a>
+            <a class="dropdown-item" href="/pipettes/">Pipettes</a>
             <a class="dropdown-item" href="/thermometers/">Thermometers</a>
             <a class="dropdown-item" href="/timers/">Timers</a>
         <?php } ?>
