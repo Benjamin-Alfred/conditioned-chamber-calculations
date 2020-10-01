@@ -1,0 +1,17 @@
+CREATE TABLE `wp_coe_pipette_xml_imports` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `certificate_number` varchar(60) DEFAULT NULL,
+  `pipette_id` varchar(30) DEFAULT NULL,
+  `client_id` int(10) unsigned DEFAULT NULL,
+  `xml_schema_type` varchar(20) DEFAULT 'METTLER',
+  `certificate_data` longtext,
+  `result` varchar(8) DEFAULT 'PENDING',
+  `comment` text,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `verified_at` datetime DEFAULT NULL,
+  `verified_by` int(10) unsigned DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `approved_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
