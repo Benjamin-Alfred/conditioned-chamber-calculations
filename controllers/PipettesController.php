@@ -142,6 +142,7 @@ if ($COEPage == 1) {
 
                 $certification = json_decode(json_encode(simplexml_load_string($contents)), TRUE);
                 // print_r($certification);
+                $certification['result'] = 1;
                 $validity = $_REQUEST['validity'];
                 $schema = $_REQUEST['xml_schema_type'];
             }else{
@@ -184,7 +185,9 @@ function addPipetteRecordings($request, $certification){
 
     $testDetails = array(
         certificate_number => 'NOT ISSUED',
+        serial_number => $certification['Pipette']['SN'],
         pipette_id => $certification['Pipette']['SndID'],
+        client_name => $certification['Contact'][0]['Company'],
         // client_id => $request['client'],
         xml_schema_type => $request['xml_schema_type'],
         certificate_data => $request['certificate_details'],
@@ -281,12 +284,11 @@ function getCOEPipetteCertificatesList(){
 
     $query = "SELECT wp_coe_pipette_xml_imports.id, 
                 wp_coe_pipette_xml_imports.date_performed, 
-                'wp_coe_clients.name' AS client_name, 
+                wp_coe_pipette_xml_imports.client_name, 
                 'Pipette' AS equipment_name, 
-                'xxx' AS equipment_serial_number, 
+                serial_number AS equipment_serial_number, 
                 wp_coe_pipette_xml_imports.result 
-            FROM wp_coe_pipette_xml_imports 
-            LEFT JOIN wp_coe_clients ON wp_coe_pipette_xml_imports.client_id = wp_coe_clients.id;";
+            FROM wp_coe_pipette_xml_imports;";
 
     return $wpdb->get_results($query);
 }
@@ -295,16 +297,15 @@ function getCOEPipetteCertificate($certificateID){
     global $wpdb;
 
     $query = "SELECT wp_coe_pipette_xml_imports.*,
-                wp_coe_clients.name AS client_name,
                 DATE_FORMAT(DATE_ADD(wp_coe_pipette_xml_imports.date_performed, INTERVAL wp_coe_pipette_xml_imports.validity MONTH),'%M %Y') AS certificate_validity
             FROM wp_coe_pipette_xml_imports 
-            LEFT JOIN wp_coe_clients 
-                ON wp_coe_pipette_xml_imports.client_id = wp_coe_clients.id
             WHERE wp_coe_pipette_xml_imports.id = $certificateID;";
 
     $result = $wpdb->get_row($query);
     
     $certification = json_decode(base64_decode($result->certificate_data), true);
+    $certification['result'] = $result->result;
+    $certification['certificate_validity'] = $result->certificate_validity;
 
     // Creators, verifiers and approvers
     if ($result->created_by) {

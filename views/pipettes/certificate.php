@@ -27,11 +27,16 @@
                         Fail
                     </button>
                     <?php
-                    } 
+                    }
+                    echo $certification->id."k";
+                    if($certification->result === 1){
                     ?>
                     <button id="save-imported-certificate" type="button" class="btn btn-sm btn-outline-dark">
                         Save
                     </button>
+                    <?php
+                    }
+                    ?>
                     <button class="btn btn-sm btn-outline-dark" onclick="document.ccc_back.submit">
                         Close
                     </button>

@@ -43,7 +43,7 @@
                             <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('ccc_cert').submit()">View</button>
                         </form>
                         <form name="ccc_cert_1" id="ccc_cert_1" method="POST"
-                            action="<?php echo get_site_url(); ?>/pipettes/" class="inline-form">
+                            action="<?php echo get_site_url(); ?>/pipettes/" class="inline-form" style="display: none;">
                             <input type="hidden" name="edit_calibration_calculation" value="false" />
                             <input type="hidden" name="ccc_id" value="<?php echo $certicate->id; ?>" />
                             <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('ccc_cert_1').submit()">Edit</button>
