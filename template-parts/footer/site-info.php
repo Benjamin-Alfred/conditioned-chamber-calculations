@@ -15,9 +15,9 @@
 		the_privacy_policy_link( '', '<span role="separator" aria-hidden="true"></span>' );
 	}
 	?>
-	<img src="<?php bloginfo('template_url'); ?>-child/i/aphl-logo.png">
+	<img style="height:10%;width:10%;" src="<?php bloginfo('template_url'); ?>-child/i/coat_of_arms.png">
 	&copy;
-	<a href="<?php echo esc_url( __( 'https://github.com/APHL-Global-Health/', 'twentyseventeen' ) ); ?>" class="imprint">
-		<?php printf( __( '%s', 'twentyseventeen' ), 'Association of Public Health Laboratories' ); ?>
+	<a href="<?php echo esc_url( __( 'https://nphl.go.ke/', 'twentyseventeen' ) ); ?>" class="imprint">
+		<?php printf( __( '%s', 'twentyseventeen' ), 'National Public Health Laboratory' ); ?>
 	</a>
 </div><!-- .site-info -->
