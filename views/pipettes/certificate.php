@@ -10,7 +10,7 @@
                 <input type="hidden" name="xml_schema_type" id="xml_schema_type" value="<?php echo $schema; ?>">
                 <div class="btn-group float-right" role="group" aria-label="Status">
                     <?php
-                    if(strcmp($certification->result, "PENDING") != 0 && hasRole('APPROVER')){
+                    if(strcmp($certification['result'], "PENDING") != 0 && hasRole('APPROVER')){
                     ?>
                     <button id="btn_approve" type="button" class="btn btn-sm btn-outline-dark">
                         Approve
@@ -18,7 +18,7 @@
                     <?php
                     }
 
-                    if(strcmp($certification->result, "PENDING") == 0 && hasRole('REVIEWER')){
+                    if(strcmp($certification['result'], "PENDING") == 0 && hasRole('REVIEWER')){
                     ?>
                     <button id="status-pass" type="button" class="btn btn-sm btn-outline-dark">
                         Pass
@@ -28,8 +28,7 @@
                     </button>
                     <?php
                     }
-                    echo $certification->id."k";
-                    if($certification->result === 1){
+                    if($certification['result'] === 1){
                     ?>
                     <button id="save-imported-certificate" type="button" class="btn btn-sm btn-outline-dark">
                         Save
@@ -63,7 +62,7 @@
                 <div class="col-5" style="text-align: right;">
                     <span style="font-size: 0.55em; "><strong>CERTIFICATE NUMBER</strong></span>
                     <span style="font-size: 0.65em; display: inline-block;border: 1px solid #000;padding: 0 10px;">
-                        <?php echo $certification->certificate_number;?>
+                        <?php echo $certification['certificate_number'];?>
                     </span>
                     <div>
                         <img style="width:85px;height:85px;margin-top:5px;" src="<?php bloginfo('template_url'); ?>-child/i/kenas_logo.jpg">
