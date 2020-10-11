@@ -305,7 +305,18 @@ function getCOEPipetteCertificate($certificateID){
     
     $certification = json_decode(base64_decode($result->certificate_data), true);
     $certification['result'] = $result->result;
+    $certification['certificate_number'] = $result->certificate_number;
+    
     $certification['certificate_validity'] = $result->certificate_validity;
+
+    $certification['date_performed'] = $result->date_performed;
+    $certification['created_by'] = $result->created_by;
+
+    $certification['verified_at'] = $result->verified_at;
+    $certification['verified_by'] = $result->verified_by;
+
+    $certification['approved_at'] = $result->approved_at;
+    $certification['approved_by'] = $result->approved_by;
 
     // Creators, verifiers and approvers
     if ($result->created_by) {
@@ -342,23 +353,24 @@ function verifyPipetteCertificate($data){
     $_APPROVER = $currentUser->ID;
     $_VERIFIER = $currentUser->ID;
 
-    $datetime = date("Y-m-d H:i:s", time() + (3*60*60)); //UTC+3
-    $year = substr($datetime, 0, 4);
+    $datetime = new DateTime("now", new DateTimeZone('Africa/Nairobi'));
+    $year = $datetime->format('Y');
+    $month = $datetime->format('m');
 
-    $subQuery = "SELECT COUNT(id) hits FROM wp_coe_timer_calculations WHERE verified_at LIKE '$year%'";
+    $subQuery = "SELECT COUNT(id) hits FROM wp_coe_pipette_xml_imports WHERE verified_at LIKE '$year-$month%'";
 
     $result = $wpdb->get_row($subQuery, ARRAY_A);
     $certificateNumber = str_pad((intval($result['hits'])+1), 4, "0", STR_PAD_LEFT);
 
     $verifierData = [
         'result' => $data['status'], 
-        'certificate_number' => "COE/TIME/".$year."/$certificateNumber", 
+        'certificate_number' => "COE-VOL-$certificateNumber-".$month."-".$year, 
         'verified_by' => $_VERIFIER, 
-        'verified_at' => $datetime, 
+        'verified_at' => $datetime->format('Y-m-d'), 
         'approved_by' => $_APPROVER, 
-        'approved_at' => $datetime
+        'approved_at' => $datetime->format('Y-m-d')
     ];
 
-    $wpdb->update("wp_coe_timer_calculations", $verifierData, ['id' => $data['ccc_id']]);
+    $wpdb->update("wp_coe_pipette_xml_imports", $verifierData, ['id' => $data['ccc_id']]);
 }
 ?>

@@ -545,21 +545,22 @@
             </div>
         </div>
         <div style="font-size: 0.7em;">
-            <p>This certificate is valid until <strong><?php echo $certification['CalibrationData']['NextDue']; ?></strong></p>
+            <!-- <p>This certificate is valid until <strong><?php echo $certification['CalibrationData']['NextDue']; ?></strong></p> -->
+            <p>This certificate is valid until <strong><?php echo $certification['certificate_validity']; ?></strong></p>
             <table class="table table-sm table-borderless" border="0">
                 <tr>
                     <td class="signatories-label-left">PERFORMED BY</td>
                     <td class="signatories-space">
-                        <?php echo $certification->creator['display_name']; ?>
+                        <?php echo $certification['creator']['display_name']; ?>
                     </td>
                     <td class="signatories-label">DATE</td>
                     <td class="signatories-space">
-                        <?php echo substr($certification->date_performed, 0, 10); ?>
+                        <?php echo substr($certification['date_performed'], 0, 10); ?>
                     </td>
                     <td class="signatories-label">SIGN</td>
                     <td class="signatories-space">
                         <?php
-                            $creatorSignature = get_template_directory_uri()."-child/i/signature-".$certification->created_by.".png";
+                            $creatorSignature = get_template_directory_uri()."-child/i/signature-".$certification['created_by'].".png";
                         ?>
                         <img src="<?php echo $creatorSignature ?>" alt="Sign here" class="signatories-image" />
                     </td>
@@ -567,17 +568,17 @@
                 <tr>
                     <td class="signatories-label-left">REVIEWED BY</td>
                     <td class="signatories-space">
-                        <?php echo isset($certification->verifier['display_name'])?$certification->verifier['display_name']:""; ?>
+                        <?php echo isset($certification['verifier']['display_name'])?$certification['verifier']['display_name']:""; ?>
                     </td>
                     <td class="signatories-label">DATE</td>
                     <td class="signatories-space">
-                        <?php echo substr($certification->verified_at, 0, 10); ?>
+                        <?php echo substr($certification['verified_at'], 0, 10); ?>
                     </td>
                     <td class="signatories-label">SIGN</td>
                     <td class="signatories-space">
                         <?php
-                        if(isset($certification->verified_by)){
-                            $verifierSignature = get_template_directory_uri()."-child/i/signature-".$certification->verified_by.".png";
+                        if(isset($certification['verified_by'])){
+                            $verifierSignature = get_template_directory_uri()."-child/i/signature-".$certification['verified_by'].".png";
                         ?>
                             <img src="<?php echo $verifierSignature ?>" alt="Sign here" 
                                 class="signatories-image" />
@@ -589,17 +590,17 @@
                 <tr>
                     <td class="signatories-label-left">APPROVED BY</td>
                     <td class="signatories-space">
-                        <?php echo isset($certification->approver['display_name'])?$certification->approver['display_name']:""; ?>
+                        <?php echo isset($certification['approver']['display_name'])?$certification['approver']['display_name']:""; ?>
                     </td>
                     <td class="signatories-label">DATE</td>
                     <td class="signatories-space">
-                        <?php echo substr($certification->approved_at, 0, 10); ?>
+                        <?php echo substr($certification['approved_at'], 0, 10); ?>
                     </td>
                     <td class="signatories-label">SIGN</td>
                     <td class="signatories-space">
                         <?php
-                        if(isset($certification->approved_by)){
-                            $approverSignature = get_template_directory_uri()."-child/i/signature-".$certification->approved_by.".png";
+                        if(isset($certification['approved_by'])){
+                            $approverSignature = get_template_directory_uri()."-child/i/signature-".$certification['approved_by'].".png";
                         ?>
                             <img src="<?php echo $approverSignature; ?>" alt="signature" 
                                 class="signatories-image" />
